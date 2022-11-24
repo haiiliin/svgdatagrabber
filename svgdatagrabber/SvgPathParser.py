@@ -200,6 +200,7 @@ class SvgPathParser(PathFilter):
         Returns:
             A list of paths.
         """
-        paths = SvgPaths(self.filter(svg2paths(self.svgfile)[0]))
+        paths, atts = svg2paths(self.svgfile)
+        paths = SvgPaths(self.filter(paths))
         paths.transform(tuple(translate), tuple(scale), tuple(origin))
         return paths
