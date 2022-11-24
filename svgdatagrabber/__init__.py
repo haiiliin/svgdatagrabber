@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from .SvgPathParser import SvgPathParser
+from .parser import SvgPathParser
 
 try:
     from ._version import version as _default_version

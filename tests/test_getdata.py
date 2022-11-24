@@ -1,4 +1,4 @@
-from svgdatagrabber.SvgPathParser import SvgPathParser
+from svgdatagrabber.parser import SvgPathParser
 
 
 def test_getpaths():
