@@ -8,5 +8,5 @@ def test_getpaths():
         yrange=(4800, 6000),
         min_segments=4,
         tolerance=1,
-    ).parse().points()
+    ).parse().lines()
     assert len(pathPoints) == 11

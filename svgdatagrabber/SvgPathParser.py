@@ -1,6 +1,7 @@
 import copy
 from typing import Union, Callable
 
+import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
@@ -8,7 +9,7 @@ from svgpathtools.path import Path, Line, QuadraticBezier, CubicBezier, Arc
 from svgpathtools.svg_to_paths import svg2paths
 
 
-class svgdatagrabber(list[Path]):
+class SvgPaths(list[Path]):
     """Svg paths returned by SvgPathParser.parse()"""
 
     def transform(
@@ -33,16 +34,16 @@ class svgdatagrabber(list[Path]):
             self[idx] = scaledPath
         return self
 
-    def points(self) -> list[np.ndarray]:
-        """Get the points from the paths.
+    def lines(self) -> list[np.ndarray]:
+        """Get the points of lines from the paths.
 
         Returns:
-            A list of points.
+            A list of lines of points.
         """
         pathPoints = []
         for path in self:
             points = []
-            for segment in path:
+            for segment in path:  # type: Line | QuadraticBezier | CubicBezier | Arc
                 points += [[point.real, point.imag] for point in [segment.start, segment.end]]
             points = np.asarray(points)
             pathPoints.append(points)
@@ -58,10 +59,21 @@ class svgdatagrabber(list[Path]):
         """
         if ax is None:
             _, ax = plt.subplots(**(fig_kwargs or {}))
-        for point in self.points():
+        for point in self.lines():
             ax.plot(point[:, 0], point[:, 1], **kwargs)
         ax.grid()
         return ax
+
+    def df(self, x: str = "x", y: str = "y") -> pd.DataFrame:
+        """Get the paths as a pandas DataFrame."""
+        df = pd.DataFrame(columns=[x, y, "path"])
+        for idx, line in enumerate(self.lines()):
+            df = pd.concat([df, pd.DataFrame({x: line[:, 0], y: line[:, 1], "path": idx})], ignore_index=True)
+        return df
+
+    def to_csv(self, path: str, x: str = "x", y: str = "y"):
+        """Save the paths as a csv file."""
+        self.df(x, y).to_csv(path, index=False)
 
 
 class PathFilter:
@@ -177,7 +189,7 @@ class SvgPathParser(PathFilter):
         translate: tuple[float, float] = (0.0, 0.0),
         scale: tuple[float, float] = (1.0, 1.0),
         origin: tuple[float, float] = (0.0, 0.0),
-    ) -> svgdatagrabber:
+    ) -> SvgPaths:
         """Parse the paths from the svg file.
 
         Args:
@@ -188,6 +200,6 @@ class SvgPathParser(PathFilter):
         Returns:
             A list of paths.
         """
-        paths = svgdatagrabber(self.filter(svg2paths(self.svgfile)[0]))
+        paths = SvgPaths(self.filter(svg2paths(self.svgfile)[0]))
         paths.transform(tuple(translate), tuple(scale), tuple(origin))
         return paths
