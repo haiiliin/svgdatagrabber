@@ -40,10 +40,7 @@ class SvgPaths(list[Path]):
         Returns:
             The transformed paths.
         """
-        self.translated(translate)
-        self.rotated(rotate, origin)
-        self.scaled(scale, origin)
-        return self
+        return self.translated(translate).rotated(rotate, origin).scaled(scale, origin)
 
     def translated(self, translate: tuple[float, float] = (0.0, 0.0)):
         """Translate the paths.
