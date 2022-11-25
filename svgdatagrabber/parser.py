@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import math
-from typing import Union, Callable
+from typing import Callable
 
 import numpy as np
 import pandas as pd
@@ -151,7 +153,7 @@ class SvgPathParser:
         drop_horizontal_lines: bool = True,
         drop_vertical_lines: bool = True,
         drop_closed_paths: bool = True,
-        custom_filter: Union[Callable[[Path], bool], FilterBase] = None,
+        custom_filter: Callable[[Path], bool] | FilterBase = None,
         tolerance: float = 1e-6,
     ):
         """Constructor of the SvgPathParser class.
@@ -177,7 +179,7 @@ class SvgPathParser:
         ]
         self.addFilter(custom_filter)
 
-    def addFilter(self, f: Union[Callable[[Path], bool], FilterBase]):
+    def addFilter(self, f: Callable[[Path], bool] | FilterBase):
         """Add a custom filter to the parser.
 
         Args:
