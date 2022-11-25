@@ -1,4 +1,3 @@
-import copy
 from typing import Union, Callable
 
 import numpy as np
@@ -9,7 +8,7 @@ from svgpathtools.path import Path, Line, QuadraticBezier, CubicBezier, Arc
 from svgpathtools.svg_to_paths import svg2paths
 
 from .filters import (
-    RangeFilter,
+    RectangleRangeFilter,
     SegmentNumberFilter,
     HorizontalLineFilter,
     VerticalLineFilter,
@@ -166,7 +165,7 @@ class SvgPathParser:
         """
         self.svgfile = svgfile
         self.filters = [
-            RangeFilter(xrange=xrange, yrange=yrange),
+            RectangleRangeFilter(xrange=xrange, yrange=yrange),
             SegmentNumberFilter(min_segments=min_segments),
             HorizontalLineFilter(enabled=drop_horizontal_lines, tolerance=tolerance),
             VerticalLineFilter(enabled=drop_vertical_lines, tolerance=tolerance),
