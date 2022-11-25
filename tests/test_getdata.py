@@ -9,4 +9,4 @@ def test_getpaths():
         min_segments=4,
         tolerance=1,
     ).parse().lines()
-    assert len(pathPoints) == 11
+    assert len(pathPoints) == 12
