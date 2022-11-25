@@ -9,6 +9,7 @@ from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 from svgpathtools.path import Path, Line, QuadraticBezier, CubicBezier, Arc
 from svgpathtools.svg_to_paths import svg2paths
+from .csys import CoordinateSystem
 
 from .filters import (
     RectangleRangeFilter,
@@ -24,25 +25,25 @@ from .filters import (
 class SvgPaths(list[Path]):
     """Svg paths returned by SvgPathParser.parse()"""
 
-    def transformed(
-        self,
-        translate: tuple[float, float] = (0.0, 0.0),
-        rotate: float = 0.0,
-        scale: tuple[float, float] = (1.0, 1.0),
-        origin: tuple[float, float] = (0.0, 0.0),
-    ):
+    def transformed(self, csys: CoordinateSystem):
         """Transform the paths.
 
         Args:
-            translate: Translation to apply to the paths.
-            rotate: Rotate degree to apply to the paths.
-            scale: Scale to apply to the paths.
-            origin: Origin to scale the paths around.
+            csys: Coordinate system to transform the paths to.
 
         Returns:
             The transformed paths.
         """
-        return self.translated(translate).rotated(rotate, origin).scaled(scale, origin)
+        for path in self:
+            for segment in path:  # type: Line | QuadraticBezier | CubicBezier | Arc
+                segment.start = csys.transform(segment.start)
+                segment.end = csys.transform(segment.end)
+                if isinstance(segment, QuadraticBezier):
+                    segment.control = csys.transform(segment.control)
+                elif isinstance(segment, CubicBezier):
+                    segment.control1 = csys.transform(segment.control1)
+                    segment.control2 = csys.transform(segment.control2)
+        return self
 
     def translated(self, translate: tuple[float, float] = (0.0, 0.0)):
         """Translate the paths.
@@ -143,6 +144,8 @@ class SvgPathParser:
     svgfile: str
     #: Filters
     filters: list[FilterBase]
+    #: coordinate system
+    csys: CoordinateSystem
 
     def __init__(
         self,
@@ -178,6 +181,7 @@ class SvgPathParser:
             ClosedPathFilter(enabled=drop_closed_paths),
         ]
         self.addFilter(custom_filter)
+        self.csys = CoordinateSystem()
 
     def addFilter(self, f: Callable[[Path], bool] | FilterBase):
         """Add a custom filter to the parser.
@@ -189,20 +193,8 @@ class SvgPathParser:
             return
         self.filters.append(f if isinstance(f, FilterBase) else CustomFilter(f))
 
-    def parse(
-        self,
-        translate: tuple[float, float] = (0.0, 0.0),
-        rotate: float = 0.0,
-        scale: tuple[float, float] = (1.0, 1.0),
-        origin: tuple[float, float] = (0.0, 0.0),
-    ) -> SvgPaths:
+    def parse(self) -> SvgPaths:
         """Parse the paths from the svg file.
-
-        Args:
-            translate: Translation to apply to the paths.
-            scale: Scale to apply to the paths.
-            rotate: Rotate degree to apply to the paths.
-            origin: Origin to scale the paths around.
 
         Returns:
             A list of paths.
@@ -212,5 +204,5 @@ class SvgPathParser:
             return [pt for pt in pts if all(f.accept(pt) for f in self.filters)]
 
         paths, atts = svg2paths(self.svgfile)
-        paths = SvgPaths(filtered(paths)).translated(translate).rotated(rotate, origin).scaled(scale, origin)
+        paths = SvgPaths(filtered(paths)).transformed(self.csys)
         return paths
