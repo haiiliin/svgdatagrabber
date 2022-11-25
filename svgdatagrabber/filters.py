@@ -12,17 +12,9 @@ class FilterBase:
     #: Tolerance for determining if a path is a horizontal or vertical line
     tolerance: float = 1e-6
 
-    def __init__(self, enabled: bool = True, tolerance: float = 1e-6, **kwargs):
-        """Constructor of the FilterBase class.
-
-        Args:
-            enabled: Enabled or not.
-            tolerance: Tolerance for determining if a path is a horizontal or vertical line.
-        """
+    def __init__(self, *, enabled: bool = True, tolerance: float = 1e-6):
         self.enabled = enabled
         self.tolerance = tolerance
-        for key, value in kwargs.items():
-            setattr(self, key, value)
 
     def accept(self, path: Path) -> bool:
         """Accept or reject a path.
@@ -65,10 +57,11 @@ class RectangleRangeFilter(FilterBase):
         yrange: tuple[float, float] = (-np.inf, np.inf),
         include: bool = True,
         sensitive: bool = False,
+        *,
         enabled: bool = True,
         tolerance: float = 1e-6,
     ):
-        super().__init__(enabled, tolerance)
+        super().__init__(enabled=enabled, tolerance=tolerance)
         self.xrange = tuple(xrange)
         self.yrange = tuple(yrange)
         self.include = include
@@ -98,8 +91,8 @@ class SegmentNumberFilter(FilterBase):
     #: Minimum number of segments in a path.
     min_segments: int
 
-    def __init__(self, min_segments: int = 4, enabled: bool = True, tolerance: float = 1e-6):
-        super().__init__(enabled, tolerance)
+    def __init__(self, min_segments: int = 4, *, enabled: bool = True, tolerance: float = 1e-6):
+        super().__init__(enabled=enabled, tolerance=tolerance)
         self.min_segments = min_segments
 
     def accept(self, path: Path) -> bool:
@@ -140,8 +133,11 @@ class ClosedPathFilter(FilterBase):
 class CustomFilter(FilterBase):
     """Custom filter."""
 
-    def __init__(self, filter_function: Callable[[Path], bool], enabled: bool = True, tolerance: float = 1e-6):
-        super().__init__(enabled, tolerance)
+    #: Custom filter function
+    filter_function: Callable[[Path], bool]
+
+    def __init__(self, filter_function: Callable[[Path], bool], *, enabled: bool = True, tolerance: float = 1e-6):
+        super().__init__(enabled=enabled, tolerance=tolerance)
         self.filter_function = filter_function
 
     def accept(self, path: Path) -> bool:
