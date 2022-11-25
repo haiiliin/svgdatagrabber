@@ -1,5 +1,6 @@
+geometry
+matplotlib
 numpy
 pytest
-matplotlib
 pandas
 svgpathtools
