@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Iterable
 
+import numpy as np
+
 from .geometry import Segment, Point
 
 
@@ -126,11 +128,15 @@ class CoordinateSystem:
         y = (yp.y - self.yaxis.start.y) / (self.yaxis.end.y - self.yaxis.start.y)
         return Point(x, y)
 
-    def translate(self) -> tuple[float, float]:
-        return self.xaxis.start.x, self.yaxis.start.y
+    def transformation_matrix(self) -> np.ndarray:
+        """Get the transformation matrix.
 
-    def scale(self) -> tuple[float, float]:
-        return 1.0 / (self.xaxis.end.x - self.xaxis.start.x), 1.0 / (self.yaxis.end.y - self.yaxis.start.y)
+        Returns:
+            The transformation matrix.
+        """
+        return np.array([[self.xaxis.end.x - self.xaxis.start.x, 0.0, self.xaxis.start.x],
+                         [0.0, self.yaxis.end.y - self.yaxis.start.y, self.yaxis.start.y],
+                         [0.0, 0.0, 1.0]])
 
     def setup_xaxis(
         self,
