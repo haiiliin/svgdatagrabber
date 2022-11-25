@@ -1,3 +1,4 @@
+import math
 from typing import Union, Callable
 
 import numpy as np
@@ -113,10 +114,11 @@ class SvgPaths(list[Path]):
         """
         if ax is None:
             _, ax = plt.subplots(**(fig_kwargs or {}))
-        for idx, point in enumerate(self.lines()):
+        lines = self.lines()
+        for idx, point in enumerate(lines):
             kwargs["label"] = f"Line-{idx}"
             ax.plot(point[:, 0], point[:, 1], **kwargs)
-        ax.legend()
+        ax.legend(ncol=math.floor(math.sqrt(len(lines))))
         ax.grid()
         return ax
 
