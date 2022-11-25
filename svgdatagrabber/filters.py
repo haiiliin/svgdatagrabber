@@ -56,12 +56,15 @@ class RectangleRangeFilter(FilterBase):
     yrange: tuple[float, float]
     #: Include or exclude the range
     include: bool
+    #: Sensitive or not
+    sensitive: bool
 
     def __init__(
         self,
         xrange: tuple[float, float] = (-np.inf, np.inf),
         yrange: tuple[float, float] = (-np.inf, np.inf),
         include: bool = True,
+        sensitive: bool = False,
         enabled: bool = True,
         tolerance: float = 1e-6,
     ):
@@ -69,16 +72,19 @@ class RectangleRangeFilter(FilterBase):
         self.xrange = tuple(xrange)
         self.yrange = tuple(yrange)
         self.include = include
+        self.sensitive = sensitive
 
     def accept(self, path: Path) -> bool:
         def pointInRange(p: complex):
             return self.xrange[0] <= p.real <= self.xrange[1] and self.yrange[0] <= p.imag <= self.yrange[1]
 
         def segmentInRange(seg: Union[Line, QuadraticBezier, CubicBezier, Arc]):
-            return all(pointInRange(p) for p in seg.bpoints())
+            func = all if self.sensitive else any
+            return func(pointInRange(p) for p in seg.bpoints())
 
         def pathInRange(pth: Path):
-            return all(segmentInRange(seg) for seg in pth)
+            func = all if self.sensitive else any
+            return func(segmentInRange(seg) for seg in pth)
 
         def pathOutRange(pth: Path):
             return not pathInRange(pth)
