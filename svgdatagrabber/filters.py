@@ -47,29 +47,43 @@ class FilterBase:
         self.enabled = False
 
 
-class RangeFilter(FilterBase):
+class RectangleRangeFilter(FilterBase):
     """Filter paths based on their range."""
 
     #: Range of x values to include.
     xrange: tuple[float, float]
     #: Range of y values to include.
     yrange: tuple[float, float]
+    #: Include or exclude the range
+    include: bool
 
     def __init__(
         self,
         xrange: tuple[float, float] = (-np.inf, np.inf),
         yrange: tuple[float, float] = (-np.inf, np.inf),
+        include: bool = True,
         enabled: bool = True,
         tolerance: float = 1e-6,
     ):
         super().__init__(enabled, tolerance)
         self.xrange = tuple(xrange)
         self.yrange = tuple(yrange)
+        self.include = include
 
     def accept(self, path: Path) -> bool:
-        return not self.enabled or (
-            self.xrange[0] <= path.start.real <= self.xrange[1] and self.yrange[0] <= path.start.imag <= self.yrange[1]
-        )
+        def pointInRange(p: complex):
+            return self.xrange[0] <= p.real <= self.xrange[1] and self.yrange[0] <= p.imag <= self.yrange[1]
+
+        def segmentInRange(seg: Union[Line, QuadraticBezier, CubicBezier, Arc]):
+            return all(pointInRange(p) for p in seg.bpoints())
+
+        def pathInRange(pth: Path):
+            return all(segmentInRange(seg) for seg in pth)
+
+        def pathOutRange(pth: Path):
+            return not pathInRange(pth)
+
+        return not self.enabled or (self.include and pathInRange(path)) or (not self.include and pathOutRange(path))
 
 
 class SegmentNumberFilter(FilterBase):
