@@ -113,8 +113,10 @@ class SvgPaths(list[Path]):
         """
         if ax is None:
             _, ax = plt.subplots(**(fig_kwargs or {}))
-        for point in self.lines():
+        for idx, point in enumerate(self.lines()):
+            kwargs["label"] = f"Line-{idx}"
             ax.plot(point[:, 0], point[:, 1], **kwargs)
+        ax.legend()
         ax.grid()
         return ax
 
