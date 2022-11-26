@@ -311,7 +311,12 @@ class Line(Geometry, Line2DCoefficients):
         return f"Line ({self.A} * x {self.B:+} * y {self.C:+} = 0)"
 
     def __eq__(self, other: Line) -> bool:
-        return np.allclose([self.A, self.B, self.C], [other.A, other.B, other.C], atol=self.tolerance)
+        multiplier = self.A / other.A if other.A != 0 else self.B / other.B if other.B != 0 else self.C / other.C
+        return np.allclose(
+            [self.A, self.B, self.C],
+            [other.A * multiplier, other.B * multiplier, other.C * multiplier],
+            atol=self.tolerance,
+        )
 
     def __contains__(self, p: Point | Iterable[float] | complex) -> bool:
         """Check if a point is on this line.
