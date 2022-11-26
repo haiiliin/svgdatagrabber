@@ -936,14 +936,14 @@ class Segment(Line):
     def direction(self) -> float:
         """Get the direction of this segment.
 
-        >>> seg = Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).direction
-        >>> assert np.isclose(seg, np.pi / 4.0)
-        >>> seg = Segment(start=Point(0.0, 0.0), end=Point(-1.0, 1.0)).direction
-        >>> assert np.isclose(seg, 3.0 * np.pi / 4.0)
-        >>> seg = Segment(start=Point(0.0, 0.0), end=Point(-1.0, -1.0)).direction
-        >>> assert np.isclose(seg, -3.0 * np.pi / 4.0)
-        >>> seg = Segment(start=Point(0.0, 0.0), end=Point(1.0, -1.0)).direction
-        >>> assert np.isclose(seg, -np.pi / 4.0)
+        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).direction - np.pi / 4
+        0.0
+        >>> Segment(start=Point(0.0, 0.0), end=Point(-1.0, 1.0)).direction - 3.0 * np.pi / 4
+        0.0
+        >>> Segment(start=Point(0.0, 0.0), end=Point(-1.0, -1.0)).direction + 3.0 * np.pi / 4.0
+        0.0
+        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, -1.0)).direction + np.pi / 4.0
+        0.0
 
         Returns:
             The direction of this segment.
