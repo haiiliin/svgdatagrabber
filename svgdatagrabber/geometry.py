@@ -48,7 +48,8 @@ class Point(Geometry):
         'Point(x=1.0, y=2.0)'
         """
         name = self.__class__.__name__
-        return f"{name}(x={self.x}, y={self.y})"
+        x, y = round(self.x, 10), round(self.y, 10)
+        return f"{name}(x={x}, y={y})"
 
     def __iter__(self):
         """Iterate over the coordinates of the point.
@@ -615,7 +616,8 @@ class Line(Geometry, Line2DCoefficients):
         >>> Line(A=1.0, B=-1.0, C=0.0)
         Line(A=1.0, B=-1.0, C=0.0)
         """
-        return f"Line(A={self.A}, B={self.B}, C={self.C})"
+        A, B, C = round(self.A, 10), round(self.B, 10), round(self.C, 10)
+        return f"Line(A={A}, B={B}, C={C})"
 
     def __eq__(self, other: Line) -> bool:
         """Return whether the line is equal to another line.
@@ -975,7 +977,8 @@ class Ray(Line):
         >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
         Ray(start=Point(x=0.0, y=0.0), slope=1.0) -> Line(A=1.0, B=-1.0, C=0.0)
         """
-        return f"Ray(start={self.start}, slope={self.slope}) -> {super().__repr__()}"
+        slope = round(self.slope, 10)
+        return f"Ray(start={self.start}, slope={slope}) -> {super().__repr__()}"
 
     def __eq__(self, other: Ray) -> bool:
         """Check if two rays are equal.
