@@ -644,8 +644,12 @@ class Line(Geometry, Line2DCoefficients):
 
         >>> Point(0.0, 0.0) in Line(A=-1.0, B=1.0, C=0.0)
         True
+        >>> Point(0.0, 0.0) not in Line(A=-1.0, B=1.0, C=0.0)
+        False
         >>> Point(1.0, 0.0) in Line(A=-1.0, B=1.0, C=0.0)
         False
+        >>> Point(1.0, 0.0) not in Line(A=-1.0, B=1.0, C=0.0)
+        True
 
         Returns:
             True if the point is on this line, otherwise False.
@@ -705,12 +709,16 @@ class Line(Geometry, Line2DCoefficients):
 
         >>> Line(A=1.0, B=1.0, C=1.0).intercept
         -1.0
+        >>> Line(A=1.0, B=0.0, C=0.0).intercept
+        Traceback (most recent call last):
+        ...
+        ValueError: The line is vertical and has no intercept.
 
         Returns:
             The intercept of this line.
         """
         if abs(self.B) < self.tolerance:
-            return np.inf
+            raise ValueError("The line is vertical and has no intercept.")
         return self.gety(0.0)
 
     def getx(self, y: float) -> float:
@@ -805,13 +813,10 @@ class Line(Geometry, Line2DCoefficients):
             raise ValueError("Lines are parallel and do not intersect")
         A = np.asarray([[self.A, self.B], [line.A, line.B]])
         b = np.asarray([-self.C, -line.C])
-        try:
-            x, y = np.linalg.solve(A, b)
-            p = Point(x, y)
-            assert p in self and p in line
-            return p
-        except np.linalg.LinAlgError:
-            raise ValueError("Lines are parallel and do not intersect")
+        x, y = np.linalg.solve(A, b)
+        p = Point(x, y)
+        assert p in self and p in line, "Intersection point is not on both lines"
+        return p
 
     def parallel(self, p: Point | Iterable[float] | complex) -> "Line":
         """Get a parallel line to this line.
