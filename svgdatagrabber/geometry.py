@@ -422,9 +422,12 @@ class Line(Geometry, Line2DCoefficients):
         try:
             x, y = np.linalg.solve(A, b)
             p = Point(x, y)
-            return p if p in self and p in line else None
+            assert p in self and p in line
+            return p
         except np.linalg.LinAlgError:
             raise ValueError("Lines are parallel and do not intersect")
+        except AssertionError:
+            raise ValueError("Intersection point is not on both lines")
 
     def parallel(self, p: Point | Iterable[float] | complex) -> "Line":
         """Get a parallel line to this line.
@@ -436,7 +439,7 @@ class Line(Geometry, Line2DCoefficients):
             A parallel line to this line.
         """
         p = Point.aspoint(p)
-        return Line(start=p, end=Point(p.x + self.A, p.y + self.B))
+        return Line(A=self.A, B=self.B, C=-self.A * p.x - self.B * p.y)
 
     def perpendicular(self, p: Point | Iterable[float] | complex) -> "Line":
         """Get a perpendicular line to this line.

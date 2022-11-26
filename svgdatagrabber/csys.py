@@ -50,7 +50,11 @@ class XAxis(Axis):
             xend: X value of the second point.
             y: Y value of the axis.
         """
-        self.__init__(start=start, end=end, xstart=xstart, xend=xend, y=y)
+        start, end = Point.aspoint(start), Point.aspoint(end)
+        self.A, self.B, self.C = self.coefficientsFromTwoPoints(start, end)
+        self.start, self.end = start, end
+        self.xstart, self.xend = xstart, xend
+        self.y = y
 
 
 class YAxis(Axis):
@@ -92,7 +96,11 @@ class YAxis(Axis):
             yend: Y value of the second point.
             x: X value of the axis.
         """
-        self.__init__(start=start, end=end, ystart=ystart, yend=yend, x=x)
+        start, end = Point.aspoint(start), Point.aspoint(end)
+        self.A, self.B, self.C = self.coefficientsFromTwoPoints(start, end)
+        self.start, self.end = start, end
+        self.ystart, self.yend = ystart, yend
+        self.x = x
 
 
 class CoordinateSystem:
