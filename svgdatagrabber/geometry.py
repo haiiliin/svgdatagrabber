@@ -299,7 +299,7 @@ class Vector(Point):
         return cls.aspoint(v)
 
 
-class Line2DCoefficients:
+class LineCoefs:
     """The coefficients of a line in 2D space."""
 
     @classmethod
@@ -332,7 +332,7 @@ class Line2DCoefficients:
     ) -> tuple[float, float, float]:
         """Get the coefficients of a line from two points.
 
-        >>> Line2DCoefficients.coefficientsFromTwoPoints(Point(0.0, 0.0), Point(1.0, 1.0))
+        >>> LineCoefs.coefficientsFromTwoPoints(Point(0.0, 0.0), Point(1.0, 1.0))
         (1.0, -1.0, 0.0)
 
         Args:
@@ -355,7 +355,7 @@ class Line2DCoefficients:
     ) -> tuple[float, float, float]:
         """Get the coefficients of a line from a point and a slope.
 
-        >>> Line2DCoefficients.coefficientsFromPointAndSlope(Point(0.0, 0.0), 1.0)
+        >>> LineCoefs.coefficientsFromPointAndSlope(Point(0.0, 0.0), 1.0)
         (1.0, -1.0, 0.0)
 
         Args:
@@ -376,7 +376,7 @@ class Line2DCoefficients:
     def coefficientsFromSlopeAndIntercept(cls, slope: float, intercept: float) -> tuple[float, float, float]:
         """Get the coefficients of a line from a slope and an intercept.
 
-        >>> Line2DCoefficients.coefficientsFromSlopeAndIntercept(1.0, 0.0)
+        >>> LineCoefs.coefficientsFromSlopeAndIntercept(1.0, 0.0)
         (1.0, -1.0, 0.0)
 
         Args:
@@ -398,7 +398,7 @@ class Line2DCoefficients:
     ) -> tuple[float, float, float]:
         """Get the coefficients of a line from a point and an angle.
 
-        >>> Line2DCoefficients.coefficientsFromPointAndAngle(Point(0.0, 0.0), np.pi / 4.0)
+        >>> LineCoefs.coefficientsFromPointAndAngle(Point(0.0, 0.0), np.pi / 4.0)
         (1.0, -1.0, 0.0)
 
         Args:
@@ -419,7 +419,7 @@ class Line2DCoefficients:
     def coefficientsFromAngleAndIntercept(cls, angle: float, intercept: float) -> tuple[float, float, float]:
         """Get the coefficients of a line from an angle and an intercept.
 
-        >>> Line2DCoefficients.coefficientsFromAngleAndIntercept(np.pi / 4.0, 0.0)
+        >>> LineCoefs.coefficientsFromAngleAndIntercept(np.pi / 4.0, 0.0)
         (1.0, -1.0, 0.0)
 
         Args:
@@ -436,7 +436,7 @@ class Line2DCoefficients:
         return A, B, C
 
 
-class Line(Geometry, Line2DCoefficients):
+class Line(Geometry, LineCoefs):
     #: Coefficient of the x term.
     A: float
     #: Coefficient of the y term.
