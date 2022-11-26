@@ -88,9 +88,3 @@ class SvgPathParser:
         paths, atts = svg2paths(self.svgfile)
         paths = SvgPaths(filtered(paths)).transformed(self.csys)
         return paths
-
-
-def test():
-    import doctest
-
-    doctest.testmod()

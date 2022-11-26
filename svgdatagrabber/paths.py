@@ -125,9 +125,3 @@ class SvgPaths(List[Path]):
     def to_csv(self, path: str, x: str = "x", y: str = "y"):
         """Save the paths as a csv file."""
         self.df(x, y).to_csv(path, index=False)
-
-
-def test():
-    import doctest
-
-    doctest.testmod()

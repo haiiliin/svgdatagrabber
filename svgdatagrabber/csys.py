@@ -218,9 +218,3 @@ class CoordinateSystem:
         self.yaxis.setup(start=start, end=end, ystart=ystart, yend=yend, x=x)
         if check and not perpendicular and not self.yaxis.isPerpendicular(self.xaxis):
             raise ValueError("The x-axis and y-axis must be perpendicular.")
-
-
-def test():
-    import doctest
-
-    doctest.testmod()
