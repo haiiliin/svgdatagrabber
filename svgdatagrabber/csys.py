@@ -2,13 +2,11 @@ from __future__ import annotations
 
 from typing import Iterable
 
-from svgdatagrabber.geometry import Line, Point
+from svgdatagrabber.geometry import ExtendedSegment, Point
 
 
-class Axis(Line):
-    def __init__(self, *, start: Point | Iterable[float] | complex, end: Point | Iterable[float] | complex):
-        super().__init__(start=start, end=end)
-        self.start, self.end = Point.aspoint(start), Point.aspoint(end)
+class Axis(ExtendedSegment):
+    pass
 
 
 class XAxis(Axis):

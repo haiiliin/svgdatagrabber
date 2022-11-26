@@ -819,7 +819,6 @@ class Line(Geometry, LineCoefs):
         b = np.asarray([-self.C, -line.C])
         x, y = np.linalg.solve(A, b)
         p = Point(x, y)
-        assert p in self and p in line, "Intersection point is not on both lines"
         return p
 
     def parallel(self, p: Point | Iterable[float] | complex) -> "Line":
@@ -862,8 +861,16 @@ class Segment(Line):
     start: Point
     #: The second point to create the line.
     end: Point
+    #: Whether to extend the segment to infinity, used to check if a point is on the extended segment.
+    extended: bool
 
-    def __init__(self, *, start: Point | Iterable[float] | complex, end: Point | Iterable[float] | complex):
+    def __init__(
+        self,
+        *,
+        start: Point | Iterable[float] | complex,
+        end: Point | Iterable[float] | complex,
+        extended: bool = False,
+    ):
         """Create a new line segment.
 
         >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
@@ -872,9 +879,11 @@ class Segment(Line):
         Args:
             start: The first point to create the line.
             end: The second point to create the line.
+            extended: Whether to extend the segment to infinity, used to check if a point is on the extended segment.
         """
         super().__init__(start=start, end=end)
         self.start, self.end = Point.aspoint(start), Point.aspoint(end)
+        self.extended = extended
 
     def __repr__(self):
         """Get the string representation of this line segment.
@@ -918,11 +927,9 @@ class Segment(Line):
             True if the point is on this segment, otherwise False.
         """
         p = Point.aspoint(p)
-        if not super().__contains__(p):
-            return False
         minx, maxx = sorted([self.start.x, self.end.x])
         miny, maxy = sorted([self.start.y, self.end.y])
-        return minx <= p.x <= maxx and miny <= p.y <= maxy
+        return super().__contains__(p) and (self.extended or (minx <= p.x <= maxx and miny <= p.y <= maxy))
 
     @property
     def length(self) -> float:
@@ -975,18 +982,52 @@ class Segment(Line):
         self.start, self.end = self.end, self.start
         return self
 
+    def intersect(self, line: "Line") -> Point:
+        """Get the intersection point of this segment and a line.
+
+        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).intersect(Line(A=1.0, B=1.0, C=-1.0))
+        Point(x=0.5, y=0.5)
+        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).intersect(Line(A=1.0, B=1.0, C=1.0))
+        Traceback (most recent call last):
+        ...
+        AssertionError: No intersection point found.
+
+        Args:
+            line: The line to intersect with.
+        """
+        p = super().intersect(line)
+        assert self.extended or (p in self and p in line), "No intersection point found."
+        return p
+
+
+class ExtendedSegment(Segment):
+    def __init__(self, start: Point | Iterable[float] | complex, end: Point | Iterable[float] | complex):
+        """Create a new extended line segment.
+
+        >>> segment = ExtendedSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> assert segment.extended
+
+        Args:
+            start: The start point of the segment.
+            end: The end point of the segment.
+        """
+        super().__init__(start=start, end=end, extended=True)
+
 
 class Ray(Line):
     #: The first point to create the line.
     start: Point
     #: The second point to create the line.
     end: Point
+    #: Whether to extend the ray to infinity, used to check if a point is on the extended ray.
+    extended: bool
 
     def __init__(
         self,
         *,
         start: Point | Iterable[float] | complex,
         end: Point | Iterable[float] | complex,
+        extended: bool = False,
     ):
         """Create a ray.
 
@@ -996,10 +1037,12 @@ class Ray(Line):
         Args:
             start: The first point to create the line.
             end: The second point to create the line.
+            extended: Whether to extend the ray to infinity, used to check if a point is on the extended ray.
         """
         super().__init__(start=start, end=end)
         self.start, self.end = Point.aspoint(start), Point.aspoint(end)
         self.direction = self.end - self.start
+        self.extended = extended
 
     def __repr__(self):
         """Get the string representation of this ray.
@@ -1039,7 +1082,7 @@ class Ray(Line):
         Returns:
             True if the point is on this ray, otherwise False.
         """
-        return super().__contains__(p) and self.start.vector(p) @ self.slope_vector >= 0
+        return super().__contains__(p) and (self.extended or self.start.vector(p) @ self.slope_vector >= 0)
 
     @property
     def slope_vector(self) -> Vector:
@@ -1052,6 +1095,37 @@ class Ray(Line):
             The slope vector of this ray.
         """
         return Vector.asvector(self.end - self.start)
+
+    def intersect(self, line: "Line") -> Point:
+        """Get the intersection point of this ray and a line.
+
+        >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).intersect(Line(A=1.0, B=1.0, C=-1.0))
+        Point(x=0.5, y=0.5)
+        >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).intersect(Line(A=1.0, B=1.0, C=1.0))
+        Traceback (most recent call last):
+        ...
+        AssertionError: No intersection point found.
+
+        Args:
+            line: The line to intersect with.
+        """
+        p = super().intersect(line)
+        assert self.extended or (p in self and p in line), "No intersection point found."
+        return p
+
+
+class ExtendedRay(Ray):
+    def __init__(self, start: Point | Iterable[float] | complex, end: Point | Iterable[float] | complex):
+        """Create an extended ray.
+
+        >>> ray = ExtendedRay(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> assert ray.extended
+
+        Args:
+            start: The first point to create the ray.
+            end: The second point to create the ray.
+        """
+        super().__init__(start=start, end=end, extended=True)
 
 
 def test():
