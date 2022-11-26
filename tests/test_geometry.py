@@ -257,7 +257,6 @@ class TestSegment(TestBase):
 
 
 class TestRay(TestBase):
-
     @pytest.mark.parametrize("start, end", [(Point(0, 0), Point(1, 1))])
     def test_create_ray(self, start: Point, end: Point):
         ray = Ray(start=start, end=end)

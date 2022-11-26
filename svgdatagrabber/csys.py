@@ -4,11 +4,13 @@ from typing import Iterable
 
 import numpy as np
 
-from .geometry import Segment, Point
+from .geometry import Line, Point
 
 
-class Axis(Segment):
-    pass
+class Axis(Line):
+    def __init__(self, *, start: Point | Iterable[float] | complex, end: Point | Iterable[float] | complex):
+        super().__init__(start=start, end=end)
+        self.start, self.end = Point.aspoint(start), Point.aspoint(end)
 
 
 class XAxis(Axis):

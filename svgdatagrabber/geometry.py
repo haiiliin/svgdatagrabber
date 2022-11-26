@@ -127,7 +127,6 @@ class Point(Geometry):
 
 
 class Vector(Point):
-
     @classmethod
     def asvector(cls, v: Point | Vector | Iterable[float] | complex) -> Vector:
         """Convert a vector to a Vector object.
@@ -614,8 +613,7 @@ class Ray(Line):
         start: Point | Iterable[float] | complex,
         end: Point | Iterable[float] | complex,
     ):
-        """Create a ray.
-        """
+        """Create a ray."""
         super().__init__(start=start, end=end)
         self.start, self.end = Point.aspoint(start), Point.aspoint(end)
         self.direction = self.end - self.start
