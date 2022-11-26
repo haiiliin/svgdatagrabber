@@ -49,6 +49,10 @@ class TestPoint(TestBase):
     def test_point_direction(self, point1: Point, point2: Point, expected: float):
         assert abs(point1.direction(point2) - expected) < self.tolerance
 
+    @pytest.mark.parametrize("point1, point2, expected", [(Point(0, 0), Point(1, 1), np.array([1, 1]))])
+    def test_point_vector(self, point1: Point, point2: Point, expected: np.ndarray):
+        assert np.allclose(point1.vector(point2), np.array([1, 1]), atol=self.tolerance)
+
 
 class TestCreateLine(TestBase):
     def test_create_line_from_coefficients(self):

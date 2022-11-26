@@ -72,6 +72,17 @@ class Point(Geometry):
         """
         return np.arctan2(other.y - self.y, other.x - self.x)
 
+    def vector(self, other: Point) -> np.ndarray:
+        """Calculate the vector between two points.
+
+        Args:
+            other: The other point.
+
+        Returns:
+            The vector between the points.
+        """
+        return np.array([other.x - self.x, other.y - self.y])
+
 
 class Line2DCoefficients:
     """The coefficients of a line in 2D space."""
