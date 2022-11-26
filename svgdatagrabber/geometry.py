@@ -15,9 +15,6 @@ class Geometry:
     def __ne__(self, other: Geometry) -> bool:
         return not self.__eq__(other)
 
-    def __contains__(self, item: Geometry) -> bool:
-        pass
-
 
 class Point(Geometry):
     #: The x coordinate of the point.
