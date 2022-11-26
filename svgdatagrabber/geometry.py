@@ -368,7 +368,7 @@ class Line(Geometry, Line2DCoefficients):
         """
         if abs(self.B) < self.tolerance:
             return np.inf
-        return -self.C / self.B
+        return self.gety(0)
 
     def getx(self, y: float) -> float:
         """Get the x coordinate of a point on this line.
@@ -381,7 +381,7 @@ class Line(Geometry, Line2DCoefficients):
         """
         if abs(self.A) < self.tolerance:
             raise ValueError("Line is vertical")
-        return (self.C - self.B * y) / self.A
+        return -(self.B * y + self.C) / self.A
 
     def gety(self, x: float) -> float:
         """Get the y coordinate of a point on this line.
@@ -394,7 +394,7 @@ class Line(Geometry, Line2DCoefficients):
         """
         if abs(self.B) < self.tolerance:
             raise ValueError("Line is horizontal")
-        return (self.C - self.A * x) / self.B
+        return -(self.A * x + self.C) / self.B
 
     def isParallel(self, line: "Line") -> bool:
         """Check if this line is parallel to another line.
