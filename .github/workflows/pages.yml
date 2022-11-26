@@ -7,6 +7,13 @@ on:
     - 'SSI/**'
     - 'docs/source/**'
     - '.github/workflows/pages.yml'
+  pull_request:
+    branches:
+    - main
+    paths:
+    - 'SSI/**'
+    - 'docs/source/**'
+    - '.github/workflows/pages.yml'
   workflow_dispatch:
 
 jobs:
