@@ -25,9 +25,18 @@ class Point(Geometry):
     def __init__(self, *args: float | complex | Iterable[float]):
         """Initialize a point.
 
-        >>> point = Point(1.0, 2.0)
-        >>> assert point.x == 1.0
-        >>> assert point.y == 2.0
+        >>> Point(1.0, 2.0)
+        Point(x=1.0, y=2.0)
+        >>> Point([1.0, 2.0])
+        Point(x=1.0, y=2.0)
+        >>> Point(complex(1.0, 2.0))
+        Point(x=1.0, y=2.0)
+        >>> Point(Point(1.0, 2.0))
+        Point(x=1.0, y=2.0)
+        >>> Point(1.0)
+        Traceback (most recent call last):
+        ...
+        ValueError: Point must be initialized with two floats, a complex number or an iterable.
 
         Args:
             *args: two floats or a complex number or an iterable of two floats.
@@ -39,7 +48,7 @@ class Point(Geometry):
         elif len(args) == 2:
             self.x, self.y = args
         else:
-            raise ValueError("Point must be initialized with two floats or a complex number.")
+            raise ValueError("Point must be initialized with two floats, a complex number or an iterable.")
 
     def __repr__(self) -> str:
         """Return a string representation of the point.
@@ -84,19 +93,6 @@ class Point(Geometry):
         """
         other = self.aspoint(other)
         return np.allclose([self.x, self.y], [other.x, other.y], atol=self.tolerance)
-
-    def __ne__(self, other: Point | Iterable[float] | complex) -> bool:
-        """Check if two points are not equal.
-
-        >>> Point(1.0, 2.0) != Point(1.0, 2.0)
-        False
-        >>> Point(1.0, 2.0) != Point(1.0, 3.0)
-        True
-
-        Args:
-            other: The other point.
-        """
-        return not self.__eq__(other)
 
     def __add__(self, other: Point | Iterable[float] | complex) -> Point:
         """Add a point or vector to the point.
@@ -154,6 +150,10 @@ class Point(Geometry):
         Point(x=1.0, y=2.0)
         >>> Point.aspoint(1.0 + 2.0j)
         Point(x=1.0, y=2.0)
+        >>> Point.aspoint(1.0)
+        Traceback (most recent call last):
+        ...
+        TypeError: Cannot convert 1.0 to a Point object.
 
         Args:
             p: The point to convert.
@@ -168,7 +168,7 @@ class Point(Geometry):
         elif isinstance(p, Iterable):
             return cls(*tuple(p))
         else:
-            raise TypeError(f"Cannot convert {p} to a {cls} object.")
+            raise TypeError(f"Cannot convert {p} to a {cls.__name__} object.")
 
     def distance(self, other: Point | Iterable[float] | complex) -> float:
         """Calculate the distance between two points.
@@ -479,6 +479,11 @@ class Line(Geometry, Line2DCoefficients):
         >>> Line(angle=np.pi / 4.0, intercept=0.0)
         Line(A=1.0, B=-1.0, C=0.0)
 
+        >>> Line(start=Point(0.0, 0.0))
+        Traceback (most recent call last):
+        ...
+        ValueError: Not enough information to create a line.
+
         Args:
             start: The start point of the line.
             end: The end point of the line.
@@ -501,7 +506,7 @@ class Line(Geometry, Line2DCoefficients):
         elif angle is not None and intercept is not None:
             A, B, C = self.coefficientsFromAngleAndIntercept(angle, intercept)
         else:
-            raise ValueError("Invalid arguments.")
+            raise ValueError("Not enough information to create a line.")
         self.A, self.B, self.C = A, B, C
 
     @classmethod
@@ -672,6 +677,8 @@ class Line(Geometry, Line2DCoefficients):
         1.0
         >>> Line(A=1.0, B=1.0, C=0.0).slope
         -1.0
+        >>> Line(A=1.0, B=0.0, C=0.0).slope
+        inf
 
         Returns:
             The slope of this line.
@@ -711,6 +718,10 @@ class Line(Geometry, Line2DCoefficients):
 
         >>> Line(A=1.0, B=1.0, C=0.0).getx(1.0)
         -1.0
+        >>> Line(A=0.0, B=1.0, C=0.0).getx(0.0)
+        Traceback (most recent call last):
+        ...
+        ValueError: Line is vertical
 
         Args:
             y: The y coordinate of the point.
@@ -727,6 +738,10 @@ class Line(Geometry, Line2DCoefficients):
 
         >>> Line(A=1.0, B=1.0, C=0.0).gety(1.0)
         -1.0
+        >>> Line(A=1.0, B=0.0, C=0.0).gety(0.0)
+        Traceback (most recent call last):
+        ...
+        ValueError: Line is horizontal
 
         Args:
             x: The x coordinate of the point.
@@ -775,6 +790,10 @@ class Line(Geometry, Line2DCoefficients):
 
         >>> Line(A=1.0, B=1.0, C=-1.0).intersect(Line(A=1.0, B=-1.0, C=1.0))
         Point(x=0.0, y=1.0)
+        >>> Line(A=1.0, B=1.0, C=0.0).intersect(Line(A=1.0, B=1.0, C=1.0))
+        Traceback (most recent call last):
+        ...
+        ValueError: Lines are parallel and do not intersect
 
         Args:
             line: The line to intersect with.
@@ -793,8 +812,6 @@ class Line(Geometry, Line2DCoefficients):
             return p
         except np.linalg.LinAlgError:
             raise ValueError("Lines are parallel and do not intersect")
-        except AssertionError:
-            raise ValueError("Intersection point is not on both lines")
 
     def parallel(self, p: Point | Iterable[float] | complex) -> "Line":
         """Get a parallel line to this line.
