@@ -136,6 +136,18 @@ class CoordinateSystem:
         >>> csys.transform(Point(1.0, 2.0))
         1j
 
+        >>> csys = CoordinateSystem()
+        >>> csys.setup_xaxis(start=(0.0, 0.0), end=(1.0, 0.0), xstart=0.0, xend=1.0, y=0.0)
+        >>> csys.setup_yaxis(start=(0.0, 0.0), end=(1.0, 1.0), ystart=0.0, yend=1.0, x=0.0)
+        Traceback (most recent call last):
+        ...
+        ValueError: The x-axis and y-axis must be perpendicular.
+        >>> csys.setup_yaxis(start=(0.0, 0.0), end=(0.0, 1.0), ystart=0.0, yend=1.0, x=0.0)
+        >>> csys.setup_xaxis(start=(0.0, 0.0), end=(1.0, 1.0), xstart=0.0, xend=1.0, y=0.0)
+        Traceback (most recent call last):
+        ...
+        ValueError: The x-axis and y-axis must be perpendicular.
+
         Args:
             p: The point to convert.
 
