@@ -234,7 +234,6 @@ class Point(Geometry):
 
 
 class Vector(Point):
-
     def __matmul__(self, other: Point | Iterable[float] | complex) -> float:
         """Calculate the dot product between two points.
 
@@ -324,7 +323,7 @@ class Line2DCoefficients:
 
     @classmethod
     def coefficientsFromTwoPoints(
-            cls, p1: Point | Iterable[float] | complex, p2: Point | Iterable[float] | complex
+        cls, p1: Point | Iterable[float] | complex, p2: Point | Iterable[float] | complex
     ) -> tuple[float, float, float]:
         """Get the coefficients of a line from two points.
 
@@ -661,7 +660,7 @@ class Line(Geometry, Line2DCoefficients):
             The distance between the point and this line.
         """
         p = Point.aspoint(p)
-        return abs(self.A * p.x + self.B * p.y + self.C) / np.sqrt(self.A ** 2 + self.B ** 2)
+        return abs(self.A * p.x + self.B * p.y + self.C) / np.sqrt(self.A**2 + self.B**2)
 
     @property
     def slope(self) -> float:
@@ -866,8 +865,10 @@ class Segment(Line):
         Args:
             other: The line segment to check.
         """
-        return super().__eq__(other) and ((self.start == other.start and self.end == other.end) or
-                                          (self.start == other.end and self.end == other.start))
+        return super().__eq__(other) and (
+            (self.start == other.start and self.end == other.end)
+            or (self.start == other.end and self.end == other.start)
+        )
 
     def __contains__(self, p: Point | Iterable[float] | complex) -> bool:
         """Check if a point is on this segment.
