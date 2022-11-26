@@ -459,7 +459,7 @@ class Line(Geometry, LineCoefs):
         """Create a line. Possible ways to create a line (in order of precedence):
 
         - start and end points (start and end)
-        - A, B, C coefficients (A, B and C)
+        - coefficients A, B, C (A, B and C)
         - start point and slope (start and slope)
         - start point and angle (start and angle)
         - slope and intercept (slope and intercept)
