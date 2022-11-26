@@ -1,4 +1,3 @@
-geometry
 matplotlib
 numpy
 pytest
