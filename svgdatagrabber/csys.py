@@ -180,7 +180,8 @@ class CoordinateSystem:
             xstart: X value of the first point.
             xend: X value of the second point.
             y: Y value of the axis.
-            perpendicular: If the axis should be perpendicular to the y-axis.
+            perpendicular: If the axis should be perpendicular to the y-axis. If True, the y value of `end` will be
+                           updated.
             check: Check if the axis is perpendicular to the y-axis.
         """
         start, end = Point.aspoint(start), Point.aspoint(end)
@@ -209,7 +210,8 @@ class CoordinateSystem:
             ystart: Y value of the first point.
             yend: Y value of the second point.
             x: X value of the axis.
-            perpendicular: If the axis should be perpendicular to the y-axis.
+            perpendicular: If the axis should be perpendicular to the y-axis. If True, the x value of `end` will be
+                           updated.
             check: Check if the axis is perpendicular to the y-axis.
         """
         start, end = Point.aspoint(start), Point.aspoint(end)
