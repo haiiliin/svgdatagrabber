@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import Iterable
 
-import numpy as np
-
 from .geometry import Line, Point
 
 
@@ -31,8 +29,7 @@ class XAxis(Axis):
         y: float = 0.0,
     ):
         super().__init__(start=start, end=end)
-        self.xstart, self.xend = xstart, xend
-        self.y = y
+        self.setup(start=start, end=end, xstart=xstart, xend=xend, y=y)
 
     def setup(
         self,
@@ -77,8 +74,7 @@ class YAxis(Axis):
         x: float = 0.0,
     ):
         super().__init__(start=start, end=end)
-        self.ystart, self.yend = ystart, yend
-        self.x = x
+        self.setup(start=start, end=end, ystart=ystart, yend=yend, x=x)
 
     def setup(
         self,
