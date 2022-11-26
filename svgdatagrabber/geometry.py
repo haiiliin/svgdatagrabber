@@ -85,8 +85,12 @@ class Point(Geometry):
 
         >>> Point(1.0, 2.0) == Point(1.0, 2.0)
         True
+        >>> Point(1.0, 2.0) != Point(1.0, 2.0)
+        False
         >>> Point(1.0, 2.0) == Point(1.0, 3.0)
         False
+        >>> Point(1.0, 2.0) != Point(1.0, 3.0)
+        True
 
         Args:
             other: The other point.
