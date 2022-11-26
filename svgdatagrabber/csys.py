@@ -115,7 +115,7 @@ class CoordinateSystem:
         self.xaxis = XAxis()
         self.yaxis = YAxis()
 
-    def transform(self, p: Point | Iterable[float] | complex) -> Point:
+    def transform(self, p: Point | Iterable[float] | complex) -> complex:
         """Transform the coordinate to the coordinate system.
 
         Args:
@@ -128,7 +128,7 @@ class CoordinateSystem:
         yp = self.xaxis.parallel(p).intersect(self.yaxis)
         x = (xp.x - self.xaxis.start.x) / (self.xaxis.end.x - self.xaxis.start.x)
         y = (yp.y - self.yaxis.start.y) / (self.yaxis.end.y - self.yaxis.start.y)
-        return Point(x, y)
+        return complex(x, y)
 
     def transformation_matrix(self) -> np.ndarray:
         """Get the transformation matrix.
