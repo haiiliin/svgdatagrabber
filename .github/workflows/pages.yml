@@ -1,4 +1,4 @@
-name: Pages
+name: docs-test
 on:
   push:
     branches:
@@ -39,8 +39,3 @@ jobs:
       uses: sphinx-notes/pages@v2
       with:
         documentation_path: docs
-    - name: Push changes
-      uses: ad-m/github-push-action@v0.6.0
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: gh-pages
