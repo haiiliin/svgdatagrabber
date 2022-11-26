@@ -842,6 +842,10 @@ class Line(Geometry, Line2DCoefficients):
 
         >>> Line(A=1.0, B=-1.0, C=0.0).perpendicular(Point(0.0, 1.0))
         Line(A=1.0, B=1.0, C=-1.0)
+        >>> Line(A=0.0, B=1.0, C=0.0).perpendicular(Point(0.0, 0.0))
+        Line(A=1.0, B=0.0, C=0.0)
+        >>> Line(A=1.0, B=0.0, C=0.0).perpendicular(Point(0.0, 0.0))
+        Line(A=0.0, B=1.0, C=0.0)
 
         Args:
             p: A point on the perpendicular line.
@@ -850,7 +854,7 @@ class Line(Geometry, Line2DCoefficients):
             A perpendicular line to this line.
         """
         p = Point.aspoint(p)
-        return Line(start=p, end=Point(p.x + self.B, p.y + self.A))
+        return Line(A=self.B, B=-self.A, C=-self.B * p.x + self.A * p.y)
 
 
 class Segment(Line):
