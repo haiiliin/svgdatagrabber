@@ -222,6 +222,43 @@ class Line(GeometryBase, LineCoefs):
             raise ValueError("Not enough information to create a line.")
         self.A, self.B, self.C = A, B, C
 
+    def __repr__(self) -> str:
+        """Return the representation of the line.
+
+        >>> Line(A=1.0, B=-1.0, C=0.0)
+        Line(A=1.0, B=-1.0, C=0.0)
+        """
+        A, B, C = round(self.A, 10), round(self.B, 10), round(self.C, 10)
+        return f"Line(A={A}, B={B}, C={C})"
+
+    def __eq__(self, other: Line) -> bool:
+        """Return whether the line is equal to another line.
+
+        >>> Line(A=1.0, B=1.0, C=0.0) == Line(A=-1.0, B=-1.0, C=0.0)
+        True
+        >>> Line(A=1.0, B=1.0, C=0.0) == Line(A=1.0, B=2.0, C=1.0)
+        False
+        """
+        return np.allclose([self.A, self.B, self.C], [other.A, other.B, other.C], atol=self.tolerance)
+
+    def __contains__(self, p: Point | Iterable[float] | complex) -> bool:
+        """Check if a point is on this line.
+
+        >>> Point(0.0, 0.0) in Line(A=-1.0, B=1.0, C=0.0)
+        True
+        >>> Point(0.0, 0.0) not in Line(A=-1.0, B=1.0, C=0.0)
+        False
+        >>> Point(1.0, 0.0) in Line(A=-1.0, B=1.0, C=0.0)
+        False
+        >>> Point(1.0, 0.0) not in Line(A=-1.0, B=1.0, C=0.0)
+        True
+
+        Returns:
+            True if the point is on this line, otherwise False.
+        """
+        p = Point.aspoint(p)
+        return self.distance(p) < self.tolerance
+
     @classmethod
     def fromCoefficients(cls, A: float, B: float, C: float) -> Line:
         """Create a line from the coefficients.
@@ -327,43 +364,6 @@ class Line(GeometryBase, LineCoefs):
         """
         A, B, C = cls.coefficientsFromAngleAndIntercept(angle, intercept)
         return cls.fromCoefficients(A=A, B=B, C=C)
-
-    def __repr__(self) -> str:
-        """Return the representation of the line.
-
-        >>> Line(A=1.0, B=-1.0, C=0.0)
-        Line(A=1.0, B=-1.0, C=0.0)
-        """
-        A, B, C = round(self.A, 10), round(self.B, 10), round(self.C, 10)
-        return f"Line(A={A}, B={B}, C={C})"
-
-    def __eq__(self, other: Line) -> bool:
-        """Return whether the line is equal to another line.
-
-        >>> Line(A=1.0, B=1.0, C=0.0) == Line(A=-1.0, B=-1.0, C=0.0)
-        True
-        >>> Line(A=1.0, B=1.0, C=0.0) == Line(A=1.0, B=2.0, C=1.0)
-        False
-        """
-        return np.allclose([self.A, self.B, self.C], [other.A, other.B, other.C], atol=self.tolerance)
-
-    def __contains__(self, p: Point | Iterable[float] | complex) -> bool:
-        """Check if a point is on this line.
-
-        >>> Point(0.0, 0.0) in Line(A=-1.0, B=1.0, C=0.0)
-        True
-        >>> Point(0.0, 0.0) not in Line(A=-1.0, B=1.0, C=0.0)
-        False
-        >>> Point(1.0, 0.0) in Line(A=-1.0, B=1.0, C=0.0)
-        False
-        >>> Point(1.0, 0.0) not in Line(A=-1.0, B=1.0, C=0.0)
-        True
-
-        Returns:
-            True if the point is on this line, otherwise False.
-        """
-        p = Point.aspoint(p)
-        return self.distance(p) < self.tolerance
 
     def distance(self, p: Point) -> float:
         """Get the distance between a point and this line.
