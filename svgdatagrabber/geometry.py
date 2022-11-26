@@ -430,7 +430,7 @@ class Line(Geometry, Line2DCoefficients):
         if self.isParallel(line):
             raise ValueError("Lines are parallel and do not intersect")
         A = np.asarray([[self.A, self.B], [line.A, line.B]])
-        b = np.asarray([self.C, line.C])
+        b = np.asarray([-self.C, -line.C])
         try:
             x, y = np.linalg.solve(A, b)
             p = Point(x, y)
