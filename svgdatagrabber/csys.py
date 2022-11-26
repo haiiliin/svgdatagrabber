@@ -121,15 +121,15 @@ class CoordinateSystem:
         (1+1j)
 
         >>> csys = CoordinateSystem()
-        >>> csys.setup_xaxis(start=(0.0, 0.0), end=(2.0, 0.0), xstart=0.0, xend=1.0, y=0.0)
-        >>> csys.setup_yaxis(start=(0.0, 0.0), end=(0.0, 2.0), ystart=0.0, yend=1.0, x=0.0, perpendicular=True)
+        >>> csys.setup_xaxis(start=(0.0, 0.0), end=(2.0, 0.0), xstart=0.0, xend=1.0, y=0.0, check=False)
+        >>> csys.setup_yaxis(start=(0.0, 0.0), end=(0.0, 2.0), ystart=0.0, yend=1.0, x=0.0, check=True)
         >>> csys.transform(Point(2.0, 0.0))
         (1+0j)
         >>> csys.transform(Point(0.0, 2.0))
         1j
 
         >>> csys = CoordinateSystem()
-        >>> csys.setup_xaxis(start=(1.0, 0.0), end=(2.0, 0.0), xstart=0.0, xend=1.0, y=0.0)
+        >>> csys.setup_xaxis(start=(1.0, 0.0), end=(2.0, 0.0), xstart=0.0, xend=1.0, y=0.0, check=False)
         >>> csys.setup_yaxis(start=(0.0, 1.0), end=(0.0, 2.0), ystart=0.0, yend=1.0, x=0.0, perpendicular=True)
         >>> csys.transform(Point(2.0, 1.0))
         (1+0j)
@@ -138,12 +138,12 @@ class CoordinateSystem:
 
         >>> csys = CoordinateSystem()
         >>> csys.setup_xaxis(start=(0.0, 0.0), end=(1.0, 0.0), xstart=0.0, xend=1.0, y=0.0)
-        >>> csys.setup_yaxis(start=(0.0, 0.0), end=(1.0, 1.0), ystart=0.0, yend=1.0, x=0.0)
+        >>> csys.setup_yaxis(start=(0.0, 0.0), end=(1.0, 1.0), ystart=0.0, yend=1.0, x=0.0, check=True)
         Traceback (most recent call last):
         ...
         ValueError: The x-axis and y-axis must be perpendicular.
         >>> csys.setup_yaxis(start=(0.0, 0.0), end=(0.0, 1.0), ystart=0.0, yend=1.0, x=0.0)
-        >>> csys.setup_xaxis(start=(0.0, 0.0), end=(1.0, 1.0), xstart=0.0, xend=1.0, y=0.0)
+        >>> csys.setup_xaxis(start=(0.0, 0.0), end=(1.0, 1.0), xstart=0.0, xend=1.0, y=0.0, check=True)
         Traceback (most recent call last):
         ...
         ValueError: The x-axis and y-axis must be perpendicular.
@@ -170,6 +170,7 @@ class CoordinateSystem:
         xend: float = 1.0,
         y: float = 0.0,
         perpendicular: bool = False,
+        check: bool = False,
     ):
         """Set up the x-axis.
 
@@ -180,12 +181,13 @@ class CoordinateSystem:
             xend: X value of the second point.
             y: Y value of the axis.
             perpendicular: If the axis should be perpendicular to the y-axis.
+            check: Check if the axis is perpendicular to the y-axis.
         """
         start, end = Point.aspoint(start), Point.aspoint(end)
         if perpendicular:
             end = self.yaxis.perpendicular(start).intersect(self.yaxis.parallel(end))
         self.xaxis.setup(start=start, end=end, xstart=xstart, xend=xend, y=y)
-        if not self.xaxis.isPerpendicular(self.yaxis):
+        if check and not perpendicular and not self.xaxis.isPerpendicular(self.yaxis):
             raise ValueError("The x-axis and y-axis must be perpendicular.")
 
     def setup_yaxis(
@@ -197,6 +199,7 @@ class CoordinateSystem:
         yend: float = 1.0,
         x: float = 0.0,
         perpendicular: bool = False,
+        check: bool = False,
     ):
         """Set up the y-axis.
 
@@ -207,12 +210,13 @@ class CoordinateSystem:
             yend: Y value of the second point.
             x: X value of the axis.
             perpendicular: If the axis should be perpendicular to the y-axis.
+            check: Check if the axis is perpendicular to the y-axis.
         """
         start, end = Point.aspoint(start), Point.aspoint(end)
         if perpendicular:
             end = self.xaxis.perpendicular(start).intersect(self.xaxis.parallel(end))
         self.yaxis.setup(start=start, end=end, ystart=ystart, yend=yend, x=x)
-        if not self.yaxis.isPerpendicular(self.xaxis):
+        if check and not perpendicular and not self.yaxis.isPerpendicular(self.xaxis):
             raise ValueError("The x-axis and y-axis must be perpendicular.")
 
 
