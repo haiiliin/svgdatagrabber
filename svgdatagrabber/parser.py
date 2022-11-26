@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import math
-from typing import Callable
+from typing import Callable, List
 
 import numpy as np
 import pandas as pd
@@ -22,7 +22,7 @@ from .filters import (
 )
 
 
-class SvgPaths(list[Path]):
+class SvgPaths(List[Path]):
     """Svg paths returned by SvgPathParser.parse()"""
 
     def transformed(self, csys: CoordinateSystem):
