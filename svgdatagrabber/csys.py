@@ -118,6 +118,12 @@ class CoordinateSystem:
     def transform(self, p: Point | Iterable[float] | complex) -> complex:
         """Transform the coordinate to the coordinate system.
 
+        >>> csys = CoordinateSystem()
+        >>> csys.transform(Point(0.0, 0.0))
+        0j
+        >>> csys.transform(Point(1.0, 1.0))
+        (1+1j)
+
         Args:
             p: The point to convert.
 
@@ -128,21 +134,8 @@ class CoordinateSystem:
         yp = self.xaxis.parallel(p).intersect(self.yaxis)
         x = (xp.x - self.xaxis.start.x) / (self.xaxis.end.x - self.xaxis.start.x)
         y = (yp.y - self.yaxis.start.y) / (self.yaxis.end.y - self.yaxis.start.y)
+        x, y = round(x + 0.0, 10), round(y + 0.0, 10)
         return complex(x, y)
-
-    def transformation_matrix(self) -> np.ndarray:
-        """Get the transformation matrix.
-
-        Returns:
-            The transformation matrix.
-        """
-        return np.array(
-            [
-                [self.xaxis.end.x - self.xaxis.start.x, 0.0, self.xaxis.start.x],
-                [0.0, self.yaxis.end.y - self.yaxis.start.y, self.yaxis.start.y],
-                [0.0, 0.0, 1.0],
-            ]
-        )
 
     def setup_xaxis(
         self,
@@ -152,7 +145,7 @@ class CoordinateSystem:
         xstart: float = 0.0,
         xend: float = 1.0,
         y: float = 0.0,
-        perpendicular: bool = False,
+        perpendicular: bool = True,
     ):
         """Set up the x-axis.
 
@@ -179,7 +172,7 @@ class CoordinateSystem:
         ystart: float = 0.0,
         yend: float = 1.0,
         x: float = 0.0,
-        perpendicular: bool = False,
+        perpendicular: bool = True,
     ):
         """Set up the y-axis.
 
