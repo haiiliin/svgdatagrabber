@@ -18,4 +18,4 @@ def pytest_configure(config: pytest.Config) -> None:
         config (pytest.Config): The pytest config object.
     """
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    sys.path.insert(0, os.path.abspath('../'))
+    sys.path.insert(0, os.path.abspath("../"))
