@@ -320,6 +320,7 @@ class Line2DCoefficients:
         elif B != 0.0:
             B, C = 1.0, C / B
         A, B, C = A + 0.0, B + 0.0, C + 0.0  # Prevent -0.0 and convert to float
+        A, B, C = round(A, 10), round(B, 10), round(C, 10)
         return A, B, C
 
     @classmethod
