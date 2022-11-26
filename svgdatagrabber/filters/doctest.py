@@ -2,39 +2,39 @@ import doctest
 
 
 def test_closedpath():
-    import svgdatagrabber.filters.closedpath
+    from . import closedpath
 
-    doctest.testmod(svgdatagrabber.filters.closedpath)
+    doctest.testmod(closedpath)
 
 
 def test_custom():
-    import svgdatagrabber.filters.custom
+    from . import custom
 
-    doctest.testmod(svgdatagrabber.filters.custom)
+    doctest.testmod(custom)
 
 
 def test_filterbase():
-    import svgdatagrabber.filters.filterbase
+    from . import filterbase
 
-    doctest.testmod(svgdatagrabber.filters.filterbase)
+    doctest.testmod(filterbase)
 
 
 def test_rectangle():
-    import svgdatagrabber.filters.rectangle
+    from . import rectangle
 
-    doctest.testmod(svgdatagrabber.filters.rectangle)
+    doctest.testmod(rectangle)
 
 
 def test_segmentnumber():
-    import svgdatagrabber.filters.segmentnumber
+    from . import segmentnumber
 
-    doctest.testmod(svgdatagrabber.filters.segmentnumber)
+    doctest.testmod(segmentnumber)
 
 
 def test_specialline():
-    import svgdatagrabber.filters.specialline
+    from . import specialline
 
-    doctest.testmod(svgdatagrabber.filters.specialline)
+    doctest.testmod(specialline)
 
 
 def test_filters():
