@@ -36,19 +36,19 @@ class Point(Geometry):
         >>> Point(1.0)
         Traceback (most recent call last):
         ...
-        ValueError: Point must be initialized with two floats, a complex number or an iterable.
+        ValueError: The arguments must be two floats, a complex number or an iterable of two floats.
 
         Args:
-            *args: two floats or a complex number or an iterable of two floats.
+            args: two floats, a complex number or an iterable of two floats.
         """
         if len(args) == 1 and isinstance(args[0], complex):
             self.x, self.y = args[0].real, args[0].imag
-        elif len(args) == 1 and isinstance(args[0], Iterable):
-            self.x, self.y, *extra_args = args[0]
-        elif len(args) >= 2:
-            self.x, self.y, *extra_args = args
+        elif len(args) == 1 and isinstance(args[0], Iterable) and len(tuple(args[0])) == 2:
+            self.x, self.y = args[0]
+        elif len(args) == 2:
+            self.x, self.y = args
         else:
-            raise ValueError("Point must be initialized with two floats, a complex number or an iterable.")
+            raise ValueError("The arguments must be two floats, a complex number or an iterable of two floats.")
 
     def __repr__(self) -> str:
         """Return a string representation of the point.
