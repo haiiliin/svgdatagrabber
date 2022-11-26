@@ -19,8 +19,8 @@ class XAxis(Axis):
     #: Y value of the axis.
     y: float
 
-    def __new__(
-        cls,
+    def __init__(
+        self,
         *,
         start: Point | Iterable[float] | complex = Point(0.0, 0.0),
         end: Point | Iterable[float] | complex = Point(1.0, 0.0),
@@ -28,10 +28,9 @@ class XAxis(Axis):
         xend: float = 1.0,
         y: float = 0.0,
     ):
-        obj = super().__new__(cls, start=start, end=end)
-        obj.xstart, obj.xend = xstart, xend
-        obj.y = y
-        return obj
+        super().__init__(start=start, end=end)
+        self.xstart, self.xend = xstart, xend
+        self.y = y
 
     def setup(
         self,
@@ -51,10 +50,7 @@ class XAxis(Axis):
             xend: X value of the second point.
             y: Y value of the axis.
         """
-        obj = self.__new__(self.__class__, start=start, end=end, xstart=xstart, xend=xend, y=y)
-        self.start, self.end = obj.start, obj.end
-        self.A, self.B, self.C = obj.A, obj.B, obj.C
-        self.xstart, self.xend, self.y = obj.xstart, obj.xend, obj.y
+        self.__init__(start=start, end=end, xstart=xstart, xend=xend, y=y)
 
 
 class YAxis(Axis):
@@ -65,8 +61,8 @@ class YAxis(Axis):
     #: X value of the axis.
     x: float
 
-    def __new__(
-        cls,
+    def __init__(
+        self,
         *,
         start: Point | Iterable[float] | complex = Point(0.0, 0.0),
         end: Point | Iterable[float] | complex = Point(0.0, 1.0),
@@ -74,10 +70,9 @@ class YAxis(Axis):
         yend: float = 1.0,
         x: float = 0.0,
     ):
-        obj = super().__new__(cls, start=start, end=end)
-        obj.ystart, obj.yend = ystart, yend
-        obj.x = x
-        return obj
+        super().__init__(start=start, end=end)
+        self.ystart, self.yend = ystart, yend
+        self.x = x
 
     def setup(
         self,
@@ -97,10 +92,7 @@ class YAxis(Axis):
             yend: Y value of the second point.
             x: X value of the axis.
         """
-        obj = self.__new__(self.__class__, start=start, end=end, ystart=ystart, yend=yend, x=x)
-        self.start, self.end = obj.start, obj.end
-        self.A, self.B, self.C = obj.A, obj.B, obj.C
-        self.ystart, self.yend, self.x = obj.ystart, obj.yend, obj.x
+        self.__init__(start=start, end=end, ystart=ystart, yend=yend, x=x)
 
 
 class CoordinateSystem:
@@ -134,9 +126,13 @@ class CoordinateSystem:
         Returns:
             The transformation matrix.
         """
-        return np.array([[self.xaxis.end.x - self.xaxis.start.x, 0.0, self.xaxis.start.x],
-                         [0.0, self.yaxis.end.y - self.yaxis.start.y, self.yaxis.start.y],
-                         [0.0, 0.0, 1.0]])
+        return np.array(
+            [
+                [self.xaxis.end.x - self.xaxis.start.x, 0.0, self.xaxis.start.x],
+                [0.0, self.yaxis.end.y - self.yaxis.start.y, self.yaxis.start.y],
+                [0.0, 0.0, 1.0],
+            ]
+        )
 
     def setup_xaxis(
         self,

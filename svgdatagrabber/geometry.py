@@ -61,8 +61,112 @@ class Point(Geometry):
         """
         return np.linalg.norm(np.array([self.x, self.y]) - np.array([other.x, other.y]))
 
+    def direction(self, other: Point) -> float:
+        """Calculate the direction between two points.
 
-class Line(Geometry):
+        Args:
+            other: The other point.
+
+        Returns:
+            The direction between the points.
+        """
+        return np.arctan2(other.y - self.y, other.x - self.x)
+
+
+class Line2DCoefficients:
+    """The coefficients of a line in 2D space."""
+
+    @classmethod
+    def coefficientsFromTwoPoints(
+        cls, p1: Point | Iterable[float] | complex, p2: Point | Iterable[float] | complex
+    ) -> tuple[float, float, float]:
+        """Get the coefficients of a line from two points.
+
+        Args:
+            p1: The first point.
+            p2: The second point.
+
+        Returns:
+            The coefficients of the line.
+        """
+        p1, p2 = Point.aspoint(p1), Point.aspoint(p2)
+        A = p1.y - p2.y
+        B = p2.x - p1.x
+        C = p1.x * p2.y - p2.x * p1.y
+        return A, B, C
+
+    @classmethod
+    def coefficientsFromPointAndSlope(
+        cls, p: Point | Iterable[float] | complex, slope: float
+    ) -> tuple[float, float, float]:
+        """Get the coefficients of a line from a point and a slope.
+
+        Args:
+            p: The point.
+            slope: The slope.
+
+        Returns:
+            The coefficients of the line.
+        """
+        p = Point.aspoint(p)
+        A = slope
+        B = -1
+        C = p.y - slope * p.x
+        return A, B, C
+
+    @classmethod
+    def coefficientsFromSlopeAndIntercept(cls, slope: float, intercept: float) -> tuple[float, float, float]:
+        """Get the coefficients of a line from a slope and an intercept.
+
+        Args:
+            slope: The slope.
+            intercept: The intercept.
+
+        Returns:
+            The coefficients of the line.
+        """
+        A = slope
+        B = -1
+        C = intercept
+        return A, B, C
+
+    @classmethod
+    def coefficientsFromPointAndAngle(
+        cls, p: Point | Iterable[float] | complex, angle: float
+    ) -> tuple[float, float, float]:
+        """Get the coefficients of a line from a point and an angle.
+
+        Args:
+            p: The point.
+            angle: The angle.
+
+        Returns:
+            The coefficients of the line.
+        """
+        p = Point.aspoint(p)
+        A = np.cos(angle)
+        B = -np.sin(angle)
+        C = B * p.y - A * p.x
+        return A, B, C
+
+    @classmethod
+    def coefficientsFromAngleAndIntercept(cls, angle: float, intercept: float) -> tuple[float, float, float]:
+        """Get the coefficients of a line from an angle and an intercept.
+
+        Args:
+            angle: The angle.
+            intercept: The intercept.
+
+        Returns:
+            The coefficients of the line.
+        """
+        A = np.cos(angle)
+        B = -np.sin(angle)
+        C = intercept * np.sin(angle)
+        return A, B, C
+
+
+class Line(Geometry, Line2DCoefficients):
     #: Coefficient of the x term.
     A: float
     #: Coefficient of the y term.
@@ -70,8 +174,8 @@ class Line(Geometry):
     #: Constant term.
     C: float
 
-    def __new__(
-        cls,
+    def __init__(
+        self,
         *,
         start: Point | Iterable[float] | complex = None,
         end: Point | Iterable[float] | complex = None,
@@ -101,17 +205,20 @@ class Line(Geometry):
             intercept: The y-intercept of the line.
         """
         if start is not None and end is not None:
-            return cls.fromTwoPoints(start, end)
+            A, B, C = self.coefficientsFromTwoPoints(start, end)
         elif A is not None and B is not None and C is not None:
-            return cls.fromCoefficients(A, B, C)
+            pass
         elif start is not None and slope is not None:
-            return cls.fromPointAndSlope(start, slope)
+            A, B, C = self.coefficientsFromPointAndSlope(start, slope)
         elif start is not None and angle is not None:
-            return cls.fromPointAndAngle(start, angle)
+            A, B, C = self.coefficientsFromPointAndAngle(start, angle)
         elif slope is not None and intercept is not None:
-            return cls.fromSlopeAndIntercept(slope, intercept)
+            A, B, C = self.coefficientsFromSlopeAndIntercept(slope, intercept)
         elif angle is not None and intercept is not None:
-            return cls.fromAngleAndIntercept(angle, intercept)
+            A, B, C = self.coefficientsFromAngleAndIntercept(angle, intercept)
+        else:
+            raise ValueError("Invalid arguments.")
+        self.A, self.B, self.C = A, B, C
 
     @classmethod
     def fromCoefficients(cls, A: float, B: float, C: float) -> Line:
@@ -125,7 +232,7 @@ class Line(Geometry):
         Returns:
             The created line.
         """
-        obj = cls.__new__(cls)
+        obj = cls()
         obj.A, obj.B, obj.C = A, B, C
         return obj
 
@@ -141,9 +248,7 @@ class Line(Geometry):
             The created line.
         """
         start, end = Point.aspoint(start), Point.aspoint(end)
-        A = start.y - end.y
-        B = end.x - start.x
-        C = start.x * end.y - end.x * start.y
+        A, B, C = cls.coefficientsFromTwoPoints(start, end)
         return cls.fromCoefficients(A=A, B=B, C=C)
 
     @classmethod
@@ -158,9 +263,7 @@ class Line(Geometry):
             The created line.
         """
         start = Point.aspoint(start)
-        A = slope
-        B = -1.0
-        C = start.y - slope * start.x
+        A, B, C = cls.coefficientsFromPointAndSlope(start, slope)
         return cls.fromCoefficients(A=A, B=B, C=C)
 
     @classmethod
@@ -175,9 +278,7 @@ class Line(Geometry):
             The created line.
         """
         start = Point.aspoint(start)
-        A = np.cos(angle)
-        B = -np.sin(angle)
-        C = B * start.y - A * start.x
+        A, B, C = cls.coefficientsFromPointAndAngle(start, angle)
         return cls.fromCoefficients(A=A, B=B, C=C)
 
     @classmethod
@@ -191,9 +292,7 @@ class Line(Geometry):
         Returns:
             The created line.
         """
-        A = slope
-        B = -1
-        C = intercept
+        A, B, C = cls.coefficientsFromSlopeAndIntercept(slope, intercept)
         return cls.fromCoefficients(A=A, B=B, C=C)
 
     @classmethod
@@ -207,9 +306,7 @@ class Line(Geometry):
         Returns:
             The created line.
         """
-        A = np.cos(angle)
-        B = -np.sin(angle)
-        C = intercept / np.sin(angle)
+        A, B, C = cls.coefficientsFromAngleAndIntercept(angle, intercept)
         return cls.fromCoefficients(A=A, B=B, C=C)
 
     def __repr__(self):
@@ -360,10 +457,9 @@ class Segment(Line):
     #: The second point to create the line.
     end: Point
 
-    def __new__(cls, *, start: Point | Iterable[float] | complex, end: Point | Iterable[float] | complex):
-        obj = super().__new__(cls, start=start, end=end)
-        obj.start, obj.end = Point.aspoint(start), Point.aspoint(end)
-        return obj
+    def __init__(self, *, start: Point | Iterable[float] | complex, end: Point | Iterable[float] | complex):
+        super().__init__(start=start, end=end)
+        self.start, self.end = Point.aspoint(start), Point.aspoint(end)
 
     def __repr__(self):
         return f"Segment ({self.start}, {self.end}) -> {super().__repr__()})"
@@ -384,15 +480,6 @@ class Segment(Line):
         miny, maxy = sorted([self.start.y, self.end.y])
         return minx <= p.x <= maxx and miny <= p.y <= maxy
 
-    @property
-    def length(self) -> float:
-        """Get the length of this segment.
-
-        Returns:
-            The length of this segment.
-        """
-        return self.start.distance(self.end)
-
     def __gt__(self, other: Segment) -> bool:
         return self.length > other.length
 
@@ -405,13 +492,43 @@ class Segment(Line):
     def __le__(self, other: Segment) -> bool:
         return self.length <= other.length
 
+    @property
+    def length(self) -> float:
+        """Get the length of this segment.
+
+        Returns:
+            The length of this segment.
+        """
+        return self.start.distance(self.end)
+
+    @property
+    def direction(self) -> float:
+        """Get the direction of this segment.
+
+        Returns:
+            The direction of this segment.
+        """
+        return self.start.direction(self.end)
+
+    def midpoint(self) -> Point:
+        """Get the midpoint of this segment.
+
+        Returns:
+            The midpoint of this segment.
+        """
+        return Point((self.start.x + self.end.x) / 2, (self.start.y + self.end.y) / 2)
+
+    def reverse(self):
+        """Reverse the direction of this segment."""
+        self.start, self.end = self.end, self.start
+
 
 class Ray(Line):
     #: The first point to create the line.
     origin: Point
 
-    def __new__(
-        cls,
+    def __init__(
+        self,
         *,
         origin: Point | Iterable[float] | complex,
         end: Point | Iterable[float] | complex = None,
@@ -424,9 +541,8 @@ class Ray(Line):
         - origin and slope (slope is not included in the ray)
         - origin and angle (angle is not included in the ray)
         """
-        obj = super().__new__(cls, start=origin, end=end, slope=slope, angle=angle)
-        obj.origin = Point.aspoint(origin)
-        return obj
+        super().__init__(start=origin, end=end, slope=slope, angle=angle)
+        self.origin = Point.aspoint(origin)
 
     def __repr__(self):
         return f"Ray ({self.origin}, slope={self.slope}) -> {super().__repr__()})"
