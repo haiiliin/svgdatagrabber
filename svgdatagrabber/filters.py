@@ -148,4 +148,5 @@ class CustomFilter(FilterBase):
 
 def test():
     import doctest
+
     doctest.testmod()

@@ -129,4 +129,5 @@ class SvgPaths(List[Path]):
 
 def test():
     import doctest
+
     doctest.testmod()

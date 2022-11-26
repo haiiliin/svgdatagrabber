@@ -92,4 +92,5 @@ class SvgPathParser:
 
 def test():
     import doctest
+
     doctest.testmod()

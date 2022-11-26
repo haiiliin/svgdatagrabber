@@ -1052,4 +1052,5 @@ class Ray(Line):
 
 def test():
     import doctest
+
     doctest.testmod()
