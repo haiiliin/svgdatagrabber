@@ -463,7 +463,7 @@ class Line(Geometry, Line2DCoefficients):
             A perpendicular line to this line.
         """
         p = Point.aspoint(p)
-        return Line(start=p, end=Point(p.x - self.B, p.y + self.A))
+        return Line(start=p, end=Point(p.x + self.B, p.y + self.A))
 
 
 class Segment(Line):
