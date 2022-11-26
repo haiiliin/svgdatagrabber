@@ -22,43 +22,137 @@ class Point(Geometry):
     #: The y coordinate of the point.
     y: float
 
-    def __init__(self, *args: float):
-        self.x, self.y, *extra_args = args
+    def __init__(self, *args: float | complex | Iterable[float]):
+        """Initialize a point.
 
-    def __repr__(self):
-        return f"Point({self.x}, {self.y})"
+        >>> point = Point(1.0, 2.0)
+        >>> assert point.x == 1.0
+        >>> assert point.y == 2.0
+
+        Args:
+            *args: two floats or a complex number or an iterable of two floats.
+        """
+        if len(args) == 1 and isinstance(args[0], complex):
+            self.x, self.y = args[0].real, args[0].imag
+        elif len(args) == 1 and isinstance(args[0], Iterable):
+            self.x, self.y, *extra_args = tuple(args[0])
+        elif len(args) == 2:
+            self.x, self.y = args
+        else:
+            raise ValueError("Point must be initialized with two floats or a complex number.")
+
+    def __repr__(self) -> str:
+        """Return a string representation of the point.
+
+        >>> repr(Point(1.0, 2.0))
+        'Point(x=1.0, y=2.0)'
+        """
+        name = self.__class__.__name__
+        return f"{name}(x={self.x}, y={self.y})"
 
     def __iter__(self):
+        """Iterate over the coordinates of the point.
+
+        >>> point = Point(1.0, 2.0)
+        >>> x, y = point
+        >>> assert x == 1.0
+        >>> assert y == 2.0
+        """
         yield self.x
         yield self.y
 
-    def __neg__(self):
+    def __neg__(self) -> Point:
+        """Return the negative of the point.
+
+        >>> point = -Point(1.0, 2.0)
+        >>> assert point.x == -1.0
+        >>> assert point.y == -2.0
+        """
         return self.__class__(-self.x, -self.y)
 
     def __eq__(self, other: Point | Iterable[float] | complex) -> bool:
+        """Check if two points are equal.
+
+        >>> Point(1.0, 2.0) == Point(1.0, 2.0)
+        True
+        >>> Point(1.0, 2.0) == Point(1.0, 3.0)
+        False
+
+        Args:
+            other: The other point.
+        """
         other = self.aspoint(other)
         return np.allclose([self.x, self.y], [other.x, other.y], atol=self.tolerance)
 
     def __ne__(self, other: Point | Iterable[float] | complex) -> bool:
+        """Check if two points are not equal.
+
+        >>> Point(1.0, 2.0) != Point(1.0, 2.0)
+        False
+        >>> Point(1.0, 2.0) != Point(1.0, 3.0)
+        True
+
+        Args:
+            other: The other point.
+        """
         return not self.__eq__(other)
 
     def __add__(self, other: Point | Iterable[float] | complex) -> Point:
+        """Add a point or vector to the point.
+
+        >>> Point(1.0, 2.0) + Point(3.0, 4.0)
+        Point(x=4.0, y=6.0)
+
+        Args:
+            other: The other point.
+        """
         other = self.aspoint(other)
         return Point(self.x + other.x, self.y + other.y)
 
     def __sub__(self, other: Point | Iterable[float] | complex) -> Point:
+        """Subtract a point or vector from the point.
+
+        >>> Point(1.0, 2.0) - Point(3.0, 4.0)
+        Point(x=-2.0, y=-2.0)
+
+        Args:
+            other: The other point.
+        """
         other = self.aspoint(other)
         return Point(self.x - other.x, self.y - other.y)
 
     def __mul__(self, other: float) -> Point:
+        """Multiply the point by a scalar.
+
+        >>> Point(1.0, 2.0) * 2.0
+        Point(x=2.0, y=4.0)
+
+        Args:
+            other: A scalar value.
+        """
         return Point(self.x * other, self.y * other)
 
     def __truediv__(self, other: float) -> Point:
+        """Divide the point by a scalar.
+
+        >>> Point(1.0, 2.0) / 2.0
+        Point(x=0.5, y=1.0)
+
+        Args:
+            other: A scalar value.
+        """
         return Point(self.x / other, self.y / other)
 
     @classmethod
     def aspoint(cls, p: Point | Iterable[float] | complex) -> Point:
         """Convert a point to a Point object.
+
+        >>> Point.aspoint(Point(1.0, 2.0))
+        Point(x=1.0, y=2.0)
+        >>> Point.aspoint((1.0, 2.0))
+        Point(x=1.0, y=2.0)
+        >>> Point.aspoint(1.0 + 2.0j)
+        Point(x=1.0, y=2.0)
 
         Args:
             p: The point to convert.
@@ -78,6 +172,9 @@ class Point(Geometry):
     def distance(self, other: Point | Iterable[float] | complex) -> float:
         """Calculate the distance between two points.
 
+        >>> Point(1.0, 2.0).distance(Point(4.0, 6.0))
+        5.0
+
         Args:
             other: The other point.
 
@@ -90,6 +187,15 @@ class Point(Geometry):
     def direction(self, other: Point | Iterable[float] | complex) -> float:
         """Calculate the direction between two points.
 
+        >>> p1 = Point(0.0, 0.0).direction(Point(1.0, 1.0))
+        >>> assert np.isclose(p1, np.pi / 4.0)
+        >>> p2 = Point(0.0, 0.0).direction(Point(-1.0, 1.0))
+        >>> assert np.isclose(p2, 3.0 * np.pi / 4.0)
+        >>> p2 = Point(0.0, 0.0).direction(Point(-1.0, -1.0))
+        >>> assert np.isclose(p2, -3.0 * np.pi / 4.0)
+        >>> p2 = Point(0.0, 0.0).direction(Point(1.0, -1.0))
+        >>> assert np.isclose(p2, -np.pi / 4.0)
+
         Args:
             other: The other point.
 
@@ -101,6 +207,9 @@ class Point(Geometry):
 
     def vector(self, other: Point | Iterable[float] | complex) -> Vector:
         """Calculate the vector between two points.
+
+        >>> Point(1.0, 2.0).vector(Point(4.0, 6.0))
+        Vector(x=3.0, y=4.0)
 
         Args:
             other: The other point.
@@ -115,6 +224,9 @@ class Point(Geometry):
     def array(self) -> np.ndarray:
         """Convert the vector to a numpy array.
 
+        >>> Point(1.0, 2.0).array
+        array([1., 2.])
+
         Returns:
             The vector as a numpy array.
         """
@@ -122,20 +234,12 @@ class Point(Geometry):
 
 
 class Vector(Point):
-    @classmethod
-    def asvector(cls, v: Point | Vector | Iterable[float] | complex) -> Vector:
-        """Convert a vector to a Vector object.
-
-        Args:
-            v: The vector to convert.
-
-        Returns:
-            The converted vector.
-        """
-        return cls.aspoint(v)
 
     def __matmul__(self, other: Point | Iterable[float] | complex) -> float:
         """Calculate the dot product between two points.
+
+        >>> Vector(1.0, 2.0) @ Vector(3.0, 4.0)
+        11.0
 
         Args:
             other: The other point.
@@ -149,6 +253,9 @@ class Vector(Point):
     def __abs__(self) -> float:
         """Calculate the magnitude of the vector.
 
+        >>> abs(Vector(3.0, 4.0))
+        5.0
+
         Returns:
             The magnitude of the vector.
         """
@@ -156,6 +263,9 @@ class Vector(Point):
 
     def dot(self, other: Point | Iterable[float] | complex) -> float:
         """Calculate the dot product between two points.
+
+        >>> Vector(1.0, 2.0).dot(Vector(3.0, 4.0))
+        11.0
 
         Args:
             other: The other point.
@@ -165,15 +275,61 @@ class Vector(Point):
         """
         return self.__matmul__(other)
 
+    @classmethod
+    def asvector(cls, v: Point | Vector | Iterable[float] | complex) -> Vector:
+        """Convert a vector to a Vector object.
+
+        >>> Vector.asvector(Vector(1.0, 2.0))
+        Vector(x=1.0, y=2.0)
+        >>> Vector.asvector((1.0, 2.0))
+        Vector(x=1.0, y=2.0)
+        >>> Vector.asvector(1.0 + 2.0j)
+        Vector(x=1.0, y=2.0)
+
+        Args:
+            v: The vector to convert.
+
+        Returns:
+            The converted vector.
+        """
+        return cls.aspoint(v)
+
 
 class Line2DCoefficients:
     """The coefficients of a line in 2D space."""
 
     @classmethod
+    def standardizeCoefficients(cls, A: float, B: float, C: float) -> tuple[float, float, float]:
+        """Standardize the coefficients of a line.
+
+        >>> Line.standardizeCoefficients(1.0, -1.0, 0.0)
+        (1.0, -1.0, 0.0)
+        >>> Line.standardizeCoefficients(-1.0, -1.0, 1.0)
+        (1.0, 1.0, -1.0)
+
+        Args:
+            A: The coefficient of the x term.
+            B: The coefficient of the y term.
+            C: The constant term.
+
+        Returns:
+            The standardized coefficients.
+        """
+        if A != 0.0:
+            A, B, C = 1.0, B / A, C / A
+        elif B != 0.0:
+            B, C = 1.0, C / B
+        A, B, C = A + 0.0, B + 0.0, C + 0.0  # Prevent -0.0 and convert to float
+        return A, B, C
+
+    @classmethod
     def coefficientsFromTwoPoints(
-        cls, p1: Point | Iterable[float] | complex, p2: Point | Iterable[float] | complex
+            cls, p1: Point | Iterable[float] | complex, p2: Point | Iterable[float] | complex
     ) -> tuple[float, float, float]:
         """Get the coefficients of a line from two points.
+
+        >>> Line2DCoefficients.coefficientsFromTwoPoints(Point(0.0, 0.0), Point(1.0, 1.0))
+        (1.0, -1.0, 0.0)
 
         Args:
             p1: The first point.
@@ -186,6 +342,7 @@ class Line2DCoefficients:
         A = p1.y - p2.y
         B = p2.x - p1.x
         C = p1.x * p2.y - p2.x * p1.y
+        A, B, C = cls.standardizeCoefficients(A, B, C)
         return A, B, C
 
     @classmethod
@@ -193,6 +350,9 @@ class Line2DCoefficients:
         cls, p: Point | Iterable[float] | complex, slope: float
     ) -> tuple[float, float, float]:
         """Get the coefficients of a line from a point and a slope.
+
+        >>> Line2DCoefficients.coefficientsFromPointAndSlope(Point(0.0, 0.0), 1.0)
+        (1.0, -1.0, 0.0)
 
         Args:
             p: The point.
@@ -203,13 +363,17 @@ class Line2DCoefficients:
         """
         p = Point.aspoint(p)
         A = slope
-        B = -1
+        B = -1.0
         C = p.y - slope * p.x
+        A, B, C = cls.standardizeCoefficients(A, B, C)
         return A, B, C
 
     @classmethod
     def coefficientsFromSlopeAndIntercept(cls, slope: float, intercept: float) -> tuple[float, float, float]:
         """Get the coefficients of a line from a slope and an intercept.
+
+        >>> Line2DCoefficients.coefficientsFromSlopeAndIntercept(1.0, 0.0)
+        (1.0, -1.0, 0.0)
 
         Args:
             slope: The slope.
@@ -219,8 +383,9 @@ class Line2DCoefficients:
             The coefficients of the line.
         """
         A = slope
-        B = -1
+        B = -1.0
         C = intercept
+        A, B, C = cls.standardizeCoefficients(A, B, C)
         return A, B, C
 
     @classmethod
@@ -228,6 +393,9 @@ class Line2DCoefficients:
         cls, p: Point | Iterable[float] | complex, angle: float
     ) -> tuple[float, float, float]:
         """Get the coefficients of a line from a point and an angle.
+
+        >>> Line2DCoefficients.coefficientsFromPointAndAngle(Point(0.0, 0.0), np.pi / 4.0)
+        (1.0, -1.0, 0.0)
 
         Args:
             p: The point.
@@ -240,11 +408,15 @@ class Line2DCoefficients:
         A = np.cos(angle)
         B = -np.sin(angle)
         C = B * p.y - A * p.x
+        A, B, C = cls.standardizeCoefficients(A, B, C)
         return A, B, C
 
     @classmethod
     def coefficientsFromAngleAndIntercept(cls, angle: float, intercept: float) -> tuple[float, float, float]:
         """Get the coefficients of a line from an angle and an intercept.
+
+        >>> Line2DCoefficients.coefficientsFromAngleAndIntercept(np.pi / 4.0, 0.0)
+        (1.0, -1.0, 0.0)
 
         Args:
             angle: The angle.
@@ -256,6 +428,7 @@ class Line2DCoefficients:
         A = np.cos(angle)
         B = -np.sin(angle)
         C = intercept * np.sin(angle)
+        A, B, C = cls.standardizeCoefficients(A, B, C)
         return A, B, C
 
 
@@ -288,6 +461,24 @@ class Line(Geometry, Line2DCoefficients):
         - slope and intercept (slope and intercept)
         - angle and intercept (angle and intercept)
 
+        >>> Line(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        Line(A=1.0, B=-1.0, C=0.0)
+
+        >>> Line(A=1.0, B=-1.0, C=0.0)
+        Line(A=1.0, B=-1.0, C=0.0)
+
+        >>> Line(start=Point(0.0, 0.0), slope=1.0)
+        Line(A=1.0, B=-1.0, C=0.0)
+
+        >>> Line(start=Point(0.0, 0.0), angle=np.pi / 4.0)
+        Line(A=1.0, B=-1.0, C=0.0)
+
+        >>> Line(slope=1.0, intercept=0.0)
+        Line(A=1.0, B=-1.0, C=0.0)
+
+        >>> Line(angle=np.pi / 4.0, intercept=0.0)
+        Line(A=1.0, B=-1.0, C=0.0)
+
         Args:
             start: The start point of the line.
             end: The end point of the line.
@@ -300,7 +491,7 @@ class Line(Geometry, Line2DCoefficients):
         if start is not None and end is not None:
             A, B, C = self.coefficientsFromTwoPoints(start, end)
         elif A is not None and B is not None and C is not None:
-            pass
+            A, B, C = self.standardizeCoefficients(A, B, C)
         elif start is not None and slope is not None:
             A, B, C = self.coefficientsFromPointAndSlope(start, slope)
         elif start is not None and angle is not None:
@@ -317,6 +508,9 @@ class Line(Geometry, Line2DCoefficients):
     def fromCoefficients(cls, A: float, B: float, C: float) -> Line:
         """Create a line from the coefficients.
 
+        >>> Line.fromCoefficients(1.0, -1.0, 0.0)
+        Line(A=1.0, B=-1.0, C=0.0)
+
         Args:
             A: The coefficient of the x term.
             B: The coefficient of the y term.
@@ -325,11 +519,15 @@ class Line(Geometry, Line2DCoefficients):
         Returns:
             The created line.
         """
+        A, B, C = cls.standardizeCoefficients(A, B, C)
         return cls(A=A, B=B, C=C)
 
     @classmethod
     def fromTwoPoints(cls, start: Point | Iterable[float] | complex, end: Point | Iterable[float] | complex) -> Line:
         """Create a line from two points.
+
+        >>> Line.fromTwoPoints(Point(0.0, 0.0), Point(1.0, 1.0))
+        Line(A=1.0, B=-1.0, C=0.0)
 
         Args:
             start: The first point.
@@ -346,6 +544,9 @@ class Line(Geometry, Line2DCoefficients):
     def fromPointAndSlope(cls, start: Point | Iterable[float] | complex, slope: float) -> Line:
         """Create a line from a point and a slope.
 
+        >>> Line.fromPointAndSlope(Point(0.0, 0.0), 1.0)
+        Line(A=1.0, B=-1.0, C=0.0)
+
         Args:
             start: The point.
             slope: The slope.
@@ -360,6 +561,9 @@ class Line(Geometry, Line2DCoefficients):
     @classmethod
     def fromPointAndAngle(cls, start: Point | Iterable[float] | complex, angle: float) -> Line:
         """Create a line from a point and an angle.
+
+        >>> Line.fromPointAndAngle(Point(0.0, 0.0), np.pi / 4.0)
+        Line(A=1.0, B=-1.0, C=0.0)
 
         Args:
             start: The point.
@@ -376,6 +580,9 @@ class Line(Geometry, Line2DCoefficients):
     def fromSlopeAndIntercept(cls, slope: float, intercept: float) -> Line:
         """Create a line from a slope and intercept.
 
+        >>> Line.fromSlopeAndIntercept(1.0, 0.0)
+        Line(A=1.0, B=-1.0, C=0.0)
+
         Args:
             slope: The slope.
             intercept: The intercept.
@@ -390,6 +597,9 @@ class Line(Geometry, Line2DCoefficients):
     def fromAngleAndIntercept(cls, angle: float, intercept: float) -> Line:
         """Create a line from an angle and intercept.
 
+        >>> Line.fromAngleAndIntercept(np.pi / 4.0, 0.0)
+        Line(A=1.0, B=-1.0, C=0.0)
+
         Args:
             angle: The angle.
             intercept: The intercept.
@@ -400,10 +610,22 @@ class Line(Geometry, Line2DCoefficients):
         A, B, C = cls.coefficientsFromAngleAndIntercept(angle, intercept)
         return cls.fromCoefficients(A=A, B=B, C=C)
 
-    def __repr__(self):
-        return f"Line ({self.A} * x {self.B:+} * y {self.C:+} = 0)"
+    def __repr__(self) -> str:
+        """Return the representation of the line.
+
+        >>> Line(A=1.0, B=-1.0, C=0.0)
+        Line(A=1.0, B=-1.0, C=0.0)
+        """
+        return f"Line(A={self.A}, B={self.B}, C={self.C})"
 
     def __eq__(self, other: Line) -> bool:
+        """Return whether the line is equal to another line.
+
+        >>> Line(A=1.0, B=1.0, C=0.0) == Line(A=-1.0, B=-1.0, C=0.0)
+        True
+        >>> Line(A=1.0, B=1.0, C=0.0) == Line(A=1.0, B=2.0, C=1.0)
+        False
+        """
         multiplier = self.A / other.A if other.A != 0 else self.B / other.B if other.B != 0 else self.C / other.C
         return np.allclose(
             [self.A, self.B, self.C],
@@ -414,6 +636,11 @@ class Line(Geometry, Line2DCoefficients):
     def __contains__(self, p: Point | Iterable[float] | complex) -> bool:
         """Check if a point is on this line.
 
+        >>> Point(0.0, 0.0) in Line(A=-1.0, B=1.0, C=0.0)
+        True
+        >>> Point(1.0, 0.0) in Line(A=-1.0, B=1.0, C=0.0)
+        False
+
         Returns:
             True if the point is on this line, otherwise False.
         """
@@ -423,6 +650,10 @@ class Line(Geometry, Line2DCoefficients):
     def distance(self, p: Point) -> float:
         """Get the distance between a point and this line.
 
+        >>> line = Line(A=1.0, B=1.0, C=0.0)
+        >>> point = Point(1.0, 1.0)
+        >>> assert np.isclose(line.distance(point), np.sqrt(2.0))
+
         Args:
             p: The point to get the distance to.
 
@@ -430,11 +661,16 @@ class Line(Geometry, Line2DCoefficients):
             The distance between the point and this line.
         """
         p = Point.aspoint(p)
-        return abs(self.A * p.x + self.B * p.y + self.C) / np.sqrt(self.A**2 + self.B**2)
+        return abs(self.A * p.x + self.B * p.y + self.C) / np.sqrt(self.A ** 2 + self.B ** 2)
 
     @property
     def slope(self) -> float:
         """Get the slope of this line.
+
+        >>> Line(A=1.0, B=-1.0, C=0.0).slope
+        1.0
+        >>> Line(A=1.0, B=1.0, C=0.0).slope
+        -1.0
 
         Returns:
             The slope of this line.
@@ -447,6 +683,9 @@ class Line(Geometry, Line2DCoefficients):
     def angle(self) -> float:
         """Get the angle of this line.
 
+        >>> angle = Line(A=1.0, B=1.0, C=0.0).angle
+        >>> assert np.isclose(angle, -np.pi / 4.0)
+
         Returns:
             The angle of this line.
         """
@@ -456,15 +695,21 @@ class Line(Geometry, Line2DCoefficients):
     def intercept(self) -> float:
         """Get the intercept of this line.
 
+        >>> Line(A=1.0, B=1.0, C=1.0).intercept
+        -1.0
+
         Returns:
             The intercept of this line.
         """
         if abs(self.B) < self.tolerance:
             return np.inf
-        return self.gety(0)
+        return self.gety(0.0)
 
     def getx(self, y: float) -> float:
         """Get the x coordinate of a point on this line.
+
+        >>> Line(A=1.0, B=1.0, C=0.0).getx(1.0)
+        -1.0
 
         Args:
             y: The y coordinate of the point.
@@ -479,6 +724,9 @@ class Line(Geometry, Line2DCoefficients):
     def gety(self, x: float) -> float:
         """Get the y coordinate of a point on this line.
 
+        >>> Line(A=1.0, B=1.0, C=0.0).gety(1.0)
+        -1.0
+
         Args:
             x: The x coordinate of the point.
 
@@ -492,6 +740,11 @@ class Line(Geometry, Line2DCoefficients):
     def isParallel(self, line: "Line") -> bool:
         """Check if this line is parallel to another line.
 
+        >>> Line(A=1.0, B=1.0, C=0.0).isParallel(Line(A=1.0, B=1.0, C=1.0))
+        True
+        >>> Line(A=1.0, B=1.0, C=0.0).isParallel(Line(A=-1.0, B=1.0, C=1.0))
+        False
+
         Args:
             line: The line to check.
 
@@ -503,6 +756,11 @@ class Line(Geometry, Line2DCoefficients):
     def isPerpendicular(self, line: "Line") -> bool:
         """Check if this line is perpendicular to another line.
 
+        >>> Line(A=1.0, B=1.0, C=0.0).isPerpendicular(Line(A=1.0, B=1.0, C=1.0))
+        False
+        >>> Line(A=1.0, B=1.0, C=0.0).isPerpendicular(Line(A=-1.0, B=1.0, C=1.0))
+        True
+
         Args:
             line: The line to check.
 
@@ -513,6 +771,9 @@ class Line(Geometry, Line2DCoefficients):
 
     def intersect(self, line: "Line") -> Point:
         """Get the intersection point between this line and another line.
+
+        >>> Line(A=1.0, B=1.0, C=-1.0).intersect(Line(A=1.0, B=-1.0, C=1.0))
+        Point(x=0.0, y=1.0)
 
         Args:
             line: The line to intersect with.
@@ -537,6 +798,9 @@ class Line(Geometry, Line2DCoefficients):
     def parallel(self, p: Point | Iterable[float] | complex) -> "Line":
         """Get a parallel line to this line.
 
+        >>> Line(A=1.0, B=-1.0, C=0.0).parallel(Point(0.0, 1.0))
+        Line(A=1.0, B=-1.0, C=1.0)
+
         Args:
             p: A point on the parallel line.
 
@@ -548,6 +812,9 @@ class Line(Geometry, Line2DCoefficients):
 
     def perpendicular(self, p: Point | Iterable[float] | complex) -> "Line":
         """Get a perpendicular line to this line.
+
+        >>> Line(A=1.0, B=-1.0, C=0.0).perpendicular(Point(0.0, 1.0))
+        Line(A=1.0, B=1.0, C=-1.0)
 
         Args:
             p: A point on the perpendicular line.
@@ -566,17 +833,53 @@ class Segment(Line):
     end: Point
 
     def __init__(self, *, start: Point | Iterable[float] | complex, end: Point | Iterable[float] | complex):
+        """Create a new line segment.
+
+        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        Segment(start=Point(x=0.0, y=0.0), end=Point(x=1.0, y=1.0)) -> Line(A=1.0, B=-1.0, C=0.0)
+
+        Args:
+            start: The first point to create the line.
+            end: The second point to create the line.
+        """
         super().__init__(start=start, end=end)
         self.start, self.end = Point.aspoint(start), Point.aspoint(end)
 
     def __repr__(self):
-        return f"Segment ({self.start}, {self.end}) -> {super().__repr__()})"
+        """Get the string representation of this line segment.
+
+        >>> repr(Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)))
+        'Segment(start=Point(x=0.0, y=0.0), end=Point(x=1.0, y=1.0)) -> Line(A=1.0, B=-1.0, C=0.0)'
+        """
+        return f"Segment(start={self.start}, end={self.end}) -> {super().__repr__()}"
 
     def __eq__(self, other: Segment) -> bool:
-        return super().__eq__(other) and self.start == other.start and self.end == other.end
+        """Check if this line segment is equal to another line segment.
+
+        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)) == Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        True
+        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)) == Segment(start=Point(1.0, 1.0), end=Point(0.0, 0.0))
+        True
+        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)) == Segment(start=Point(0.0, 0.0), end=Point(2.0, 2.0))
+        False
+
+        Args:
+            other: The line segment to check.
+        """
+        return super().__eq__(other) and ((self.start == other.start and self.end == other.end) or
+                                          (self.start == other.end and self.end == other.start))
 
     def __contains__(self, p: Point | Iterable[float] | complex) -> bool:
         """Check if a point is on this segment.
+
+        >>> Point(0.0, 0.0) in Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        True
+        >>> Point(1.0, 1.0) in Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        True
+        >>> Point(0.5, 0.5) in Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        True
+        >>> Point(0.0, 1.0) in Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        False
 
         Returns:
             True if the point is on this segment, otherwise False.
@@ -592,6 +895,9 @@ class Segment(Line):
     def length(self) -> float:
         """Get the length of this segment.
 
+        >>> Segment(start=Point(0.0, 0.0), end=Point(3.0, 4.0)).length
+        5.0
+
         Returns:
             The length of this segment.
         """
@@ -600,6 +906,15 @@ class Segment(Line):
     @property
     def direction(self) -> float:
         """Get the direction of this segment.
+
+        >>> seg = Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).direction
+        >>> assert np.isclose(seg, np.pi / 4.0)
+        >>> seg = Segment(start=Point(0.0, 0.0), end=Point(-1.0, 1.0)).direction
+        >>> assert np.isclose(seg, 3.0 * np.pi / 4.0)
+        >>> seg = Segment(start=Point(0.0, 0.0), end=Point(-1.0, -1.0)).direction
+        >>> assert np.isclose(seg, -3.0 * np.pi / 4.0)
+        >>> seg = Segment(start=Point(0.0, 0.0), end=Point(1.0, -1.0)).direction
+        >>> assert np.isclose(seg, -np.pi / 4.0)
 
         Returns:
             The direction of this segment.
@@ -610,13 +925,20 @@ class Segment(Line):
     def midpoint(self) -> Point:
         """Get the midpoint of this segment.
 
+        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).midpoint
+        Point(x=0.5, y=0.5)
+
         Returns:
             The midpoint of this segment.
         """
         return Point((self.start.x + self.end.x) / 2, (self.start.y + self.end.y) / 2)
 
     def reverse(self) -> "Segment":
-        """Reverse the direction of this segment."""
+        """Reverse the direction of this segment.
+
+        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).reverse()
+        Segment(start=Point(x=1.0, y=1.0), end=Point(x=0.0, y=0.0)) -> Line(A=1.0, B=-1.0, C=0.0)
+        """
         self.start, self.end = self.end, self.start
         return self
 
@@ -633,19 +955,52 @@ class Ray(Line):
         start: Point | Iterable[float] | complex,
         end: Point | Iterable[float] | complex,
     ):
-        """Create a ray."""
+        """Create a ray.
+
+        >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        Ray(start=Point(x=0.0, y=0.0), slope=1.0) -> Line(A=1.0, B=-1.0, C=0.0)
+
+        Args:
+            start: The first point to create the line.
+            end: The second point to create the line.
+        """
         super().__init__(start=start, end=end)
         self.start, self.end = Point.aspoint(start), Point.aspoint(end)
         self.direction = self.end - self.start
 
     def __repr__(self):
-        return f"Ray ({self.start}, slope={self.slope}) -> {super().__repr__()})"
+        """Get the string representation of this ray.
+
+        >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        Ray(start=Point(x=0.0, y=0.0), slope=1.0) -> Line(A=1.0, B=-1.0, C=0.0)
+        """
+        return f"Ray(start={self.start}, slope={self.slope}) -> {super().__repr__()}"
 
     def __eq__(self, other: Ray) -> bool:
+        """Check if two rays are equal.
+
+        >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0)) == Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        True
+        >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0)) == Ray(start=Point(0.0, 0.0), end=Point(2.0, 2.0))
+        True
+        >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0)) == Ray(start=Point(-1.0, -1.0), end=Point(1.0, 1.0))
+        False
+        """
         return super().__eq__(other) and self.start == other.start
 
     def __contains__(self, p: Point | Iterable[float] | complex):
         """Check if a point is on this ray.
+
+        >>> Point(0.0, 0.0) in Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        True
+        >>> Point(0.5, 0.5) in Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        True
+        >>> Point(1.0, 1.0) in Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        True
+        >>> Point(2.0, 2.0) in Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        True
+        >>> Point(-1.0, -1.0) in Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        False
 
         Returns:
             True if the point is on this ray, otherwise False.
@@ -655,6 +1010,9 @@ class Ray(Line):
     @property
     def slope_vector(self) -> Vector:
         """Get the slope vector of this ray.
+
+        >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).slope_vector
+        Vector(x=1.0, y=1.0)
 
         Returns:
             The slope vector of this ray.
