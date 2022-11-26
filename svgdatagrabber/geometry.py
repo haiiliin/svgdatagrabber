@@ -351,6 +351,15 @@ class Line(Geometry, Line2DCoefficients):
         return self.A / self.B
 
     @property
+    def angle(self) -> float:
+        """Get the angle of this line.
+
+        Returns:
+            The angle of this line.
+        """
+        return np.arctan2(-self.A, self.B)
+
+    @property
     def intercept(self) -> float:
         """Get the intercept of this line.
 
