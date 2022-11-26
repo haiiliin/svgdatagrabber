@@ -347,8 +347,8 @@ class Line(Geometry, Line2DCoefficients):
             The slope of this line.
         """
         if abs(self.B) < self.tolerance:
-            return np.inf
-        return self.A / self.B
+            return np.inf if self.A > 0 else -np.inf
+        return -self.A / self.B
 
     @property
     def angle(self) -> float:
