@@ -232,9 +232,7 @@ class Line(Geometry, Line2DCoefficients):
         Returns:
             The created line.
         """
-        obj = cls()
-        obj.A, obj.B, obj.C = A, B, C
-        return obj
+        return cls(A=A, B=B, C=C)
 
     @classmethod
     def fromTwoPoints(cls, start: Point | Iterable[float] | complex, end: Point | Iterable[float] | complex) -> Line:
