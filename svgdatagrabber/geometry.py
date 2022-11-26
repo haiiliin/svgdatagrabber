@@ -31,6 +31,13 @@ class Point(Geometry):
     def __repr__(self):
         return f"Point({self.x}, {self.y})"
 
+    def __iter__(self):
+        yield self.x
+        yield self.y
+
+    def __neg__(self):
+        return self.__class__(-self.x, -self.y)
+
     def __eq__(self, other: Point | Iterable[float] | complex) -> bool:
         other = self.aspoint(other)
         return np.allclose([self.x, self.y], [other.x, other.y], atol=self.tolerance)
@@ -49,18 +56,6 @@ class Point(Geometry):
     def __mul__(self, other: float) -> Point:
         return Point(self.x * other, self.y * other)
 
-    def __matmul__(self, other: Point | Iterable[float] | complex) -> float:
-        """Calculate the dot product between two points.
-
-        Args:
-            other: The other point.
-
-        Returns:
-            The dot product between the points.
-        """
-        other = self.aspoint(other)
-        return self.x * other.x + self.y * other.y
-
     def __truediv__(self, other: float) -> Point:
         return Point(self.x / other, self.y / other)
 
@@ -78,7 +73,10 @@ class Point(Geometry):
             return p
         elif isinstance(p, complex):
             return cls(p.real, p.imag)
-        return cls(*p)
+        elif isinstance(p, Iterable):
+            return cls(*tuple(p))
+        else:
+            raise TypeError(f"Cannot convert {p} to a {cls} object.")
 
     def distance(self, other: Point | Iterable[float] | complex) -> float:
         """Calculate the distance between two points.
@@ -137,13 +135,38 @@ class Vector(Point):
         Returns:
             The converted vector.
         """
-        if isinstance(v, cls):
-            return v
-        elif isinstance(v, Point):
-            return cls(v.x, v.y)
-        elif isinstance(v, complex):
-            return cls(v.real, v.imag)
-        return cls(*v)
+        return cls.aspoint(v)
+
+    def __matmul__(self, other: Point | Iterable[float] | complex) -> float:
+        """Calculate the dot product between two points.
+
+        Args:
+            other: The other point.
+
+        Returns:
+            The dot product between the points.
+        """
+        other = self.aspoint(other)
+        return self.x * other.x + self.y * other.y
+
+    def __abs__(self) -> float:
+        """Calculate the magnitude of the vector.
+
+        Returns:
+            The magnitude of the vector.
+        """
+        return np.linalg.norm(self.array)
+
+    def dot(self, other: Point | Iterable[float] | complex) -> float:
+        """Calculate the dot product between two points.
+
+        Args:
+            other: The other point.
+
+        Returns:
+            The dot product between the points.
+        """
+        return self.__matmul__(other)
 
 
 class Line2DCoefficients:
