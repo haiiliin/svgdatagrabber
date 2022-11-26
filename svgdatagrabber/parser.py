@@ -6,8 +6,8 @@ import numpy as np
 from svgpathtools.path import Path
 from svgpathtools.svg_to_paths import svg2paths
 
-from svgdatagrabber.csys import CoordinateSystem
-from svgdatagrabber.filters import (
+from .csys import CoordinateSystem
+from .filters import (
     RectangleRangeFilter,
     SegmentNumberFilter,
     HorizontalLineFilter,

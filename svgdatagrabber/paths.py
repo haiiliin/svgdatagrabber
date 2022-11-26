@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 from svgpathtools.path import Path, Line, QuadraticBezier, CubicBezier, Arc
 
-from svgdatagrabber.csys import CoordinateSystem
+from .csys import CoordinateSystem
 
 
 class SvgPaths(List[Path]):
