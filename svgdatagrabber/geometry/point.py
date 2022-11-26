@@ -135,6 +135,17 @@ class Point(GeometryBase):
         """
         return Point(self.x / other, self.y / other)
 
+    def __abs__(self) -> float:
+        """Calculate the magnitude of the vector.
+
+        >>> abs(Point(3.0, 4.0))
+        5.0
+
+        Returns:
+            The magnitude of the vector.
+        """
+        return np.linalg.norm(self.array)
+
     @classmethod
     def aspoint(cls, p: Point | Iterable[float] | complex) -> Point:
         """Convert a point to a Point object.
@@ -244,17 +255,6 @@ class Vector(Point):
         """
         other = self.aspoint(other)
         return self.x * other.x + self.y * other.y
-
-    def __abs__(self) -> float:
-        """Calculate the magnitude of the vector.
-
-        >>> abs(Vector(3.0, 4.0))
-        5.0
-
-        Returns:
-            The magnitude of the vector.
-        """
-        return np.linalg.norm(self.array)
 
     def dot(self, other: Point | Iterable[float] | complex) -> float:
         """Calculate the dot product between two points.
