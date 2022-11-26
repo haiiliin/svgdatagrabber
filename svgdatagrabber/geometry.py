@@ -495,18 +495,6 @@ class Segment(Line):
         miny, maxy = sorted([self.start.y, self.end.y])
         return minx <= p.x <= maxx and miny <= p.y <= maxy
 
-    def __gt__(self, other: Segment) -> bool:
-        return self.length > other.length
-
-    def __ge__(self, other: Segment) -> bool:
-        return self.length >= other.length
-
-    def __lt__(self, other: Segment) -> bool:
-        return self.length < other.length
-
-    def __le__(self, other: Segment) -> bool:
-        return self.length <= other.length
-
     @property
     def length(self) -> float:
         """Get the length of this segment.
@@ -525,6 +513,7 @@ class Segment(Line):
         """
         return self.start.direction(self.end)
 
+    @property
     def midpoint(self) -> Point:
         """Get the midpoint of this segment.
 
@@ -533,9 +522,10 @@ class Segment(Line):
         """
         return Point((self.start.x + self.end.x) / 2, (self.start.y + self.end.y) / 2)
 
-    def reverse(self):
+    def reverse(self) -> "Segment":
         """Reverse the direction of this segment."""
         self.start, self.end = self.end, self.start
+        return self
 
 
 class Ray(Line):
