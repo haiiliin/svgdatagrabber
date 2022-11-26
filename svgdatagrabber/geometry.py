@@ -530,30 +530,30 @@ class Segment(Line):
 
 class Ray(Line):
     #: The first point to create the line.
-    origin: Point
+    start: Point
 
     def __init__(
         self,
         *,
-        origin: Point | Iterable[float] | complex,
+        start: Point | Iterable[float] | complex,
         end: Point | Iterable[float] | complex = None,
         slope: float = None,
         angle: float = None,
     ):
         """Create a ray. Possible ways to create a ray (in order of precedence):
 
-        - origin and end points (end point is not included in the ray)
-        - origin and slope (slope is not included in the ray)
-        - origin and angle (angle is not included in the ray)
+        - start and end points (end point is not included in the ray)
+        - start and slope (slope is not included in the ray)
+        - start and angle (angle is not included in the ray)
         """
-        super().__init__(start=origin, end=end, slope=slope, angle=angle)
-        self.origin = Point.aspoint(origin)
+        super().__init__(start=start, end=end, slope=slope, angle=angle)
+        self.start = Point.aspoint(start)
 
     def __repr__(self):
-        return f"Ray ({self.origin}, slope={self.slope}) -> {super().__repr__()})"
+        return f"Ray ({self.start}, slope={self.slope}) -> {super().__repr__()})"
 
     def __eq__(self, other: Ray) -> bool:
-        return super().__eq__(other) and self.origin == other.origin
+        return super().__eq__(other) and self.start == other.start
 
     def __contains__(self, p: Point | Iterable[float] | complex):
         """Check if a point is on this ray.
@@ -565,7 +565,7 @@ class Ray(Line):
         if not super().__contains__(p):
             return False
         return (
-            (self.origin.x <= p.x and self.origin.y <= p.y)
+            (self.start.x <= p.x and self.start.y <= p.y)
             if self.slope > 0
-            else (self.origin.x >= p.x and self.origin.y >= p.y)
+            else (self.start.x >= p.x and self.start.y >= p.y)
         )
