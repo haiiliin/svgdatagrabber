@@ -31,8 +31,38 @@ class Point(Geometry):
     def __repr__(self):
         return f"Point({self.x}, {self.y})"
 
-    def __eq__(self, other: Point) -> bool:
+    def __eq__(self, other: Point | Iterable[float] | complex) -> bool:
+        other = self.aspoint(other)
         return np.allclose([self.x, self.y], [other.x, other.y], atol=self.tolerance)
+
+    def __ne__(self, other: Point | Iterable[float] | complex) -> bool:
+        return not self.__eq__(other)
+
+    def __add__(self, other: Point | Iterable[float] | complex) -> Point:
+        other = self.aspoint(other)
+        return Point(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other: Point | Iterable[float] | complex) -> Point:
+        other = self.aspoint(other)
+        return Point(self.x - other.x, self.y - other.y)
+
+    def __mul__(self, other: float) -> Point:
+        return Point(self.x * other, self.y * other)
+
+    def __matmul__(self, other: Point | Iterable[float] | complex) -> float:
+        """Calculate the dot product between two points.
+
+        Args:
+            other: The other point.
+
+        Returns:
+            The dot product between the points.
+        """
+        other = self.aspoint(other)
+        return self.x * other.x + self.y * other.y
+
+    def __truediv__(self, other: float) -> Point:
+        return Point(self.x / other, self.y / other)
 
     @classmethod
     def aspoint(cls, p: Point | Iterable[float] | complex) -> Point:
@@ -44,13 +74,13 @@ class Point(Geometry):
         Returns:
             The converted point.
         """
-        if isinstance(p, Point):
+        if isinstance(p, cls):
             return p
         elif isinstance(p, complex):
             return cls(p.real, p.imag)
         return cls(*p)
 
-    def distance(self, other: Point) -> float:
+    def distance(self, other: Point | Iterable[float] | complex) -> float:
         """Calculate the distance between two points.
 
         Args:
@@ -59,9 +89,10 @@ class Point(Geometry):
         Returns:
             The distance between the points.
         """
+        other = self.aspoint(other)
         return np.linalg.norm(np.array([self.x, self.y]) - np.array([other.x, other.y]))
 
-    def direction(self, other: Point) -> float:
+    def direction(self, other: Point | Iterable[float] | complex) -> float:
         """Calculate the direction between two points.
 
         Args:
@@ -70,9 +101,10 @@ class Point(Geometry):
         Returns:
             The direction between the points.
         """
+        other = self.aspoint(other)
         return np.arctan2(other.y - self.y, other.x - self.x)
 
-    def vector(self, other: Point) -> np.ndarray:
+    def vector(self, other: Point | Iterable[float] | complex) -> Vector:
         """Calculate the vector between two points.
 
         Args:
@@ -81,7 +113,38 @@ class Point(Geometry):
         Returns:
             The vector between the points.
         """
-        return np.array([other.x - self.x, other.y - self.y])
+        other = self.aspoint(other)
+        return Vector(other.x - self.x, other.y - self.y)
+
+    @property
+    def array(self) -> np.ndarray:
+        """Convert the vector to a numpy array.
+
+        Returns:
+            The vector as a numpy array.
+        """
+        return np.array([self.x, self.y])
+
+
+class Vector(Point):
+
+    @classmethod
+    def asvector(cls, v: Point | Vector | Iterable[float] | complex) -> Vector:
+        """Convert a vector to a Vector object.
+
+        Args:
+            v: The vector to convert.
+
+        Returns:
+            The converted vector.
+        """
+        if isinstance(v, cls):
+            return v
+        elif isinstance(v, Point):
+            return cls(v.x, v.y)
+        elif isinstance(v, complex):
+            return cls(v.real, v.imag)
+        return cls(*v)
 
 
 class Line2DCoefficients:
@@ -542,23 +605,20 @@ class Segment(Line):
 class Ray(Line):
     #: The first point to create the line.
     start: Point
+    #: The second point to create the line.
+    end: Point
 
     def __init__(
         self,
         *,
         start: Point | Iterable[float] | complex,
-        end: Point | Iterable[float] | complex = None,
-        slope: float = None,
-        angle: float = None,
+        end: Point | Iterable[float] | complex,
     ):
-        """Create a ray. Possible ways to create a ray (in order of precedence):
-
-        - start and end points (end point is not included in the ray)
-        - start and slope (slope is not included in the ray)
-        - start and angle (angle is not included in the ray)
+        """Create a ray.
         """
-        super().__init__(start=start, end=end, slope=slope, angle=angle)
-        self.start = Point.aspoint(start)
+        super().__init__(start=start, end=end)
+        self.start, self.end = Point.aspoint(start), Point.aspoint(end)
+        self.direction = self.end - self.start
 
     def __repr__(self):
         return f"Ray ({self.start}, slope={self.slope}) -> {super().__repr__()})"
@@ -572,11 +632,13 @@ class Ray(Line):
         Returns:
             True if the point is on this ray, otherwise False.
         """
-        p = Point.aspoint(p)
-        if not super().__contains__(p):
-            return False
-        return (
-            (self.start.x <= p.x and self.start.y <= p.y)
-            if self.slope > 0
-            else (self.start.x >= p.x and self.start.y >= p.y)
-        )
+        return super().__contains__(p) and self.start.vector(p) @ self.slope_vector >= 0
+
+    @property
+    def slope_vector(self) -> Vector:
+        """Get the slope vector of this ray.
+
+        Returns:
+            The slope vector of this ray.
+        """
+        return Vector.asvector(self.end - self.start)

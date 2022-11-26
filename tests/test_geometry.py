@@ -51,7 +51,11 @@ class TestPoint(TestBase):
 
     @pytest.mark.parametrize("point1, point2, expected", [(Point(0, 0), Point(1, 1), np.array([1, 1]))])
     def test_point_vector(self, point1: Point, point2: Point, expected: np.ndarray):
-        assert np.allclose(point1.vector(point2), np.array([1, 1]), atol=self.tolerance)
+        assert np.allclose(point1.vector(point2).array, np.array([1, 1]), atol=self.tolerance)
+
+    @pytest.mark.parametrize("point, expected", [(Point(0, 0), np.array([0, 0]))])
+    def test_array(self, point: Point, expected: np.ndarray):
+        assert np.allclose(point.array, expected, atol=self.tolerance)
 
 
 class TestCreateLine(TestBase):
@@ -254,11 +258,11 @@ class TestSegment(TestBase):
 
 class TestRay(TestBase):
 
-    @pytest.mark.parametrize("start, angle", [(Point(0, 0), np.pi / 4)])
-    def test_create_ray(self, start: Point, angle: float):
-        ray = Ray(start=start, angle=angle)
+    @pytest.mark.parametrize("start, end", [(Point(0, 0), Point(1, 1))])
+    def test_create_ray(self, start: Point, end: Point):
+        ray = Ray(start=start, end=end)
         assert ray.start == start
-        assert abs(ray.angle - angle + np.pi * (ray.angle - angle < 0)) < self.tolerance
+        assert ray.end == end
 
     @pytest.mark.parametrize(
         "ray1, ray2, expected",
