@@ -297,7 +297,3 @@ class TestRay(TestBase):
     )
     def test_ray_contains_point(self, ray: Ray, point: Point, expected: bool):
         assert (point in ray) == expected
-
-
-class TestLine(TestCreateLine, TestLineMethods, TestLineProperties, TestLineOperators, TestSegment, TestRay):
-    pass
