@@ -144,3 +144,8 @@ class CustomFilter(FilterBase):
 
     def accept(self, path: Path) -> bool:
         return not self.enabled or self.filter_function(path)
+
+
+def test():
+    import doctest
+    doctest.testmod()

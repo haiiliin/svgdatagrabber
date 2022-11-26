@@ -6,8 +6,8 @@ import numpy as np
 from svgpathtools.path import Path
 from svgpathtools.svg_to_paths import svg2paths
 
-from .csys import CoordinateSystem
-from .filters import (
+from svgdatagrabber.csys import CoordinateSystem
+from svgdatagrabber.filters import (
     RectangleRangeFilter,
     SegmentNumberFilter,
     HorizontalLineFilter,
@@ -88,3 +88,8 @@ class SvgPathParser:
         paths, atts = svg2paths(self.svgfile)
         paths = SvgPaths(filtered(paths)).transformed(self.csys)
         return paths
+
+
+def test():
+    import doctest
+    doctest.testmod()

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Iterable
 
-from .geometry import Line, Point
+from svgdatagrabber.geometry import Line, Point
 
 
 class Axis(Line):
@@ -120,6 +120,22 @@ class CoordinateSystem:
         >>> csys.transform(Point(1.0, 1.0))
         (1+1j)
 
+        >>> csys = CoordinateSystem()
+        >>> csys.setup_xaxis(start=(0.0, 0.0), end=(2.0, 0.0), xstart=0.0, xend=1.0, y=0.0)
+        >>> csys.setup_yaxis(start=(0.0, 0.0), end=(0.0, 2.0), ystart=0.0, yend=1.0, x=0.0)
+        >>> csys.transform(Point(2.0, 0.0))
+        (1+0j)
+        >>> csys.transform(Point(0.0, 2.0))
+        1j
+
+        >>> csys = CoordinateSystem()
+        >>> csys.setup_xaxis(start=(1.0, 0.0), end=(2.0, 0.0), xstart=0.0, xend=1.0, y=0.0)
+        >>> csys.setup_yaxis(start=(0.0, 1.0), end=(0.0, 2.0), ystart=0.0, yend=1.0, x=0.0)
+        >>> csys.transform(Point(2.0, 1.0))
+        (1+0j)
+        >>> csys.transform(Point(1.0, 2.0))
+        1j
+
         Args:
             p: The point to convert.
 
@@ -141,7 +157,7 @@ class CoordinateSystem:
         xstart: float = 0.0,
         xend: float = 1.0,
         y: float = 0.0,
-        perpendicular: bool = True,
+        perpendicular: bool = False,
     ):
         """Set up the x-axis.
 
@@ -168,7 +184,7 @@ class CoordinateSystem:
         ystart: float = 0.0,
         yend: float = 1.0,
         x: float = 0.0,
-        perpendicular: bool = True,
+        perpendicular: bool = False,
     ):
         """Set up the y-axis.
 
@@ -186,3 +202,8 @@ class CoordinateSystem:
         self.yaxis.setup(start=start, end=end, ystart=ystart, yend=yend, x=x)
         if not self.yaxis.isPerpendicular(self.xaxis):
             raise ValueError("The x-axis and y-axis must be perpendicular.")
+
+
+def test():
+    import doctest
+    doctest.testmod()

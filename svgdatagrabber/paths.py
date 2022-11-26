@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 from svgpathtools.path import Path, Line, QuadraticBezier, CubicBezier, Arc
 
-from .csys import CoordinateSystem
+from svgdatagrabber.csys import CoordinateSystem
 
 
 class SvgPaths(List[Path]):
@@ -125,3 +125,8 @@ class SvgPaths(List[Path]):
     def to_csv(self, path: str, x: str = "x", y: str = "y"):
         """Save the paths as a csv file."""
         self.df(x, y).to_csv(path, index=False)
+
+
+def test():
+    import doctest
+    doctest.testmod()

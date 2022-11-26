@@ -1048,3 +1048,8 @@ class Ray(Line):
             The slope vector of this ray.
         """
         return Vector.asvector(self.end - self.start)
+
+
+def test():
+    import doctest
+    doctest.testmod()
