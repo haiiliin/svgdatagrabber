@@ -479,6 +479,26 @@ class Line(GeometryBase, LineCoefs):
         """
         return abs(self.A * line.B - self.B * line.A) < self.tolerance
 
+    def isIntersecting(self, line: "Line") -> bool:
+        """Check if this line is intersecting another line.
+
+        >>> Line(A=1.0, B=1.0, C=0.0).isIntersecting(Line(A=1.0, B=1.0, C=1.0))
+        False
+        >>> Line(A=1.0, B=1.0, C=0.0).isIntersecting(Line(A=-1.0, B=1.0, C=1.0))
+        True
+
+        Args:
+            line: The line to check.
+
+        Returns:
+            True if the lines are intersecting, otherwise False.
+        """
+        try:
+            self.intersect(line)
+            return True
+        except AssertionError:
+            return False
+
     def isPerpendicular(self, line: "Line") -> bool:
         """Check if this line is perpendicular to another line.
 
@@ -503,7 +523,7 @@ class Line(GeometryBase, LineCoefs):
         >>> Line(A=1.0, B=1.0, C=0.0).intersect(Line(A=1.0, B=1.0, C=1.0))
         Traceback (most recent call last):
         ...
-        ValueError: Lines are parallel and do not intersect
+        AssertionError: Lines are parallel.
 
         Args:
             line: The line to intersect with.
@@ -511,12 +531,12 @@ class Line(GeometryBase, LineCoefs):
         Returns:
             The intersection point if there is one, otherwise None.
         """
-        if self.isParallel(line):
-            raise ValueError("Lines are parallel and do not intersect")
+        assert not self.isParallel(line), "Lines are parallel."
         A = np.asarray([[self.A, self.B], [line.A, line.B]])
         b = np.asarray([-self.C, -line.C])
         x, y = np.linalg.solve(A, b)
         p = Point(x, y)
+        assert getattr(self, "extended", False) or p in self and p in line, "Lines do not intersect."
         return p
 
     def parallel(self, p: PointType) -> "Line":
@@ -689,23 +709,6 @@ class Segment(Line, IterablePoint):
         self.start, self.end = self.end, self.start
         return self
 
-    def intersect(self, line: "Line") -> Point:
-        """Get the intersection point of this segment and a line.
-
-        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).intersect(Line(A=1.0, B=1.0, C=-1.0))
-        Point(x=0.5, y=0.5)
-        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).intersect(Line(A=1.0, B=1.0, C=1.0))
-        Traceback (most recent call last):
-        ...
-        AssertionError: No intersection point found.
-
-        Args:
-            line: The line to intersect with.
-        """
-        p = super().intersect(line)
-        assert self.extended or (p in self and p in line), "No intersection point found."
-        return p
-
 
 class ExtendedSegment(Segment):
     def __init__(self, start: PointType, end: PointType):
@@ -802,23 +805,6 @@ class Ray(Line):
             The slope vector of this ray.
         """
         return Vector.asvector(self.end - self.start)
-
-    def intersect(self, line: "Line") -> Point:
-        """Get the intersection point of this ray and a line.
-
-        >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).intersect(Line(A=1.0, B=1.0, C=-1.0))
-        Point(x=0.5, y=0.5)
-        >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).intersect(Line(A=1.0, B=1.0, C=1.0))
-        Traceback (most recent call last):
-        ...
-        AssertionError: No intersection point found.
-
-        Args:
-            line: The line to intersect with.
-        """
-        p = super().intersect(line)
-        assert self.extended or (p in self and p in line), "No intersection point found."
-        return p
 
 
 class ExtendedRay(Ray):
