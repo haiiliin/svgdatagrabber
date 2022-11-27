@@ -1,19 +1,12 @@
 from __future__ import annotations
 
-from abc import abstractmethod, ABC
+from abc import abstractmethod
 from typing import Iterable, Sequence, overload, List
 
-from .geometrybase import GeometryBase
 from .point import Point, PointType
 
 
-class IterablePoint(GeometryBase, ABC):
-    def __iter__(self) -> Iterable[Point]:
-        """Iterate over the geometry vertices."""
-        raise NotImplementedError
-
-
-class PointSequence(Sequence[Point], IterablePoint):
+class PointSequence(Sequence[Point]):
     #: The points in the sequence.
     points: List[Point]
 

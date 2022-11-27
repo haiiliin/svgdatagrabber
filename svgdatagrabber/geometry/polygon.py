@@ -5,10 +5,10 @@ from typing import List, Iterable, Tuple
 from .closedshape import ClosedShape
 from .line import Ray, Segment
 from .point import Point, PointType
-from .pointsequence import PointSequence, IterablePoint
+from .pointsequence import PointSequence
 
 
-class Polygon(PointSequence, ClosedShape, IterablePoint):
+class Polygon(PointSequence, ClosedShape):
     def __init__(self, *points: PointType):
         """Create a polygon.
 
