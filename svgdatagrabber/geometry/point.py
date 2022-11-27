@@ -13,7 +13,7 @@ class Point(GeometryBase):
     #: The y coordinate of the point.
     y: float
 
-    def __init__(self, *args: float | complex | Iterable[float]):
+    def __init__(self, *args: float | complex | Iterable[float], x: float = None, y: float = None):
         """Initialize a point.
 
         >>> Point(1.0, 2.0)
@@ -23,6 +23,8 @@ class Point(GeometryBase):
         >>> Point(complex(1.0, 2.0))
         Point(x=1.0, y=2.0)
         >>> Point(Point(1.0, 2.0))
+        Point(x=1.0, y=2.0)
+        >>> Point(x=1.0, y=2.0)
         Point(x=1.0, y=2.0)
         >>> Point(1.0)
         Traceback (most recent call last):
@@ -38,6 +40,8 @@ class Point(GeometryBase):
             self.x, self.y = args[0]
         elif len(args) == 2:
             self.x, self.y = args
+        elif len(args) == 0 and x is not None and y is not None:
+            self.x, self.y = x, y
         else:
             raise ValueError("The arguments must be two floats, a complex number or an iterable of two floats.")
 
