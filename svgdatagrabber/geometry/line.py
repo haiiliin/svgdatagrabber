@@ -406,6 +406,21 @@ class Line(GeometryBase, LineCoefs):
         """
         return np.arctan2(-self.A, self.B)
 
+    def angleBetween(self, other: Line) -> float:
+        """Get the angle between this line and another line.
+
+        >>> line1 = Line(A=1.0, B=1.0, C=0.0)
+        >>> line2 = Line(A=1.0, B=-1.0, C=0.0)
+        >>> assert np.isclose(line1.angleBetween(line2), np.pi / 2.0)
+
+        Args:
+            other: The other line.
+
+        Returns:
+            The angle between the two lines.
+        """
+        return np.arctan2(self.A * other.B - self.B * other.A, self.A * other.A + self.B * other.B)
+
     @property
     def intercept(self) -> float:
         """Get the intercept of this line.
