@@ -3,7 +3,6 @@ from .polygon import Polygon
 
 
 class Quadrilateral(Polygon):
-
     def __init__(self, *points: PointType):
         if len(points) != 4:
             raise ValueError("A quadrilateral must have exactly four points.")
