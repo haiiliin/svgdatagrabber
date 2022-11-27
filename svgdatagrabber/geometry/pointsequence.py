@@ -23,19 +23,15 @@ class PointSequence(Sequence[Point], IterablePoint):
     #: The points in the sequence.
     points: List[Point]
 
-    def __init__(self, *points: PointType | Iterable[PointType]):
+    def __init__(self, *points: PointType):
         """Create a sequence of points.
 
         >>> PointSequence(Point(1.0, 2.0), Point(3.0, 4.0))
-        PointSequence(Point(x=1.0, y=2.0), Point(x=3.0, y=4.0))
-        >>> PointSequence([(1.0, 2.0), (3.0, 4.0)])
         PointSequence(Point(x=1.0, y=2.0), Point(x=3.0, y=4.0))
 
         Args:
             points: The points to add to the sequence.
         """
-        if len(points) == 1 and isinstance(points[0], Iterable):
-            points = points[0]
         self.points = [Point.aspoint(p) for p in points]
 
     def __repr__(self) -> str:
