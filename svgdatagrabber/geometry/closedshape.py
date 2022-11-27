@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from abc import ABC
-from typing import Tuple, Iterable
+from typing import Tuple, Iterable, List
 
 from .geometrybase import GeometryBase
 from .point import Point
+from .line import LineBase
 
 
 class ClosedShape(GeometryBase, ABC):
@@ -19,6 +20,27 @@ class ClosedShape(GeometryBase, ABC):
 
     def contains(self, item: GeometryBase | Iterable["GeometryBase"]) -> bool:
         """Check if a point or shape is inside the shape."""
+        if isinstance(item, Point):
+            return self.containsPoint(item)
+        elif isinstance(item, LineBase):
+            return self.containsLine(item)
+        elif isinstance(item, ClosedShape):
+            return all(self.containsLine(line) for line in item.lines())
+        elif isinstance(item, Iterable):
+            return all(self.contains(subitem) for subitem in item)
+        else:
+            raise TypeError(f"Unsupported type: {type(item)}")
+
+    def lines(self) -> List[LineBase]:
+        """Return the lines of the shape."""
+        raise NotImplementedError
+
+    def containsPoint(self, point: Point | Iterable[Point]) -> bool:
+        """Check if a point is inside the shape."""
+        raise NotImplementedError
+
+    def containsLine(self, line: LineBase | Iterable[LineBase]) -> bool:
+        """Check if a line is inside the shape."""
         raise NotImplementedError
 
     @property

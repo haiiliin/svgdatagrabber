@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from abc import ABC
 from typing import Iterator
 
 import numpy as np
@@ -139,7 +140,19 @@ class LineCoefs:
         return A, B, C
 
 
-class Line(GeometryBase, LineCoefs):
+class LineBase(GeometryBase, ABC):
+    pass
+
+
+class StraightLineBase(LineBase, ABC):
+    pass
+
+
+class CurveLineBase(LineBase, ABC):
+    pass
+
+
+class Line(StraightLineBase, LineCoefs):
     #: Coefficient of the x term.
     A: float
     #: Coefficient of the y term.

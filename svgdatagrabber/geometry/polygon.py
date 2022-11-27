@@ -5,12 +5,13 @@ from typing import List, Iterable, Tuple
 from shapely.geometry import Polygon as ShapelyPolygon
 
 from .closedshape import ClosedShape
-from .line import Ray, Segment
+from .line import Ray, Segment, LineBase
 from .point import Point, PointType
 from .pointsequence import PointSequence
 
 
 class Polygon(ClosedShape, PointSequence):
+
     def __init__(self, *points: PointType):
         """Create a polygon.
 
@@ -91,7 +92,21 @@ class Polygon(ClosedShape, PointSequence):
         starts, ends = self.vertices, self.vertices[1:] + self.vertices[:1]
         return [Segment(start=start, end=end) for start, end in zip(starts, ends)]
 
-    def contains(self, item: PointType | Iterable[Point]) -> bool:
+    @property
+    def lines(self) -> List[LineBase]:
+        """Return the lines of the polygon.
+
+        >>> lines = Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0)).lines
+        >>> lines[0]
+        Segment(start=Point(x=0.0, y=0.0), end=Point(x=1.0, y=0.0)) -> Line(A=0.0, B=1.0, C=0.0)
+        >>> lines[1]
+        Segment(start=Point(x=1.0, y=0.0), end=Point(x=1.0, y=1.0)) -> Line(A=1.0, B=0.0, C=-1.0)
+        >>> lines[2]
+        Segment(start=Point(x=1.0, y=1.0), end=Point(x=0.0, y=0.0)) -> Line(A=1.0, B=-1.0, C=0.0)
+        """
+        return self.edges
+
+    def containsPoint(self, point: PointType | Iterable[Point]) -> bool:
         """Check if a point is inside the polygon.
 
         >>> polygon = Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0))
@@ -105,13 +120,13 @@ class Polygon(ClosedShape, PointSequence):
         False
 
         Args:
-            item: A point or an iterable of points.
+            point: A point or an iterable of points.
         """
-        if isinstance(item, Iterable) and isinstance(tuple(item)[0], Point):
-            return all(self.contains(p) for p in item)
+        if isinstance(point, Iterable) and isinstance(tuple(point)[0], Point):
+            return all(self.contains(p) for p in point)
 
         # Lie on the edges or vertices
-        point = Point.aspoint(item)
+        point = Point.aspoint(point)
         if self.inVertices(point) or self.inEdges(point):
             return True
 
@@ -125,6 +140,9 @@ class Polygon(ClosedShape, PointSequence):
                     intersections += 1
                     intersecting_points.append(intersection)
         return intersections % 2 == 1
+
+    def containsLine(self, line: LineBase | Iterable[LineBase]) -> bool:
+        raise NotImplementedError
 
     def inEdges(self, item: PointType | Iterable[Point]) -> bool:
         """Check if a point is on the edges of the polygon.

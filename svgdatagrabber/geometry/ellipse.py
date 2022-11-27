@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-from typing import Tuple, Iterable
+from typing import Tuple, Iterable, List
 
 import numpy as np
 
 from .closedshape import ClosedShape
+from .line import LineBase
 from .point import Point, PointType
 
 
@@ -97,7 +98,11 @@ class Ellipse(ClosedShape):
             return False
         return self.center == other.center and self.ra == other.ra and self.rb == other.rb and self.theta == other.theta
 
-    def contains(self, item: PointType | Iterable[Point]) -> bool:
+    @property
+    def lines(self) -> List[LineBase]:
+        raise NotImplementedError
+
+    def containsPoint(self, item: PointType | Iterable[Point]) -> bool:
         """Check if a point is inside the ellipse.
 
         >>> Point(0.5, 0.5) in Ellipse(center=Point(0.0, 0.0), ra=1.0, rb=1.0)
@@ -114,6 +119,9 @@ class Ellipse(ClosedShape):
         x, y = point.x, point.y
         A, B, C, D, E, F = self.coefficients
         return A * x**2 + B * x * y + C * y**2 + D * x + E * y + F <= 0
+
+    def containsLine(self, line: LineBase | Iterable[LineBase]) -> bool:
+        raise NotImplementedError
 
     @property
     def x0(self) -> float:
