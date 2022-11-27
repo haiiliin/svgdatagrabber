@@ -5,7 +5,8 @@ from typing import Iterator
 import numpy as np
 
 from .geometrybase import GeometryBase
-from .point import Point, PointType, Vector, IterablePoint
+from .point import Point, PointType, Vector
+from .pointsequence import StraightLineShape
 
 
 class LineCoefs:
@@ -574,7 +575,7 @@ class Line(GeometryBase, LineCoefs):
         return Line(A=self.B, B=-self.A, C=-self.B * p.x + self.A * p.y)
 
 
-class Segment(Line, IterablePoint):
+class Segment(Line, StraightLineShape):
     #: The first point to create the line.
     start: Point
     #: The second point to create the line.
