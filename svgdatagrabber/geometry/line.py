@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+from typing import Iterator
+
 import numpy as np
 
 from .geometrybase import GeometryBase
-from .point import Point, PointType, Vector
+from .point import Point, PointType, Vector, IterablePoint
 
 
 class LineCoefs:
@@ -552,7 +554,7 @@ class Line(GeometryBase, LineCoefs):
         return Line(A=self.B, B=-self.A, C=-self.B * p.x + self.A * p.y)
 
 
-class Segment(Line):
+class Segment(Line, IterablePoint):
     #: The first point to create the line.
     start: Point
     #: The second point to create the line.
@@ -626,6 +628,15 @@ class Segment(Line):
         minx, maxx = sorted([self.start.x, self.end.x])
         miny, maxy = sorted([self.start.y, self.end.y])
         return super().__contains__(p) and (self.extended or (minx <= p.x <= maxx and miny <= p.y <= maxy))
+
+    def __iter__(self) -> Iterator[Point]:
+        """Iterate over the points of this segment.
+
+        >>> list(Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)))
+        [Point(x=0.0, y=0.0), Point(x=1.0, y=1.0)]
+        """
+        yield self.start
+        yield self.end
 
     @property
     def length(self) -> float:

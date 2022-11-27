@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 from typing import Iterable, Union, Sequence, overload, List
 
 import numpy as np
@@ -297,7 +297,13 @@ class Vector(Point):
         return cls.aspoint(v)
 
 
-class PointSequence(Sequence[Point], GeometryBase):
+class IterablePoint(ABC):
+    def __iter__(self) -> Iterable[Point]:
+        """Iterate over the geometry vertices."""
+        raise NotImplementedError
+
+
+class PointSequence(Sequence[Point], GeometryBase, IterablePoint):
     #: The points in the sequence.
     points: List[Point]
 
