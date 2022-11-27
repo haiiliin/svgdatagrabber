@@ -99,10 +99,10 @@ class Ellipse(ClosedShape):
         return self.center == other.center and self.ra == other.ra and self.rb == other.rb and self.theta == other.theta
 
     @property
-    def lines(self) -> List[LineBase]:
+    def boundaries(self) -> List[LineBase]:
         raise NotImplementedError
 
-    def containsPoint(self, item: PointType | Iterable[Point]) -> bool:
+    def containsPoint(self, point: PointType | Iterable[Point]) -> bool:
         """Check if a point is inside the ellipse.
 
         >>> Point(0.5, 0.5) in Ellipse(center=Point(0.0, 0.0), ra=1.0, rb=1.0)
@@ -111,11 +111,11 @@ class Ellipse(ClosedShape):
         True
 
         Args:
-            item: The point.
+            point: The point.
         """
-        if isinstance(item, Iterable) and isinstance(tuple(item)[0], Point):
-            return all(self.contains(p) for p in item)
-        point = Point.aspoint(item)
+        if isinstance(point, Iterable) and isinstance(tuple(point)[0], Point):
+            return all(self.contains(p) for p in point)
+        point = Point.aspoint(point)
         x, y = point.x, point.y
         A, B, C, D, E, F = self.coefficients
         return A * x**2 + B * x * y + C * y**2 + D * x + E * y + F <= 0

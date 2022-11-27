@@ -11,7 +11,6 @@ from .pointsequence import PointSequence
 
 
 class Polygon(ClosedShape, PointSequence):
-
     def __init__(self, *points: PointType):
         """Create a polygon.
 
@@ -93,10 +92,10 @@ class Polygon(ClosedShape, PointSequence):
         return [Segment(start=start, end=end) for start, end in zip(starts, ends)]
 
     @property
-    def lines(self) -> List[LineBase]:
-        """Return the lines of the polygon.
+    def boundaries(self) -> List[LineBase]:
+        """Return the boundaries of the polygon.
 
-        >>> lines = Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0)).lines
+        >>> lines = Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0)).boundaries
         >>> lines[0]
         Segment(start=Point(x=0.0, y=0.0), end=Point(x=1.0, y=0.0)) -> Line(A=0.0, B=1.0, C=0.0)
         >>> lines[1]

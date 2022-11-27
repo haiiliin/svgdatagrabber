@@ -4,8 +4,8 @@ from abc import ABC
 from typing import Tuple, Iterable, List
 
 from .geometrybase import GeometryBase
-from .point import Point
 from .line import LineBase
+from .point import Point
 
 
 class ClosedShape(GeometryBase, ABC):
@@ -25,14 +25,15 @@ class ClosedShape(GeometryBase, ABC):
         elif isinstance(item, LineBase):
             return self.containsLine(item)
         elif isinstance(item, ClosedShape):
-            return all(self.containsLine(line) for line in item.lines())
+            return all(self.containsLine(line) for line in item.boundaries)
         elif isinstance(item, Iterable):
             return all(self.contains(subitem) for subitem in item)
         else:
             raise TypeError(f"Unsupported type: {type(item)}")
 
-    def lines(self) -> List[LineBase]:
-        """Return the lines of the shape."""
+    @property
+    def boundaries(self) -> List[LineBase]:
+        """Return the boundaries of the shape. To decide whether the shape is inside another shape."""
         raise NotImplementedError
 
     def containsPoint(self, point: Point | Iterable[Point]) -> bool:
