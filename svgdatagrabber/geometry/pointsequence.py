@@ -3,7 +3,6 @@ from __future__ import annotations
 from abc import abstractmethod, ABC
 from typing import Iterable, Sequence, overload, List
 
-from .closedshape import ClosedShape
 from .geometrybase import GeometryBase
 from .point import Point, PointType
 
@@ -12,11 +11,6 @@ class IterablePoint(GeometryBase, ABC):
     def __iter__(self) -> Iterable[Point]:
         """Iterate over the geometry vertices."""
         raise NotImplementedError
-
-
-class StraightLineShape(IterablePoint, ABC):
-    def within(self, other: "ClosedShape") -> bool:
-        return all(p in other for p in self)
 
 
 class PointSequence(Sequence[Point], IterablePoint):

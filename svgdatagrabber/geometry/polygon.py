@@ -3,12 +3,12 @@ from __future__ import annotations
 from typing import List, Iterable, Tuple
 
 from .closedshape import ClosedShape
-from .point import Point, PointType
-from .pointsequence import PointSequence, StraightLineShape
 from .line import Ray, Segment
+from .point import Point, PointType
+from .pointsequence import PointSequence, IterablePoint
 
 
-class Polygon(PointSequence, ClosedShape, StraightLineShape):
+class Polygon(PointSequence, ClosedShape, IterablePoint):
     def __init__(self, *points: PointType):
         """Create a polygon.
 
