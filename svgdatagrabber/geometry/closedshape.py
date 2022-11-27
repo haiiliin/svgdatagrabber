@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from abc import ABC
-from typing import Tuple
+from typing import Tuple, Iterable
 
 from .geometrybase import GeometryBase
 from .point import Point
@@ -11,7 +13,11 @@ class ClosedShape(GeometryBase, ABC):
     def __eq__(self, other: "ClosedShape") -> bool:
         raise NotImplementedError
 
-    def __contains__(self, item: GeometryBase) -> bool:
+    def __contains__(self, item: GeometryBase | Iterable["GeometryBase"]) -> bool:
+        """Check if a point or shape is inside the shape."""
+        return self.contains(item)
+
+    def contains(self, item: GeometryBase | Iterable["GeometryBase"]) -> bool:
         """Check if a point or shape is inside the shape."""
         raise NotImplementedError
 

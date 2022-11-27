@@ -10,7 +10,7 @@ from .point import Point, PointType
 from .pointsequence import PointSequence
 
 
-class Polygon(PointSequence, ClosedShape):
+class Polygon(ClosedShape, PointSequence):
     def __init__(self, *points: PointType):
         """Create a polygon.
 
@@ -24,26 +24,23 @@ class Polygon(PointSequence, ClosedShape):
             raise ValueError("A polygon must have at least three points.")
         super().__init__(*points)
 
-    def __contains__(self, item: PointType | Iterable[Point]) -> bool:
-        """Check if a point or shape is inside the shape.
+    def __repr__(self):
+        """Return a string representation of the polygon.
 
-        >>> polygon = Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0))
-        >>> (Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)) in polygon
-        True
-        >>> Point(0.5, 0.5) in polygon
-        True
-        >>> (Point(0.5, 0.0), Point(0.5, 1.0), Point(0.0, 0.5), Point(1.0, 0.5)) in polygon
-        True
-        >>> Point(0.5, 1.5) in polygon
-        False
-
-        Args:
-            item: The point or shape.
+        >>> Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0))
+        Polygon(Point(x=0.0, y=0.0), Point(x=1.0, y=0.0), Point(x=1.0, y=1.0), Point(x=0.0, y=1.0))
         """
-        return self.contains(item)
+        return PointSequence.__repr__(self)
 
     def __eq__(self, other: Polygon) -> bool:
-        return super().__eq__(other)
+        """Check if two polygons are equal.
+
+        >>> polygon1 = Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0))
+        >>> polygon2 = Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0))
+        >>> polygon1 == polygon2
+        True
+        """
+        return PointSequence.__eq__(self, other)
 
     @property
     def isSimple(self) -> bool:
@@ -98,8 +95,14 @@ class Polygon(PointSequence, ClosedShape):
         """Check if a point is inside the polygon.
 
         >>> polygon = Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0))
-        >>> polygon.contains((Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)))
+        >>> (Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)) in polygon
         True
+        >>> Point(0.5, 0.5) in polygon
+        True
+        >>> (Point(0.5, 0.0), Point(0.5, 1.0), Point(0.0, 0.5), Point(1.0, 0.5)) in polygon
+        True
+        >>> Point(0.5, 1.5) in polygon
+        False
 
         Args:
             item: A point or an iterable of points.

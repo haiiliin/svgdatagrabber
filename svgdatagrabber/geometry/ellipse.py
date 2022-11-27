@@ -1,4 +1,6 @@
-from typing import Tuple
+from __future__ import annotations
+
+from typing import Tuple, Iterable
 
 import numpy as np
 
@@ -95,7 +97,7 @@ class Ellipse(ClosedShape):
             return False
         return self.center == other.center and self.ra == other.ra and self.rb == other.rb and self.theta == other.theta
 
-    def __contains__(self, item: PointType) -> bool:
+    def contains(self, item: PointType | Iterable[Point]) -> bool:
         """Check if a point is inside the ellipse.
 
         >>> Point(0.5, 0.5) in Ellipse(center=Point(0.0, 0.0), ra=1.0, rb=1.0)
@@ -106,6 +108,8 @@ class Ellipse(ClosedShape):
         Args:
             item: The point.
         """
+        if isinstance(item, Iterable) and isinstance(tuple(item)[0], Point):
+            return all(self.contains(p) for p in item)
         point = Point.aspoint(item)
         x, y = point.x, point.y
         A, B, C, D, E, F = self.coefficients
