@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+from abc import ABC
+
 from svgpathtools.path import Path
 
 
-class FilterBase:
+class FilterBase(ABC):
     """Base class for filters."""
 
     #: Enabled or not
