@@ -389,12 +389,18 @@ class PointSequence(Sequence[Point], GeometryBase, IterablePoint):
         """
         return all(v1 == v2 for v1, v2 in zip(self.points, other.points))
 
-    def __contains__(self, item: PointType) -> bool:
+    def __contains__(self, item: PointType | Iterable[Point]) -> bool:
         """Check if a point is in the sequence.
 
         >>> Point(1.0, 2.0) in PointSequence(Point(0.0, 0.0), Point(1.0, 2.0))
         True
+        >>> (Point(1.0, 2.0), Point(3.0, 4.0)) in PointSequence(Point(0.0, 0.0), Point(1.0, 2.0))
+        False
+        >>> (Point(1.0, 2.0), Point(3.0, 4.0)) in PointSequence(Point(0.0, 0.0), Point(1.0, 2.0), Point(3.0, 4.0))
+        True
         """
+        if isinstance(item, Iterable) and isinstance(tuple(item)[0], Point):
+            return all(p in self.points for p in item)
         return Point.aspoint(item) in self.points
 
     def append(self, point: PointType) -> None:
