@@ -27,6 +27,6 @@ class ClosedShape(GeometryBase, ABC):
         """Return the centroid of the shape."""
         raise NotImplementedError
 
-    def bounding_box(self) -> Tuple[Point, Point]:
+    def bounding(self) -> Tuple[Point, Point]:
         """Return the bounding box of the shape."""
         raise NotImplementedError
