@@ -22,7 +22,7 @@ class ClosedShape(GeometryBase, ABC):
     def perimeter(self) -> float:
         """Return the perimeter of the shape."""
         raise NotImplementedError
-    
+
     def centroid(self) -> Point:
         """Return the centroid of the shape."""
         raise NotImplementedError

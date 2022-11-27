@@ -34,9 +34,7 @@ class LineCoefs:
         return A, B, C
 
     @classmethod
-    def coefficientsFromTwoPoints(
-        cls, p1: PointType, p2: PointType
-    ) -> tuple[float, float, float]:
+    def coefficientsFromTwoPoints(cls, p1: PointType, p2: PointType) -> tuple[float, float, float]:
         """Get the coefficients of a line from two points.
 
         >>> LineCoefs.coefficientsFromTwoPoints(Point(0.0, 0.0), Point(1.0, 1.0))
@@ -57,9 +55,7 @@ class LineCoefs:
         return A, B, C
 
     @classmethod
-    def coefficientsFromPointAndSlope(
-        cls, p: PointType, slope: float
-    ) -> tuple[float, float, float]:
+    def coefficientsFromPointAndSlope(cls, p: PointType, slope: float) -> tuple[float, float, float]:
         """Get the coefficients of a line from a point and a slope.
 
         >>> LineCoefs.coefficientsFromPointAndSlope(Point(0.0, 0.0), 1.0)
@@ -100,9 +96,7 @@ class LineCoefs:
         return A, B, C
 
     @classmethod
-    def coefficientsFromPointAndAngle(
-        cls, p: PointType, angle: float
-    ) -> tuple[float, float, float]:
+    def coefficientsFromPointAndAngle(cls, p: PointType, angle: float) -> tuple[float, float, float]:
         """Get the coefficients of a line from a point and an angle.
 
         >>> LineCoefs.coefficientsFromPointAndAngle(Point(0.0, 0.0), np.pi / 4.0)
