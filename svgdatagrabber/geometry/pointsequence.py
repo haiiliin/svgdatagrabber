@@ -136,3 +136,18 @@ class PointSequence(Sequence[Point], IterablePoint):
         """
         args = (Point.aspoint(point), start, stop) if stop is not None else (Point.aspoint(point), start)
         return self.points.index(*args)
+
+    def count(self, value: Point) -> int:
+        """Count the number of occurrences of a value.
+
+        >>> ps = PointSequence(Point(1.0, 2.0), Point(3.0, 4.0), Point(1.0, 2.0))
+        >>> ps.count(Point(1.0, 2.0))
+        2
+
+        Args:
+            value: The value to count.
+
+        Returns:
+            The number of occurrences.
+        """
+        return self.points.count(value)
