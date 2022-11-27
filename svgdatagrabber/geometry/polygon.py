@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import List, Iterable, Tuple
 
+from shapely.geometry import Polygon as ShapelyPolygon
+
 from .closedshape import ClosedShape
 from .line import Ray, Segment
 from .point import Point, PointType
@@ -40,14 +42,21 @@ class Polygon(PointSequence, ClosedShape):
         """
         return self.contains(item)
 
+    @property
     def isSimple(self) -> bool:
-        """Check if the polygon is simple."""
-        raise NotImplementedError
+        """Check if the polygon is simple.
 
-    def isConvex(self):
+        >>> Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)).isSimple
+        True
+        >>> Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, -1.0)).isSimple
+        False
+        """
+        return self.asShapely.is_simple
+
+    @property
+    def isValid(self):
         """Check if the polygon is convex."""
-        #: https://stackoverflow.com/questions/471962/how-do-determine-if-a-polygon-is-complex-convex-nonconvex
-        raise NotImplementedError
+        return self.asShapely.is_valid
 
     @property
     def ndim(self) -> int:
@@ -185,6 +194,11 @@ class Polygon(PointSequence, ClosedShape):
         return Point(min(x), min(y)), Point(max(x), max(y))
 
     @property
-    def internalAngles(self) -> list[float]:
-        """Return the internal angles of the polygon."""
-        raise NotImplementedError
+    def asShapely(self) -> ShapelyPolygon:
+        """Return the polygon as a Shapely polygon.
+
+        >>> Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)).asShapely
+        <shapely.geometry.polygon.Polygon object at ...>
+        """
+        shell = ((vertex.x, vertex.y) for vertex in self.vertices)
+        return ShapelyPolygon(shell)
