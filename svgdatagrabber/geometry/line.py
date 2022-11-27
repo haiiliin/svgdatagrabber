@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-from typing import Iterable
-
 import numpy as np
 
 from .geometrybase import GeometryBase
-from .point import Point, Vector
+from .point import Point, PointType, Vector
 
 
 class LineCoefs:
@@ -37,7 +35,7 @@ class LineCoefs:
 
     @classmethod
     def coefficientsFromTwoPoints(
-        cls, p1: Point | Iterable[float] | complex, p2: Point | Iterable[float] | complex
+        cls, p1: PointType, p2: PointType
     ) -> tuple[float, float, float]:
         """Get the coefficients of a line from two points.
 
@@ -60,7 +58,7 @@ class LineCoefs:
 
     @classmethod
     def coefficientsFromPointAndSlope(
-        cls, p: Point | Iterable[float] | complex, slope: float
+        cls, p: PointType, slope: float
     ) -> tuple[float, float, float]:
         """Get the coefficients of a line from a point and a slope.
 
@@ -103,7 +101,7 @@ class LineCoefs:
 
     @classmethod
     def coefficientsFromPointAndAngle(
-        cls, p: Point | Iterable[float] | complex, angle: float
+        cls, p: PointType, angle: float
     ) -> tuple[float, float, float]:
         """Get the coefficients of a line from a point and an angle.
 
@@ -156,8 +154,8 @@ class Line(GeometryBase, LineCoefs):
     def __init__(
         self,
         *,
-        start: Point | Iterable[float] | complex = None,
-        end: Point | Iterable[float] | complex = None,
+        start: PointType = None,
+        end: PointType = None,
         A: float = None,
         B: float = None,
         C: float = None,
@@ -241,7 +239,7 @@ class Line(GeometryBase, LineCoefs):
         """
         return np.allclose([self.A, self.B, self.C], [other.A, other.B, other.C], atol=self.tolerance)
 
-    def __contains__(self, p: Point | Iterable[float] | complex) -> bool:
+    def __contains__(self, p: PointType) -> bool:
         """Check if a point is on this line.
 
         >>> Point(0.0, 0.0) in Line(A=-1.0, B=1.0, C=0.0)
@@ -278,7 +276,7 @@ class Line(GeometryBase, LineCoefs):
         return cls(A=A, B=B, C=C)
 
     @classmethod
-    def fromTwoPoints(cls, start: Point | Iterable[float] | complex, end: Point | Iterable[float] | complex) -> Line:
+    def fromTwoPoints(cls, start: PointType, end: PointType) -> Line:
         """Create a line from two points.
 
         >>> Line.fromTwoPoints(Point(0.0, 0.0), Point(1.0, 1.0))
@@ -296,7 +294,7 @@ class Line(GeometryBase, LineCoefs):
         return cls.fromCoefficients(A=A, B=B, C=C)
 
     @classmethod
-    def fromPointAndSlope(cls, start: Point | Iterable[float] | complex, slope: float) -> Line:
+    def fromPointAndSlope(cls, start: PointType, slope: float) -> Line:
         """Create a line from a point and a slope.
 
         >>> Line.fromPointAndSlope(Point(0.0, 0.0), 1.0)
@@ -314,7 +312,7 @@ class Line(GeometryBase, LineCoefs):
         return cls.fromCoefficients(A=A, B=B, C=C)
 
     @classmethod
-    def fromPointAndAngle(cls, start: Point | Iterable[float] | complex, angle: float) -> Line:
+    def fromPointAndAngle(cls, start: PointType, angle: float) -> Line:
         """Create a line from a point and an angle.
 
         >>> Line.fromPointAndAngle(Point(0.0, 0.0), np.pi / 4.0)
@@ -525,7 +523,7 @@ class Line(GeometryBase, LineCoefs):
         p = Point(x, y)
         return p
 
-    def parallel(self, p: Point | Iterable[float] | complex) -> "Line":
+    def parallel(self, p: PointType) -> "Line":
         """Get a parallel line to this line.
 
         >>> Line(A=1.0, B=-1.0, C=0.0).parallel(Point(0.0, 1.0))
@@ -540,7 +538,7 @@ class Line(GeometryBase, LineCoefs):
         p = Point.aspoint(p)
         return Line(A=self.A, B=self.B, C=-self.A * p.x - self.B * p.y)
 
-    def perpendicular(self, p: Point | Iterable[float] | complex) -> "Line":
+    def perpendicular(self, p: PointType) -> "Line":
         """Get a perpendicular line to this line.
 
         >>> Line(A=1.0, B=-1.0, C=0.0).perpendicular(Point(0.0, 1.0))
@@ -571,8 +569,8 @@ class Segment(Line):
     def __init__(
         self,
         *,
-        start: Point | Iterable[float] | complex,
-        end: Point | Iterable[float] | complex,
+        start: PointType,
+        end: PointType,
         extended: bool = False,
     ):
         """Create a new line segment.
@@ -615,7 +613,7 @@ class Segment(Line):
             or (self.start == other.end and self.end == other.start)
         )
 
-    def __contains__(self, p: Point | Iterable[float] | complex) -> bool:
+    def __contains__(self, p: PointType) -> bool:
         """Check if a point is on this segment.
 
         >>> Point(0.0, 0.0) in Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
@@ -705,7 +703,7 @@ class Segment(Line):
 
 
 class ExtendedSegment(Segment):
-    def __init__(self, start: Point | Iterable[float] | complex, end: Point | Iterable[float] | complex):
+    def __init__(self, start: PointType, end: PointType):
         """Create a new extended line segment.
 
         >>> segment = ExtendedSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
@@ -729,8 +727,8 @@ class Ray(Line):
     def __init__(
         self,
         *,
-        start: Point | Iterable[float] | complex,
-        end: Point | Iterable[float] | complex,
+        start: PointType,
+        end: PointType,
         extended: bool = False,
     ):
         """Create a ray.
@@ -769,7 +767,7 @@ class Ray(Line):
         """
         return super().__eq__(other) and self.start == other.start
 
-    def __contains__(self, p: Point | Iterable[float] | complex):
+    def __contains__(self, p: PointType):
         """Check if a point is on this ray.
 
         >>> Point(0.0, 0.0) in Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
@@ -819,7 +817,7 @@ class Ray(Line):
 
 
 class ExtendedRay(Ray):
-    def __init__(self, start: Point | Iterable[float] | complex, end: Point | Iterable[float] | complex):
+    def __init__(self, start: PointType, end: PointType):
         """Create an extended ray.
 
         >>> ray = ExtendedRay(start=Point(0.0, 0.0), end=Point(1.0, 1.0))

@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from typing import Iterable
+from typing import Iterable, Union
 
 import numpy as np
 
 from .geometrybase import GeometryBase
+
+PointType = Union["Point", Iterable[float], complex]
 
 
 class Point(GeometryBase):
@@ -13,7 +15,7 @@ class Point(GeometryBase):
     #: The y coordinate of the point.
     y: float
 
-    def __init__(self, *args: float | complex | Iterable[float], x: float = None, y: float = None):
+    def __init__(self, *args: float | PointType, x: float = None, y: float = None):
         """Initialize a point.
 
         >>> Point(1.0, 2.0)
@@ -75,7 +77,7 @@ class Point(GeometryBase):
         """
         return self.__class__(-self.x, -self.y)
 
-    def __eq__(self, other: Point | Iterable[float] | complex) -> bool:
+    def __eq__(self, other: PointType) -> bool:
         """Check if two points are equal.
 
         >>> Point(1.0, 2.0) == Point(1.0, 2.0)
@@ -93,7 +95,7 @@ class Point(GeometryBase):
         other = self.aspoint(other)
         return np.allclose([self.x, self.y], [other.x, other.y], atol=self.tolerance)
 
-    def __add__(self, other: Point | Iterable[float] | complex) -> Point:
+    def __add__(self, other: PointType) -> Point:
         """Add a point or vector to the point.
 
         >>> Point(1.0, 2.0) + Point(3.0, 4.0)
@@ -105,7 +107,7 @@ class Point(GeometryBase):
         other = self.aspoint(other)
         return Point(self.x + other.x, self.y + other.y)
 
-    def __sub__(self, other: Point | Iterable[float] | complex) -> Point:
+    def __sub__(self, other: PointType) -> Point:
         """Subtract a point or vector from the point.
 
         >>> Point(1.0, 2.0) - Point(3.0, 4.0)
@@ -151,7 +153,7 @@ class Point(GeometryBase):
         return np.linalg.norm(self.array)
 
     @classmethod
-    def aspoint(cls, p: Point | Iterable[float] | complex) -> Point:
+    def aspoint(cls, p: PointType) -> Point:
         """Convert a point to a Point object.
 
         >>> Point.aspoint(Point(1.0, 2.0))
@@ -180,7 +182,7 @@ class Point(GeometryBase):
         else:
             raise TypeError(f"Cannot convert {p} to a {cls.__name__} object.")
 
-    def distance(self, other: Point | Iterable[float] | complex) -> float:
+    def distance(self, other: PointType) -> float:
         """Calculate the distance between two points.
 
         >>> Point(1.0, 2.0).distance(Point(4.0, 6.0))
@@ -195,7 +197,7 @@ class Point(GeometryBase):
         other = self.aspoint(other)
         return np.linalg.norm(np.array([self.x, self.y]) - np.array([other.x, other.y]))
 
-    def direction(self, other: Point | Iterable[float] | complex) -> float:
+    def direction(self, other: PointType) -> float:
         """Calculate the direction between two points.
 
         >>> p1 = Point(0.0, 0.0).direction(Point(1.0, 1.0))
@@ -216,7 +218,7 @@ class Point(GeometryBase):
         other = self.aspoint(other)
         return np.arctan2(other.y - self.y, other.x - self.x)
 
-    def vector(self, other: Point | Iterable[float] | complex) -> Vector:
+    def vector(self, other: PointType) -> Vector:
         """Calculate the vector between two points.
 
         >>> Point(1.0, 2.0).vector(Point(4.0, 6.0))
@@ -245,7 +247,7 @@ class Point(GeometryBase):
 
 
 class Vector(Point):
-    def __matmul__(self, other: Point | Iterable[float] | complex) -> float:
+    def __matmul__(self, other: PointType) -> float:
         """Calculate the dot product between two points.
 
         >>> Vector(1.0, 2.0) @ Vector(3.0, 4.0)
@@ -260,7 +262,7 @@ class Vector(Point):
         other = self.aspoint(other)
         return self.x * other.x + self.y * other.y
 
-    def dot(self, other: Point | Iterable[float] | complex) -> float:
+    def dot(self, other: PointType) -> float:
         """Calculate the dot product between two points.
 
         >>> Vector(1.0, 2.0).dot(Vector(3.0, 4.0))
@@ -275,7 +277,7 @@ class Vector(Point):
         return self.__matmul__(other)
 
     @classmethod
-    def asvector(cls, v: Point | "Vector" | Iterable[float] | complex) -> "Vector":
+    def asvector(cls, v: "Vector" | PointType) -> "Vector":
         """Convert a vector to a Vector object.
 
         >>> Vector.asvector(Vector(1.0, 2.0))
