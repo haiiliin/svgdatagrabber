@@ -20,8 +20,6 @@ class Polygon(PointSequence, ClosedShape, IterablePoint):
         """
         if len(points) < 3:
             raise ValueError("A polygon must have at least three points.")
-        elif not self.isConvex():
-            raise ValueError("A polygon must be convex.")
         super().__init__(*points)
 
     def __contains__(self, item: PointType | Iterable[Point]) -> bool:
@@ -42,10 +40,14 @@ class Polygon(PointSequence, ClosedShape, IterablePoint):
         """
         return self.contains(item)
 
+    def isSimple(self) -> bool:
+        """Check if the polygon is simple."""
+        raise NotImplementedError
+
     def isConvex(self):
         """Check if the polygon is convex."""
         #: https://stackoverflow.com/questions/471962/how-do-determine-if-a-polygon-is-complex-convex-nonconvex
-        return True
+        raise NotImplementedError
 
     @property
     def ndim(self) -> int:
@@ -102,9 +104,11 @@ class Polygon(PointSequence, ClosedShape, IterablePoint):
         ray = Ray(start=point, end=Point(0, 0))
         intersections, intersecting_points = 0, PointSequence()
         for edge in self.edges:
-            if ray.isIntersecting(edge) and (intersection := ray.intersect(edge)) not in intersecting_points:
-                intersections += 1
-                intersecting_points.append(intersection)
+            if ray.isIntersecting(edge):
+                intersection = ray.intersect(edge)
+                if intersection not in intersecting_points:
+                    intersections += 1
+                    intersecting_points.append(intersection)
         return intersections % 2 == 1
 
     def inEdges(self, item: PointType | Iterable[Point]) -> bool:
@@ -182,9 +186,5 @@ class Polygon(PointSequence, ClosedShape, IterablePoint):
 
     @property
     def internalAngles(self) -> list[float]:
-        """Return the internal angles of the polygon.
-
-        >>> Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)).internalAngles
-        [90.0, 90.0, 90.0, 90.0]
-        """
-        return [edge.angle for edge in self.edges]
+        """Return the internal angles of the polygon."""
+        raise NotImplementedError
