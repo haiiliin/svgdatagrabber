@@ -42,6 +42,9 @@ class Polygon(PointSequence, ClosedShape):
         """
         return self.contains(item)
 
+    def __eq__(self, other: Polygon) -> bool:
+        return super().__eq__(other)
+
     @property
     def isSimple(self) -> bool:
         """Check if the polygon is simple.
