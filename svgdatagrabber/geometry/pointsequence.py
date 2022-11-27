@@ -13,26 +13,10 @@ class IterablePoint(GeometryBase, ABC):
         """Iterate over the geometry vertices."""
         raise NotImplementedError
 
-    def within(self, other: PointType) -> bool:
-        """Check if the point is within the geometry.
-
-        Args:
-            other: The point to check.
-
-        Returns:
-            True if the point is within the geometry.
-        """
-        raise NotImplementedError
-
 
 class StraightLineShape(IterablePoint, ABC):
     def within(self, other: "ClosedShape") -> bool:
         return all(p in other for p in self)
-
-
-class CurveShape(IterablePoint, ABC):
-    def within(self, other: "ClosedShape") -> bool:
-        raise NotImplementedError
 
 
 class PointSequence(Sequence[Point], IterablePoint):
