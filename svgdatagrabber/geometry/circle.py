@@ -7,7 +7,7 @@ from .point import PointType, Point
 class Circle(Ellipse):
 
     #: The radius of the circle.
-    r: float
+    _r: float
 
     def __init__(self, *, center: PointType, r: float):
         """Create a circle, either by center and radius or by parameters.
@@ -20,7 +20,7 @@ class Circle(Ellipse):
             r: The radius of the circle.
         """
         super().__init__(center=center, ra=r, rb=r, theta=0.0)
-        self.r = r
+        self._r = r
 
     def __repr__(self) -> str:
         """Get the string representation of the circle.
@@ -29,6 +29,26 @@ class Circle(Ellipse):
         'Circle(center=Point(x=0.0, y=0.0), r=1.0)'
         """
         return f"Circle(center={self.center}, r={self.r})"
+
+    @property
+    def r(self):
+        """Get the radius of the circle.
+
+        >>> Circle(center=Point(0.0, 0.0), r=1.0).r
+        1.0
+        """
+        return self._r
+
+    @r.setter
+    def r(self, value):
+        """Set the radius of the circle.
+
+        >>> circle = Circle(center=Point(0.0, 0.0), r=1.0)
+        >>> circle.r = 2.0
+        >>> circle.r
+        2.0
+        """
+        self._r, self.ra, self.rb = value, value, value
 
     def bounding(self) -> Tuple[Point, Point]:
         """Get the bounding box of the circle.
