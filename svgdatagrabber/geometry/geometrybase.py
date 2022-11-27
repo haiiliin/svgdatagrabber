@@ -5,6 +5,10 @@ class GeometryBase(ABC):
     #: Tolerance for equality.
     tolerance = 1e-6
 
+    def __repr__(self) -> str:
+        """Return the representation of the geometry."""
+        raise NotImplementedError
+
     def __eq__(self, other: "GeometryBase") -> bool:
         """Check if two geometries are equal."""
         raise NotImplementedError
