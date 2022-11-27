@@ -1,4 +1,5 @@
 from abc import ABC
+from typing import Tuple
 
 from .geometrybase import GeometryBase
 from .point import Point
@@ -26,6 +27,6 @@ class ClosedShape(GeometryBase, ABC):
         """Return the centroid of the shape."""
         raise NotImplementedError
 
-    def bounding_box(self) -> tuple[Point, Point]:
+    def bounding_box(self) -> Tuple[Point, Point]:
         """Return the bounding box of the shape."""
         raise NotImplementedError
