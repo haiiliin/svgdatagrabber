@@ -81,7 +81,7 @@ class GeometryBase(ABC):
         else:
             raise ValueError(f"Unknown type {self.drawAs}")
         pen = QPen(pen or item.pen())
-        pen.setWidthF(max(0.02 * self.maxsize, pen.widthF()))
+        pen.setWidthF(min(0.02 * self.maxsize, pen.widthF()))
         item.setPen(pen)
         item.setBrush(brush or item.brush())
         return item
