@@ -9,6 +9,21 @@ from .geometrybase import GeometryBase
 from .point import Point, PointType, Vector
 
 
+class LineBase(GeometryBase, ABC):
+    """Base class for line-like geometries."""
+    pass
+
+
+class StraightLineBase(LineBase, ABC):
+    """Base class for straight line-like geometries."""
+    pass
+
+
+class CurveLineBase(LineBase, ABC):
+    """Base class for curve line-like geometries."""
+    pass
+
+
 class LineCoefs:
     """The coefficients of a line in 2D space."""
 
@@ -138,18 +153,6 @@ class LineCoefs:
         C = intercept * np.sin(angle)
         A, B, C = cls.standardizeCoefficients(A, B, C)
         return A, B, C
-
-
-class LineBase(GeometryBase, ABC):
-    pass
-
-
-class StraightLineBase(LineBase, ABC):
-    pass
-
-
-class CurveLineBase(LineBase, ABC):
-    pass
 
 
 class Line(StraightLineBase, LineCoefs):

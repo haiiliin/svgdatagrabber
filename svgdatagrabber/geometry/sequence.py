@@ -3,10 +3,9 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Iterable, Sequence, overload, List, Union
 
-from .line import Line
 from .geometrybase import GeometryBase
+from .line import Line
 from .point import Point, PointType
-
 
 SequenceItem = Union[GeometryBase, Point, Line]
 SequenceItemType = Union[GeometryBase, PointType, Line]
