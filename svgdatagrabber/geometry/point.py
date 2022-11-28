@@ -3,8 +3,11 @@ from __future__ import annotations
 from typing import Iterable, Union
 
 import numpy as np
+from qtpy.QtCore import QPointF, QLineF
+from qtpy.QtGui import QPen, QBrush
+from qtpy.QtWidgets import QGraphicsScene, QGraphicsLineItem, QGraphicsEllipseItem
 
-from .geometrybase import GeometryBase
+from .geometrybase import GeometryBase, QPenType, QBrushType
 
 PointType = Union["Point", Iterable[float], complex]
 
@@ -246,6 +249,21 @@ class Point(GeometryBase):
         """
         return np.array([self.x, self.y])
 
+    @property
+    def qobject(self) -> QPointF:
+        """Convert the point to a Qt point."""
+        return QPointF(self.x, self.y)
+
+    def draw(self, scene: QGraphicsScene, pen: QPenType = None, brush: QBrushType = None) -> QGraphicsEllipseItem:
+        """Draw the point on the scene.
+
+        Args:
+            scene: The scene to draw on.
+            pen: The pen to draw with.
+            brush: The brush to draw with.
+        """
+        return scene.addEllipse(self.x, self.y, 0, 0, pen or QPen(), brush or QBrush())
+
 
 class Vector(Point):
     def __matmul__(self, other: PointType) -> float:
@@ -295,3 +313,18 @@ class Vector(Point):
             The converted vector.
         """
         return cls.aspoint(v)
+
+    @property
+    def qobject(self) -> QLineF:
+        """Convert the vector to a Qt line."""
+        return QLineF(0.0, 0.0, self.x, self.y)
+
+    def draw(self, scene: QGraphicsScene, pen: QPenType = None, brush: QBrushType = None) -> QGraphicsLineItem:
+        """Draw the vector on the scene.
+
+        Args:
+            scene: The scene to draw on.
+            pen: The pen to draw with.
+            brush: The brush to draw with.
+        """
+        return scene.addLine(self.qobject, pen or QPen(), brush or QBrush())
