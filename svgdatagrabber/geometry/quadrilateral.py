@@ -18,7 +18,7 @@ class Quadrilateral(Polygon):
         >>> Quadrilateral(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, -1.0)).check()
         Traceback (most recent call last):
         ...
-        AssertionError: The quadrilateral must be simple.
+        AssertionError: The polygon must be simple.
         """
         super().check()
         assert self.isValid, "The quadrilateral must be convex."

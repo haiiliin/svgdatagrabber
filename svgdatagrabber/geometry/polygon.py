@@ -57,7 +57,7 @@ class Polygon(ClosedShape, PointSequence):
     def check(self):
         """Check if the polygon is valid."""
         assert len(self) >= 3, "A polygon must have at least three points."
-        assert self.isSimple, "The polygon is not simple."
+        assert self.isSimple, "The polygon must be simple."
 
     @property
     def ndim(self) -> int:
