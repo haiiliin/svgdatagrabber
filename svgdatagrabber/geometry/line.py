@@ -24,138 +24,7 @@ class CurveLineBase(LineBase, ABC):
     pass
 
 
-class LineCoefs:
-    """The coefficients of a line in 2D space."""
-
-    @classmethod
-    def standardizeCoefficients(cls, A: float, B: float, C: float) -> tuple[float, float, float]:
-        """Standardize the coefficients of a line.
-
-        >>> Line.standardizeCoefficients(1.0, -1.0, 0.0)
-        (1.0, -1.0, 0.0)
-        >>> Line.standardizeCoefficients(-1.0, -1.0, 1.0)
-        (1.0, 1.0, -1.0)
-
-        Args:
-            A: The coefficient of the x term.
-            B: The coefficient of the y term.
-            C: The constant term.
-
-        Returns:
-            The standardized coefficients.
-        """
-        if A != 0.0:
-            A, B, C = 1.0, B / A, C / A
-        elif B != 0.0:
-            B, C = 1.0, C / B
-        A, B, C = round(A + 0.0, 10), round(B + 0.0, 10), round(C + 0.0, 10)  # Prevent -0.0 and convert to float
-        return A, B, C
-
-    @classmethod
-    def coefficientsFromTwoPoints(cls, p1: PointType, p2: PointType) -> tuple[float, float, float]:
-        """Get the coefficients of a line from two points.
-
-        >>> LineCoefs.coefficientsFromTwoPoints(Point(0.0, 0.0), Point(1.0, 1.0))
-        (1.0, -1.0, 0.0)
-
-        Args:
-            p1: The first point.
-            p2: The second point.
-
-        Returns:
-            The coefficients of the line.
-        """
-        p1, p2 = Point.aspoint(p1), Point.aspoint(p2)
-        A = p1.y - p2.y
-        B = p2.x - p1.x
-        C = p1.x * p2.y - p2.x * p1.y
-        A, B, C = cls.standardizeCoefficients(A, B, C)
-        return A, B, C
-
-    @classmethod
-    def coefficientsFromPointAndSlope(cls, p: PointType, slope: float) -> tuple[float, float, float]:
-        """Get the coefficients of a line from a point and a slope.
-
-        >>> LineCoefs.coefficientsFromPointAndSlope(Point(0.0, 0.0), 1.0)
-        (1.0, -1.0, 0.0)
-
-        Args:
-            p: The point.
-            slope: The slope.
-
-        Returns:
-            The coefficients of the line.
-        """
-        p = Point.aspoint(p)
-        A = slope
-        B = -1.0
-        C = p.y - slope * p.x
-        A, B, C = cls.standardizeCoefficients(A, B, C)
-        return A, B, C
-
-    @classmethod
-    def coefficientsFromSlopeAndIntercept(cls, slope: float, intercept: float) -> tuple[float, float, float]:
-        """Get the coefficients of a line from a slope and an intercept.
-
-        >>> LineCoefs.coefficientsFromSlopeAndIntercept(1.0, 0.0)
-        (1.0, -1.0, 0.0)
-
-        Args:
-            slope: The slope.
-            intercept: The intercept.
-
-        Returns:
-            The coefficients of the line.
-        """
-        A = slope
-        B = -1.0
-        C = intercept
-        A, B, C = cls.standardizeCoefficients(A, B, C)
-        return A, B, C
-
-    @classmethod
-    def coefficientsFromPointAndAngle(cls, p: PointType, angle: float) -> tuple[float, float, float]:
-        """Get the coefficients of a line from a point and an angle.
-
-        >>> LineCoefs.coefficientsFromPointAndAngle(Point(0.0, 0.0), np.pi / 4.0)
-        (1.0, -1.0, 0.0)
-
-        Args:
-            p: The point.
-            angle: The angle.
-
-        Returns:
-            The coefficients of the line.
-        """
-        p = Point.aspoint(p)
-        A = np.cos(angle)
-        B = -np.sin(angle)
-        C = B * p.y - A * p.x
-        A, B, C = cls.standardizeCoefficients(A, B, C)
-        return A, B, C
-
-    @classmethod
-    def coefficientsFromAngleAndIntercept(cls, angle: float, intercept: float) -> tuple[float, float, float]:
-        """Get the coefficients of a line from an angle and an intercept.
-
-        >>> LineCoefs.coefficientsFromAngleAndIntercept(np.pi / 4.0, 0.0)
-        (1.0, -1.0, 0.0)
-
-        Args:
-            angle: The angle.
-            intercept: The intercept.
-
-        Returns:
-            The coefficients of the line.
-        """
-        A = np.cos(angle)
-        B = -np.sin(angle)
-        C = intercept * np.sin(angle)
-        A, B, C = cls.standardizeCoefficients(A, B, C)
-        return A, B, C
-
-
-class Line(StraightLineBase, LineCoefs):
+class Line(StraightLineBase):
     #: Coefficient of the x term.
     A: float
     #: Coefficient of the y term.
@@ -270,6 +139,30 @@ class Line(StraightLineBase, LineCoefs):
         return self.distance(p) < self.tolerance
 
     @classmethod
+    def standardizeCoefficients(cls, A: float, B: float, C: float) -> tuple[float, float, float]:
+        """Standardize the coefficients of a line.
+
+        >>> Line.standardizeCoefficients(1.0, -1.0, 0.0)
+        (1.0, -1.0, 0.0)
+        >>> Line.standardizeCoefficients(-1.0, -1.0, 1.0)
+        (1.0, 1.0, -1.0)
+
+        Args:
+            A: The coefficient of the x term.
+            B: The coefficient of the y term.
+            C: The constant term.
+
+        Returns:
+            The standardized coefficients.
+        """
+        if A != 0.0:
+            A, B, C = 1.0, B / A, C / A
+        elif B != 0.0:
+            B, C = 1.0, C / B
+        A, B, C = round(A + 0.0, 10), round(B + 0.0, 10), round(C + 0.0, 10)  # Prevent -0.0 and convert to float
+        return A, B, C
+
+    @classmethod
     def fromCoefficients(cls, A: float, B: float, C: float) -> Line:
         """Create a line from the coefficients.
 
@@ -286,6 +179,27 @@ class Line(StraightLineBase, LineCoefs):
         """
         A, B, C = cls.standardizeCoefficients(A, B, C)
         return cls(A=A, B=B, C=C)
+
+    @classmethod
+    def coefficientsFromTwoPoints(cls, p1: PointType, p2: PointType) -> tuple[float, float, float]:
+        """Get the coefficients of a line from two points.
+
+        >>> Line.coefficientsFromTwoPoints(Point(0.0, 0.0), Point(1.0, 1.0))
+        (1.0, -1.0, 0.0)
+
+        Args:
+            p1: The first point.
+            p2: The second point.
+
+        Returns:
+            The coefficients of the line.
+        """
+        p1, p2 = Point.aspoint(p1), Point.aspoint(p2)
+        A = p1.y - p2.y
+        B = p2.x - p1.x
+        C = p1.x * p2.y - p2.x * p1.y
+        A, B, C = cls.standardizeCoefficients(A, B, C)
+        return A, B, C
 
     @classmethod
     def fromTwoPoints(cls, start: PointType, end: PointType) -> Line:
@@ -306,6 +220,27 @@ class Line(StraightLineBase, LineCoefs):
         return cls.fromCoefficients(A=A, B=B, C=C)
 
     @classmethod
+    def coefficientsFromPointAndSlope(cls, p: PointType, slope: float) -> tuple[float, float, float]:
+        """Get the coefficients of a line from a point and a slope.
+
+        >>> Line.coefficientsFromPointAndSlope(Point(0.0, 0.0), 1.0)
+        (1.0, -1.0, 0.0)
+
+        Args:
+            p: The point.
+            slope: The slope.
+
+        Returns:
+            The coefficients of the line.
+        """
+        p = Point.aspoint(p)
+        A = slope
+        B = -1.0
+        C = p.y - slope * p.x
+        A, B, C = cls.standardizeCoefficients(A, B, C)
+        return A, B, C
+
+    @classmethod
     def fromPointAndSlope(cls, start: PointType, slope: float) -> Line:
         """Create a line from a point and a slope.
 
@@ -322,6 +257,27 @@ class Line(StraightLineBase, LineCoefs):
         start = Point.aspoint(start)
         A, B, C = cls.coefficientsFromPointAndSlope(start, slope)
         return cls.fromCoefficients(A=A, B=B, C=C)
+
+    @classmethod
+    def coefficientsFromPointAndAngle(cls, p: PointType, angle: float) -> tuple[float, float, float]:
+        """Get the coefficients of a line from a point and an angle.
+
+        >>> Line.coefficientsFromPointAndAngle(Point(0.0, 0.0), np.pi / 4.0)
+        (1.0, -1.0, 0.0)
+
+        Args:
+            p: The point.
+            angle: The angle.
+
+        Returns:
+            The coefficients of the line.
+        """
+        p = Point.aspoint(p)
+        A = np.cos(angle)
+        B = -np.sin(angle)
+        C = B * p.y - A * p.x
+        A, B, C = cls.standardizeCoefficients(A, B, C)
+        return A, B, C
 
     @classmethod
     def fromPointAndAngle(cls, start: PointType, angle: float) -> Line:
@@ -342,6 +298,26 @@ class Line(StraightLineBase, LineCoefs):
         return cls.fromCoefficients(A=A, B=B, C=C)
 
     @classmethod
+    def coefficientsFromSlopeAndIntercept(cls, slope: float, intercept: float) -> tuple[float, float, float]:
+        """Get the coefficients of a line from a slope and an intercept.
+
+        >>> Line.coefficientsFromSlopeAndIntercept(1.0, 0.0)
+        (1.0, -1.0, 0.0)
+
+        Args:
+            slope: The slope.
+            intercept: The intercept.
+
+        Returns:
+            The coefficients of the line.
+        """
+        A = slope
+        B = -1.0
+        C = intercept
+        A, B, C = cls.standardizeCoefficients(A, B, C)
+        return A, B, C
+
+    @classmethod
     def fromSlopeAndIntercept(cls, slope: float, intercept: float) -> Line:
         """Create a line from a slope and intercept.
 
@@ -357,6 +333,26 @@ class Line(StraightLineBase, LineCoefs):
         """
         A, B, C = cls.coefficientsFromSlopeAndIntercept(slope, intercept)
         return cls.fromCoefficients(A=A, B=B, C=C)
+
+    @classmethod
+    def coefficientsFromAngleAndIntercept(cls, angle: float, intercept: float) -> tuple[float, float, float]:
+        """Get the coefficients of a line from an angle and an intercept.
+
+        >>> Line.coefficientsFromAngleAndIntercept(np.pi / 4.0, 0.0)
+        (1.0, -1.0, 0.0)
+
+        Args:
+            angle: The angle.
+            intercept: The intercept.
+
+        Returns:
+            The coefficients of the line.
+        """
+        A = np.cos(angle)
+        B = -np.sin(angle)
+        C = intercept * np.sin(angle)
+        A, B, C = cls.standardizeCoefficients(A, B, C)
+        return A, B, C
 
     @classmethod
     def fromAngleAndIntercept(cls, angle: float, intercept: float) -> Line:
