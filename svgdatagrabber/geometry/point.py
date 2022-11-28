@@ -5,13 +5,15 @@ from typing import Iterable, Union, Tuple
 import numpy as np
 from qtpy.QtCore import QLineF
 
-from .geometrybase import DrawAsEllipse
+from .geometrybase import DrawAsEllipse, GeometryBase
 
 PointType = Union["Point", Iterable[float], complex]
 
 
-class Point(DrawAsEllipse):
+class Point(GeometryBase):
     """A class representing a point in 2D space."""
+
+    drawAs = DrawAsEllipse
 
     #: The x coordinate of the point.
     x: float

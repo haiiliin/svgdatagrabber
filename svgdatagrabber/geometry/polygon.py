@@ -14,8 +14,10 @@ from .sequence import PointSequence
 from .straightline import LineRay, LineSegment
 
 
-class Polygon(ClosedShape, DrawAsPolygon, PointSequence):
+class Polygon(ClosedShape, PointSequence):
     """A class representing a polygon."""
+
+    drawAs = DrawAsPolygon
 
     def __init__(self, *points: PointType):
         """Create a polygon.

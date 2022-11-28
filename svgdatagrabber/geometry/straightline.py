@@ -11,8 +11,10 @@ from .linebase import StraightLineBase
 from .point import Point, PointType, Vector
 
 
-class Line(StraightLineBase, DrawAsLine):
+class Line(StraightLineBase):
     """A class representing a line."""
+
+    drawAs = DrawAsLine
 
     #: Coefficient of the x term.
     A: float

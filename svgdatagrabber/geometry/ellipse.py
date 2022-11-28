@@ -10,8 +10,10 @@ from .linebase import LineBase
 from .point import Point, PointType
 
 
-class Ellipse(ClosedShape, DrawAsEllipse):
+class Ellipse(ClosedShape):
     """A class representing an ellipse."""
+
+    drawAs = DrawAsEllipse
 
     #: The center of the ellipse.
     center: Point
