@@ -1,6 +1,8 @@
+from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QMainWindow
 
 from .graphicsview import GraphicsView
+from ..geometry import Polygon, Point, Circle
 
 
 class SvgDataGrabberMainWindow(QMainWindow):
@@ -8,8 +10,13 @@ class SvgDataGrabberMainWindow(QMainWindow):
 
     def __init__(self, parent=None):
         super(SvgDataGrabberMainWindow, self).__init__(parent)
-        self._graphics_view = GraphicsView(self)
-        self.setCentralWidget(self._graphics_view)
+        self.view = GraphicsView(self)
+        self.setCentralWidget(self.view)
 
         self.resize(800, 600)
         self.setWindowTitle("SVG Data Grabber")
+
+        # add test geometries
+        self.view.addPrimitive(Polygon(Point(0.0, 0.0), Point(100.0, 0.0), Point(100.0, 100.0), Point(0.0, 100.0)))
+        self.view.addPrimitive(Circle(center=Point(50.0, 50.0), r=50.0))
+        self.view.redraw(Qt.blue, Qt.red)

@@ -7,7 +7,7 @@ from qtpy.QtGui import QResizeEvent, QPainter
 from qtpy.QtWidgets import QGraphicsView, QGraphicsScene, QOpenGLWidget
 
 from .geometricobject import GeometricObject
-from ..geometry import Polygon, Point, Circle, GeometryBase
+from ..geometry import GeometryBase
 
 
 class GraphicsView(QGraphicsView):
@@ -26,10 +26,6 @@ class GraphicsView(QGraphicsView):
         # geometric objects
         self.geometric_objects = []
 
-        # add test geometries
-        self.addPrimitive(Polygon(Point(0.0, 0.0), Point(100.0, 0.0), Point(100.0, 100.0), Point(0.0, 100.0)))
-        self.addPrimitive(Circle(center=Point(50.0, 50.0), r=50.0))
-
     def addPrimitive(self, primitive: GeometricObject | GeometryBase):
         """Add a primitive to the scene."""
         if isinstance(primitive, GeometryBase):
@@ -37,13 +33,13 @@ class GraphicsView(QGraphicsView):
         primitive.draw(self.scene)
         self.geometric_objects.append(primitive)
 
-    def draw(self):
+    def redraw(self, pen=None, brush=None, fit=True):
         """Draw the geometries in the scene and fit the view."""
         for geometric_object in self.geometric_objects:
-            geometric_object.draw(self.scene, Qt.blue)
-        self.fitInView(self.scene.itemsBoundingRect(), Qt.KeepAspectRatio)
+            geometric_object.draw(self.scene, pen, brush)
+        fit and self.fitInView(self.scene.itemsBoundingRect(), Qt.KeepAspectRatio)
 
-    def resizeEvent(self, event: QResizeEvent) -> None:
+    def resizeEvent(self, event: QResizeEvent):
         """Reimplement the resize event."""
         self.fitInView(self.scene.itemsBoundingRect(), Qt.KeepAspectRatio)
 

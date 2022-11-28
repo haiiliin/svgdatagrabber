@@ -22,5 +22,4 @@ class GeometricObject:
 
     def draw(self, scene: QGraphicsScene, pen: QPen = None, brush: QBrush = None):
         """Draw the object in the scene."""
-        self.item = self.geometry.draw(scene, pen, brush)
-        return self.item
+        self.item = self.geometry.draw(scene, pen, brush, self.item)
