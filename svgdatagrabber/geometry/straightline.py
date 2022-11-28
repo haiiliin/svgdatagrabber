@@ -14,8 +14,6 @@ from .point import Point, PointType, Vector
 class Line(StraightLineBase):
     """A class representing a line."""
 
-    drawAs = DrawAsLine
-
     #: Coefficient of the x term.
     A: float
     #: Coefficient of the y term.

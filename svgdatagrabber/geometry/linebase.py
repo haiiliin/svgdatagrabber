@@ -1,10 +1,12 @@
 from abc import ABC
 
-from .geometrybase import GeometryBase
+from .geometrybase import GeometryBase, DrawAsLine
 
 
 class LineBase(GeometryBase, ABC):
     """A base class for line-like geometries."""
+
+    drawAs = DrawAsLine
 
     pass
 
