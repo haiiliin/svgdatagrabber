@@ -3,16 +3,13 @@ from __future__ import annotations
 import sys
 from abc import ABC
 from enum import IntEnum
-from typing import Union, Tuple
+from typing import Tuple
 
 from qtpy.QtCore import Qt
-from qtpy.QtGui import QPen, QBrush, QColor, QGradient
-from qtpy.QtWidgets import QGraphicsLineItem, QGraphicsPolygonItem, QGraphicsEllipseItem, QApplication
-from qtpy.QtWidgets import QGraphicsScene
+from qtpy.QtGui import QPen
+from qtpy.QtWidgets import QApplication, QGraphicsScene
 
-QPenType = Union[QPen, QColor, Qt.GlobalColor, QGradient]
-QBrushType = Union[QBrush, QColor, Qt.GlobalColor, QGradient]
-QGraphicsItemType = Union[QGraphicsLineItem, QGraphicsPolygonItem, QGraphicsEllipseItem]
+from ..graphics.annotations import QPenType, QBrushType, QGraphicsItemType
 
 
 class GeometryDrawAs(IntEnum):

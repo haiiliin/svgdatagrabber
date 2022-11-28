@@ -7,8 +7,8 @@ from qtpy.QtGui import QPainter
 from qtpy.QtWidgets import QGraphicsView, QGraphicsScene, QOpenGLWidget, QWidget
 
 from .geometricobject import GeometricObject
+from .annotations import QPenType, QBrushType
 from ..geometry import GeometryBase
-from ..geometry.geometrybase import QPenType, QBrushType
 
 
 class GraphicsView(QGraphicsView):
