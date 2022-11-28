@@ -169,7 +169,7 @@ class Rectangle(Parallelogram, IsoscelesTrapezoid):
         assert self.isRectangle, "The quadrilateral must be a right parallelogram."
 
 
-class Square(Rectangle, Rhombus, Parallelogram):
+class Square(Rectangle, Rhombus, Parallelogram, RightKite):
     @property
     def isSquare(self):
         """Check if the quadrilateral is a square."""
