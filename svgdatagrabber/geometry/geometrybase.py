@@ -6,10 +6,12 @@ from typing import Union, Tuple
 
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QPen, QBrush, QColor, QGradient
-from qtpy.QtWidgets import QGraphicsScene, QGraphicsItem
+from qtpy.QtWidgets import QGraphicsLineItem, QGraphicsPolygonItem, QGraphicsEllipseItem
+from qtpy.QtWidgets import QGraphicsScene
 
 QPenType = Union[QPen, QColor, Qt.GlobalColor, QGradient]
 QBrushType = Union[QBrush, QColor, Qt.GlobalColor, QGradient]
+QGraphicsItemType = Union[QGraphicsLineItem, QGraphicsPolygonItem, QGraphicsEllipseItem]
 
 
 class GeometryDrawAs(IntEnum):
@@ -52,8 +54,8 @@ class GeometryBase(ABC):
         raise NotImplementedError
 
     def draw(
-        self, scene: QGraphicsScene, pen: QPenType = None, brush: QBrushType = None, item: QGraphicsItem = None
-    ) -> QGraphicsItem:
+        self, scene: QGraphicsScene, pen: QPenType = None, brush: QBrushType = None, item: QGraphicsItemType = None
+    ) -> QGraphicsItemType:
         """Draw the geometry on the scene.
 
         Args:
@@ -64,11 +66,11 @@ class GeometryBase(ABC):
         """
         args = self.drawArgs
         if self.drawAs == DrawAsLine:
-            item and item.setLine(*args) or (item := scene.addLine(*args))
+            item and item.setLine(*args) or item or (item := scene.addLine(*args))
         elif self.drawAs == DrawAsPolygon:
-            item and item.setPolygon(*args) or (item := scene.addPolygon(*args))
+            item and item.setPolygon(*args) or item or (item := scene.addPolygon(*args))
         elif self.drawAs == DrawAsEllipse:
-            item and item.setRect(*args) or (item := scene.addEllipse(*args))
+            item and item.setRect(*args) or item or (item := scene.addEllipse(*args))
         else:
             raise ValueError(f"Unknown type {self.drawAs}")
         pen and item.setPen(pen)
