@@ -25,6 +25,7 @@ class GeometrySequence(Sequence[GeometryBase]):
             items: The items to add to the sequence.
         """
         self.items = list(self.asitem(item) for item in items)
+        self.check()
 
     def __repr__(self) -> str:
         """Return a string representation of the sequence.

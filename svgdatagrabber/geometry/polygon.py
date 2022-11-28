@@ -22,8 +22,7 @@ class Polygon(ClosedShape, PointSequence):
         """
         if len(points) < 3:
             raise ValueError("A polygon must have at least three points.")
-        super().__init__(*points)
-        self.check()
+        PointSequence.__init__(self, *points)
 
     def __repr__(self):
         """Return a string representation of the polygon.
