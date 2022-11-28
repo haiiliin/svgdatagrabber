@@ -223,5 +223,4 @@ class Polygon(ClosedShape, PointSequence):
         >>> Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)).asShapely
         <shapely.geometry.polygon.Polygon object at ...>
         """
-        shell = ((vertex.x, vertex.y) for vertex in self.vertices)
-        return ShapelyPolygon(shell)
+        return ShapelyPolygon(((vertex.x, vertex.y) for vertex in self.vertices))
