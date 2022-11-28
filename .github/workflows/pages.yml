@@ -1,6 +1,13 @@
-name: Pages
+name: docs-test
 on:
   push:
+    branches:
+    - main
+    paths:
+    - 'SSI/**'
+    - 'docs/source/**'
+    - '.github/workflows/pages.yml'
+  pull_request:
     branches:
     - main
     paths:
@@ -32,8 +39,3 @@ jobs:
       uses: sphinx-notes/pages@v2
       with:
         documentation_path: docs
-    - name: Push changes
-      uses: ad-m/github-push-action@v0.6.0
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: gh-pages
