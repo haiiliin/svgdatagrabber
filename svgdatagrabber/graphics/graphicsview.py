@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from typing import List
+from typing import List, overload
 
 from qtpy.QtCore import Qt
-from qtpy.QtGui import QResizeEvent, QPainter
-from qtpy.QtWidgets import QGraphicsView, QGraphicsScene, QOpenGLWidget
+from qtpy.QtGui import QPainter
+from qtpy.QtWidgets import QGraphicsView, QGraphicsScene, QOpenGLWidget, QWidget
 
 from .geometricobject import GeometricObject
 from ..geometry import GeometryBase
@@ -17,15 +17,34 @@ class GraphicsView(QGraphicsView):
     #: geometric objects
     geometric_objects: List[GeometricObject]
 
-    def __init__(self, parent=None):
+    @overload
+    def __init__(self, parent: QWidget | None = None, *, useOpenGL: bool = False):
+        ...
+
+    @overload
+    def __init__(self, scene: QGraphicsScene = None, parent: QWidget | None = None, *, useOpenGL: bool = False):
+        ...
+
+    def __init__(
+        self,
+        scene: QGraphicsScene | QWidget | None = None,
+        parent: QWidget | None = None,
+        *,
+        useOpenGL: bool = False,
+    ):
         """Initialize the class."""
+        if isinstance(scene, QWidget):
+            scene, parent = None, scene
         super().__init__(parent)
-        self.scene = QGraphicsScene()
+        self.scene = scene or QGraphicsScene()
         self.setScene(self.scene)
         self.setRenderHint(QPainter.HighQualityAntialiasing)
 
         # geometric objects
         self.geometric_objects = []
+
+        # use OpenGL
+        useOpenGL and self.useOpenGL()
 
     def addPrimitive(self, primitive: GeometricObject | GeometryBase):
         """Add a primitive to the scene."""
@@ -39,10 +58,6 @@ class GraphicsView(QGraphicsView):
         for geometric_object in self.geometric_objects:
             geometric_object.draw(self.scene, pen, brush)
         fit and self.fitInView(self.scene.itemsBoundingRect(), Qt.KeepAspectRatio)
-
-    def resizeEvent(self, event: QResizeEvent):
-        """Reimplement the resize event."""
-        self.fitInView(self.scene.itemsBoundingRect(), Qt.KeepAspectRatio)
 
     def useOpenGL(self):
         """Use OpenGL."""
