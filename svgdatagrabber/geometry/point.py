@@ -186,6 +186,15 @@ class Point(GeometryBase):
         else:
             raise TypeError(f"Cannot convert {p} to a {cls.__name__} object.")
 
+    @property
+    def maxsize(self) -> float:
+        """Return the maximum size of the point.
+
+        >>> Point(1.0, 2.0).maxsize
+        0.0
+        """
+        return 0.0
+
     def distance(self, other: PointType) -> float:
         """Calculate the distance between two points.
 

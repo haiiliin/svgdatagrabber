@@ -185,6 +185,16 @@ class Polygon(ClosedShape, PointSequence):
         return any(point == vertex for vertex in self.vertices)
 
     @property
+    def maxsize(self) -> float:
+        """Return the maximum size of the polygon.
+
+        >>> Polygon(Point(0.0, 0.0), Point(2.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)).maxsize
+        2.0
+        """
+        lf, tr = self.bounding
+        return max(tr.x - lf.x, tr.y - lf.y)
+
+    @property
     def area(self) -> float:
         """Return the area of the polygon.
 

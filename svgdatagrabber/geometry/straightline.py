@@ -682,6 +682,15 @@ class LineSegment(Line):
         yield self.end
 
     @property
+    def maxsize(self) -> float:
+        """Get the maximal size of this segment.
+
+        >>> LineSegment(start=Point(0.0, 0.0), end=Point(3.0, 4.0)).maxsize
+        5.0
+        """
+        return self.length
+
+    @property
     def length(self) -> float:
         """Get the length of this segment.
 

@@ -178,6 +178,15 @@ class Ellipse(ClosedShape):
         return self.A, self.B, self.C, self.D, self.E, self.F
 
     @property
+    def maxsize(self) -> float:
+        """Return the maximum size of the ellipse.
+
+        >>> Ellipse(center=Point(0.0, 0.0), ra=1.0, rb=2.0).maxsize
+        4.0
+        """
+        return max(self.ra, self.rb) * 2
+
+    @property
     def area(self) -> float:
         """Return the area of the ellipse.
 

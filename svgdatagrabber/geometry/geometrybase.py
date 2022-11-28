@@ -50,6 +50,11 @@ class GeometryBase(ABC):
         return not self.__eq__(other)
 
     @property
+    def maxsize(self) -> float:
+        """Return the max size of the geometry."""
+        raise NotImplementedError
+
+    @property
     def drawArgs(self) -> Tuple[str, tuple]:
         """Return the arguments for drawing the geometry."""
         raise NotImplementedError
@@ -78,12 +83,20 @@ class GeometryBase(ABC):
             item and item.setRect(*args) or item or (item := scene.addEllipse(*args))
         else:
             raise ValueError(f"Unknown type {self.drawAs}")
-        pen and item.setPen(pen)
-        brush and item.setBrush(brush)
+        pen = QPen(pen or item.pen())
+        pen.setWidthF(max(0.02 * self.maxsize, pen.widthF()))
+        item.setPen(pen)
+        item.setBrush(brush or item.brush())
         return item
 
-    def plot(self):
-        """Plot the geometry."""
+    def plot(self, pen: QPenType = None, brush: QBrushType = None, fit: bool = True):
+        """Plot the geometry.
+
+        Args:
+            pen: The pen to draw with.
+            brush: The brush to draw with.
+            fit: Fit the view to the geometry.
+        """
         from ..graphics.graphicsview import GraphicsView
 
         app = QApplication(sys.argv)
@@ -92,5 +105,6 @@ class GeometryBase(ABC):
         view.setWindowTitle(repr(self))
         view.resize(800, 600)
         view.show()
-        self.draw(scene, Qt.blue, Qt.red)
+        self.draw(scene, pen, brush)
+        fit and view.fitInView(scene.itemsBoundingRect(), Qt.KeepAspectRatio)
         sys.exit(app.exec_())
