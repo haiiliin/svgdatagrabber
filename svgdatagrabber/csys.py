@@ -154,8 +154,10 @@ class CoordinateSystem:
         """
         xp = self.yaxis.parallel(p).intersect(self.xaxis)
         yp = self.xaxis.parallel(p).intersect(self.yaxis)
-        x = (xp.x - self.xaxis.start.x) / (self.xaxis.end.x - self.xaxis.start.x)
-        y = (yp.y - self.yaxis.start.y) / (self.yaxis.end.y - self.yaxis.start.y)
+        rx = (xp.x - self.xaxis.start.x) / (self.xaxis.end.x - self.xaxis.start.x)
+        ry = (yp.y - self.yaxis.start.y) / (self.yaxis.end.y - self.yaxis.start.y)
+        x = self.xaxis.xstart + rx * (self.xaxis.xend - self.xaxis.xstart)
+        y = self.yaxis.ystart + ry * (self.yaxis.yend - self.yaxis.ystart)
         x, y = round(x + 0.0, 10), round(y + 0.0, 10)
         return complex(x, y)
 
