@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import Iterable
 
-from svgdatagrabber.geometry import ExtendedSegment, Point
+from svgdatagrabber.geometry import ExtendedLineSegment, Point
 
 
-class Axis(ExtendedSegment):
+class Axis(ExtendedLineSegment):
     pass
 
 

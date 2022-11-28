@@ -53,9 +53,8 @@ class Point(GeometryBase):
         >>> repr(Point(1.0, 2.0))
         'Point(x=1.0, y=2.0)'
         """
-        name = self.__class__.__name__
         x, y = round(self.x, 10), round(self.y, 10)
-        return f"{name}(x={x}, y={y})"
+        return f"{self.__class__.__name__}(x={x}, y={y})"
 
     def __iter__(self):
         """Iterate over the coordinates of the point.

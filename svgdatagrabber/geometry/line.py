@@ -236,7 +236,7 @@ class Line(StraightLineBase, LineCoefs):
         Line(A=1.0, B=-1.0, C=0.0)
         """
         A, B, C = round(self.A, 10), round(self.B, 10), round(self.C, 10)
-        return f"Line(A={A}, B={B}, C={C})"
+        return f"{self.__class__.__name__}(A={A}, B={B}, C={C})"
 
     def __eq__(self, other: Line) -> bool:
         """Return whether the line is equal to another line.
@@ -603,7 +603,7 @@ class Line(StraightLineBase, LineCoefs):
         return Line(A=self.B, B=-self.A, C=-self.B * p.x + self.A * p.y)
 
 
-class Segment(Line):
+class LineSegment(Line):
     #: The first point to create the line.
     start: Point
     #: The second point to create the line.
@@ -620,8 +620,8 @@ class Segment(Line):
     ):
         """Create a new line segment.
 
-        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
-        Segment(start=Point(x=0.0, y=0.0), end=Point(x=1.0, y=1.0)) -> Line(A=1.0, B=-1.0, C=0.0)
+        >>> LineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        LineSegment(start=Point(x=0.0, y=0.0), end=Point(x=1.0, y=1.0)) -> LineSegment(A=1.0, B=-1.0, C=0.0)
 
         Args:
             start: The first point to create the line.
@@ -635,19 +635,20 @@ class Segment(Line):
     def __repr__(self):
         """Get the string representation of this line segment.
 
-        >>> repr(Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)))
-        'Segment(start=Point(x=0.0, y=0.0), end=Point(x=1.0, y=1.0)) -> Line(A=1.0, B=-1.0, C=0.0)'
+        >>> repr(LineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)))
+        'LineSegment(start=Point(x=0.0, y=0.0), end=Point(x=1.0, y=1.0)) -> LineSegment(A=1.0, B=-1.0, C=0.0)'
         """
-        return f"Segment(start={self.start}, end={self.end}) -> {super().__repr__()}"
+        return f"{self.__class__.__name__}(start={self.start}, end={self.end}) -> {super().__repr__()}"
 
-    def __eq__(self, other: Segment) -> bool:
+    def __eq__(self, other: LineSegment) -> bool:
         """Check if this line segment is equal to another line segment.
 
-        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)) == Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> segment1 = LineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> segment2 = LineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> segment1 == segment2
         True
-        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)) == Segment(start=Point(1.0, 1.0), end=Point(0.0, 0.0))
-        True
-        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)) == Segment(start=Point(0.0, 0.0), end=Point(2.0, 2.0))
+        >>> segment3 = LineSegment(start=Point(0.0, 0.0), end=Point(2.0, 2.0))
+        >>> segment1 == segment3
         False
 
         Args:
@@ -661,13 +662,13 @@ class Segment(Line):
     def __contains__(self, p: PointType) -> bool:
         """Check if a point is on this segment.
 
-        >>> Point(0.0, 0.0) in Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> Point(0.0, 0.0) in LineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
         True
-        >>> Point(1.0, 1.0) in Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> Point(1.0, 1.0) in LineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
         True
-        >>> Point(0.5, 0.5) in Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> Point(0.5, 0.5) in LineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
         True
-        >>> Point(0.0, 1.0) in Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> Point(0.0, 1.0) in LineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
         False
 
         Returns:
@@ -681,7 +682,7 @@ class Segment(Line):
     def __iter__(self) -> Iterator[Point]:
         """Iterate over the points of this segment.
 
-        >>> list(Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)))
+        >>> list(LineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)))
         [Point(x=0.0, y=0.0), Point(x=1.0, y=1.0)]
         """
         yield self.start
@@ -691,7 +692,7 @@ class Segment(Line):
     def length(self) -> float:
         """Get the length of this segment.
 
-        >>> Segment(start=Point(0.0, 0.0), end=Point(3.0, 4.0)).length
+        >>> LineSegment(start=Point(0.0, 0.0), end=Point(3.0, 4.0)).length
         5.0
 
         Returns:
@@ -703,13 +704,13 @@ class Segment(Line):
     def direction(self) -> float:
         """Get the direction of this segment.
 
-        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).direction - np.pi / 4
+        >>> LineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).direction - np.pi / 4
         0.0
-        >>> Segment(start=Point(0.0, 0.0), end=Point(-1.0, 1.0)).direction - 3.0 * np.pi / 4
+        >>> LineSegment(start=Point(0.0, 0.0), end=Point(-1.0, 1.0)).direction - 3.0 * np.pi / 4
         0.0
-        >>> Segment(start=Point(0.0, 0.0), end=Point(-1.0, -1.0)).direction + 3.0 * np.pi / 4.0
+        >>> LineSegment(start=Point(0.0, 0.0), end=Point(-1.0, -1.0)).direction + 3.0 * np.pi / 4.0
         0.0
-        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, -1.0)).direction + np.pi / 4.0
+        >>> LineSegment(start=Point(0.0, 0.0), end=Point(1.0, -1.0)).direction + np.pi / 4.0
         0.0
 
         Returns:
@@ -721,7 +722,7 @@ class Segment(Line):
     def midpoint(self) -> Point:
         """Get the midpoint of this segment.
 
-        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).midpoint
+        >>> LineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).midpoint
         Point(x=0.5, y=0.5)
 
         Returns:
@@ -729,21 +730,21 @@ class Segment(Line):
         """
         return Point((self.start.x + self.end.x) / 2, (self.start.y + self.end.y) / 2)
 
-    def reverse(self) -> "Segment":
+    def reverse(self) -> "LineSegment":
         """Reverse the direction of this segment.
 
-        >>> Segment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).reverse()
-        Segment(start=Point(x=1.0, y=1.0), end=Point(x=0.0, y=0.0)) -> Line(A=1.0, B=-1.0, C=0.0)
+        >>> LineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).reverse()
+        LineSegment(start=Point(x=1.0, y=1.0), end=Point(x=0.0, y=0.0)) -> LineSegment(A=1.0, B=-1.0, C=0.0)
         """
         self.start, self.end = self.end, self.start
         return self
 
 
-class ExtendedSegment(Segment):
+class ExtendedLineSegment(LineSegment):
     def __init__(self, start: PointType, end: PointType):
         """Create a new extended line segment.
 
-        >>> segment = ExtendedSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> segment = ExtendedLineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
         >>> assert segment.extended
 
         Args:
@@ -753,7 +754,7 @@ class ExtendedSegment(Segment):
         super().__init__(start=start, end=end, extended=True)
 
 
-class Ray(Line):
+class LineRay(Line):
     #: The first point to create the line.
     start: Point
     #: The second point to create the line.
@@ -770,8 +771,8 @@ class Ray(Line):
     ):
         """Create a ray.
 
-        >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
-        Ray(start=Point(x=0.0, y=0.0), slope=1.0) -> Line(A=1.0, B=-1.0, C=0.0)
+        >>> LineRay(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        LineRay(start=Point(x=0.0, y=0.0), slope=1.0) -> LineRay(A=1.0, B=-1.0, C=0.0)
 
         Args:
             start: The first point to create the line.
@@ -786,20 +787,20 @@ class Ray(Line):
     def __repr__(self):
         """Get the string representation of this ray.
 
-        >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
-        Ray(start=Point(x=0.0, y=0.0), slope=1.0) -> Line(A=1.0, B=-1.0, C=0.0)
+        >>> LineRay(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        LineRay(start=Point(x=0.0, y=0.0), slope=1.0) -> LineRay(A=1.0, B=-1.0, C=0.0)
         """
         slope = round(self.slope, 10)
-        return f"Ray(start={self.start}, slope={slope}) -> {super().__repr__()}"
+        return f"{self.__class__.__name__}(start={self.start}, slope={slope}) -> {super().__repr__()}"
 
-    def __eq__(self, other: Ray) -> bool:
+    def __eq__(self, other: LineRay) -> bool:
         """Check if two rays are equal.
 
-        >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0)) == Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> LineRay(start=Point(0.0, 0.0), end=Point(1.0, 1.0)) == LineRay(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
         True
-        >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0)) == Ray(start=Point(0.0, 0.0), end=Point(2.0, 2.0))
+        >>> LineRay(start=Point(0.0, 0.0), end=Point(1.0, 1.0)) == LineRay(start=Point(0.0, 0.0), end=Point(2.0, 2.0))
         True
-        >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0)) == Ray(start=Point(-1.0, -1.0), end=Point(1.0, 1.0))
+        >>> LineRay(start=Point(0.0, 0.0), end=Point(1.0, 1.0)) == LineRay(start=Point(-1.0, -1.0), end=Point(1.0, 1.0))
         False
         """
         return super().__eq__(other) and self.start == other.start
@@ -807,15 +808,15 @@ class Ray(Line):
     def __contains__(self, p: PointType):
         """Check if a point is on this ray.
 
-        >>> Point(0.0, 0.0) in Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> Point(0.0, 0.0) in LineRay(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
         True
-        >>> Point(0.5, 0.5) in Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> Point(0.5, 0.5) in LineRay(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
         True
-        >>> Point(1.0, 1.0) in Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> Point(1.0, 1.0) in LineRay(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
         True
-        >>> Point(2.0, 2.0) in Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> Point(2.0, 2.0) in LineRay(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
         True
-        >>> Point(-1.0, -1.0) in Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> Point(-1.0, -1.0) in LineRay(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
         False
 
         Returns:
@@ -827,7 +828,7 @@ class Ray(Line):
     def slope_vector(self) -> Vector:
         """Get the slope vector of this ray.
 
-        >>> Ray(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).slope_vector
+        >>> LineRay(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).slope_vector
         Vector(x=1.0, y=1.0)
 
         Returns:
@@ -836,11 +837,11 @@ class Ray(Line):
         return Vector.asvector(self.end - self.start)
 
 
-class ExtendedRay(Ray):
+class ExtendedLineRay(LineRay):
     def __init__(self, start: PointType, end: PointType):
         """Create an extended ray.
 
-        >>> ray = ExtendedRay(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
+        >>> ray = ExtendedLineRay(start=Point(0.0, 0.0), end=Point(1.0, 1.0))
         >>> assert ray.extended
 
         Args:

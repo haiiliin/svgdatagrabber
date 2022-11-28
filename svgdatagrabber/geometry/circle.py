@@ -28,7 +28,7 @@ class Circle(Ellipse):
         >>> repr(Circle(center=Point(0.0, 0.0), r=1.0))
         'Circle(center=Point(x=0.0, y=0.0), r=1.0)'
         """
-        return f"Circle(center={self.center}, r={self.r})"
+        return f"{self.__class__.__name__}(center={self.center}, r={self.r})"
 
     @property
     def r(self):

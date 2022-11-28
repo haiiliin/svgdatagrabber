@@ -1,6 +1,6 @@
 import numpy as np
 
-from .line import Segment
+from .line import LineSegment
 from .point import Point, PointType
 from .polygon import Polygon
 
@@ -48,7 +48,7 @@ class RightKite(Kite):
     @property
     def isRightKite(self):
         """Check if the quadrilateral is a right kite."""
-        e1, e2, e3, e4 = self.edges  # type: Segment
+        e1, e2, e3, e4 = self.edges  # type: LineSegment
         l1, l2, l3, l4 = e1.length, e2.length, e3.length, e4.length
         return (np.allclose([l1, l3], [l2, l4]) and e1.isPerpendicular(e4)) or (
             np.allclose([l2, l1], [l3, l4]) and e1.isPerpendicular(e2)
@@ -91,7 +91,7 @@ class Trapezoid(Quadrilateral):
     @property
     def isTrapezoid(self):
         """Check if the quadrilateral is a trapezoid."""
-        e1, e2, e3, e4 = self.edges  # type: Segment
+        e1, e2, e3, e4 = self.edges  # type: LineSegment
         return e1.isParallel(e3) or e2.isParallel(e4)
 
     def check(self):
@@ -112,7 +112,7 @@ class IsoscelesTrapezoid(Trapezoid):
     def isIsoscelesTrapezoid(self):
         """Check if the quadrilateral is an isosceles trapezoid."""
         #: https://en.wikipedia.org/wiki/Isosceles_trapezoid
-        e1, e2, e3, e4 = self.edges  # type: Segment
+        e1, e2, e3, e4 = self.edges  # type: LineSegment
         l1, l2, l3, l4 = e1.length, e2.length, e3.length, e4.length
         return (e1.isParallel(e3) and np.allclose(l2, l4)) or (e2.isParallel(e4) and np.allclose(l1, l3))
 
@@ -133,7 +133,7 @@ class Parallelogram(Quadrilateral):
     @property
     def isParallelogram(self):
         """Check if the quadrilateral is a parallelogram."""
-        e1, e2, e3, e4 = self.edges  # type: Segment
+        e1, e2, e3, e4 = self.edges  # type: LineSegment
         return e1.isParallel(e3) and e2.isParallel(e4)
 
     def check(self):
@@ -153,7 +153,7 @@ class Rectangle(Parallelogram, IsoscelesTrapezoid):
     @property
     def isRectangle(self):
         """Check if the quadrilateral is a rectangle."""
-        e1, e2, e3, e4 = self.edges  # type: Segment
+        e1, e2, e3, e4 = self.edges  # type: LineSegment
         return e1.isPerpendicular(e2)
 
     def check(self):

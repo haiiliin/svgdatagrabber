@@ -5,7 +5,7 @@ from typing import List, Iterable, Tuple
 from shapely.geometry import Polygon as ShapelyPolygon
 
 from .closedshape import ClosedShape
-from .line import Ray, Segment, LineBase
+from .line import LineRay, LineSegment, LineBase
 from .point import Point, PointType
 from .sequence import PointSequence
 
@@ -78,19 +78,19 @@ class Polygon(ClosedShape, PointSequence):
         return self.points
 
     @property
-    def edges(self) -> List[Segment]:
+    def edges(self) -> List[LineSegment]:
         """Return the edges of the polygon.
 
         >>> edges = Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0)).edges
         >>> edges[0]
-        Segment(start=Point(x=0.0, y=0.0), end=Point(x=1.0, y=0.0)) -> Line(A=0.0, B=1.0, C=0.0)
+        LineSegment(start=Point(x=0.0, y=0.0), end=Point(x=1.0, y=0.0)) -> LineSegment(A=0.0, B=1.0, C=0.0)
         >>> edges[1]
-        Segment(start=Point(x=1.0, y=0.0), end=Point(x=1.0, y=1.0)) -> Line(A=1.0, B=0.0, C=-1.0)
+        LineSegment(start=Point(x=1.0, y=0.0), end=Point(x=1.0, y=1.0)) -> LineSegment(A=1.0, B=0.0, C=-1.0)
         >>> edges[2]
-        Segment(start=Point(x=1.0, y=1.0), end=Point(x=0.0, y=0.0)) -> Line(A=1.0, B=-1.0, C=0.0)
+        LineSegment(start=Point(x=1.0, y=1.0), end=Point(x=0.0, y=0.0)) -> LineSegment(A=1.0, B=-1.0, C=0.0)
         """
         starts, ends = self.vertices, self.vertices[1:] + self.vertices[:1]
-        return [Segment(start=start, end=end) for start, end in zip(starts, ends)]
+        return [LineSegment(start=start, end=end) for start, end in zip(starts, ends)]
 
     @property
     def boundaries(self) -> List[LineBase]:
@@ -98,11 +98,11 @@ class Polygon(ClosedShape, PointSequence):
 
         >>> lines = Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0)).boundaries
         >>> lines[0]
-        Segment(start=Point(x=0.0, y=0.0), end=Point(x=1.0, y=0.0)) -> Line(A=0.0, B=1.0, C=0.0)
+        LineSegment(start=Point(x=0.0, y=0.0), end=Point(x=1.0, y=0.0)) -> LineSegment(A=0.0, B=1.0, C=0.0)
         >>> lines[1]
-        Segment(start=Point(x=1.0, y=0.0), end=Point(x=1.0, y=1.0)) -> Line(A=1.0, B=0.0, C=-1.0)
+        LineSegment(start=Point(x=1.0, y=0.0), end=Point(x=1.0, y=1.0)) -> LineSegment(A=1.0, B=0.0, C=-1.0)
         >>> lines[2]
-        Segment(start=Point(x=1.0, y=1.0), end=Point(x=0.0, y=0.0)) -> Line(A=1.0, B=-1.0, C=0.0)
+        LineSegment(start=Point(x=1.0, y=1.0), end=Point(x=0.0, y=0.0)) -> LineSegment(A=1.0, B=-1.0, C=0.0)
         """
         return self.edges
 
@@ -130,8 +130,8 @@ class Polygon(ClosedShape, PointSequence):
         if self.inVertices(point) or self.inEdges(point):
             return True
 
-        # Ray casting
-        ray = Ray(start=point, end=Point(0, 0))
+        # LineRay casting
+        ray = LineRay(start=point, end=Point(0, 0))
         intersections, intersecting_points = 0, PointSequence()
         for edge in self.edges:
             if ray.isIntersecting(edge):
