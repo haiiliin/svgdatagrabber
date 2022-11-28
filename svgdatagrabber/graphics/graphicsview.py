@@ -84,6 +84,7 @@ class GraphicsView(QGraphicsView):
         # Zoom
         zoomFactor = zoomInFactor if event.angleDelta().y() > 0 else zoomOutFactor
         self.scale(zoomFactor, zoomFactor)
+        self.centerOn(self.mapToScene(self.viewport().rect().center()))
 
         # Get the new position
         newPos = self.mapToScene(event.pos())
