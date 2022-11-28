@@ -55,7 +55,11 @@ class GeometryBase(ABC):
         raise NotImplementedError
 
     def draw(
-        self, scene: QGraphicsScene, pen: QPenType = None, brush: QBrushType = None, item: QGraphicsItemType = None
+        self,
+        scene: QGraphicsScene,
+        pen: QPenType = None,
+        brush: QBrushType = None,
+        item: QGraphicsItemType = None,
     ) -> QGraphicsItemType:
         """Draw the geometry on the scene.
 
