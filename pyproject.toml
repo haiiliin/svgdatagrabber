@@ -34,7 +34,7 @@ dependencies = [
 "Documentation" = "https://svgdatagrabber.readthedocs.io/"
 
 [project.scripts]
-abqpy = "svgdatagrabber.__main__:cli"
+svgdatagrabber = "svgdatagrabber.graphics.gui:main"
 
 [tool.setuptools_scm]
 root = "."
