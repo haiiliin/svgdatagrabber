@@ -7,7 +7,7 @@ from shapely.geometry import Polygon as ShapelyPolygon
 from .closedshape import ClosedShape
 from .line import Ray, Segment, LineBase
 from .point import Point, PointType
-from .pointsequence import PointSequence
+from .sequence import PointSequence
 
 
 class Polygon(ClosedShape, PointSequence):
