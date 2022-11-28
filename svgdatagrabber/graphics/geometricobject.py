@@ -1,7 +1,7 @@
-from qtpy.QtGui import QPen, QBrush
 from qtpy.QtWidgets import QGraphicsItem, QGraphicsScene
 
 from ..geometry import GeometryBase
+from ..geometry.geometrybase import QPenType, QBrushType
 
 
 class GeometricObject:
@@ -20,6 +20,6 @@ class GeometricObject:
         self.geometry = geometry
         self.item = item
 
-    def draw(self, scene: QGraphicsScene, pen: QPen = None, brush: QBrush = None):
+    def draw(self, scene: QGraphicsScene, pen: QPenType = None, brush: QBrushType = None):
         """Draw the object in the scene."""
         self.item = self.geometry.draw(scene, pen, brush, self.item)

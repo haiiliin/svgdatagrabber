@@ -8,6 +8,7 @@ from qtpy.QtWidgets import QGraphicsView, QGraphicsScene, QOpenGLWidget
 
 from .geometricobject import GeometricObject
 from ..geometry import GeometryBase
+from ..geometry.geometrybase import QPenType, QBrushType
 
 
 class GraphicsView(QGraphicsView):
@@ -33,7 +34,7 @@ class GraphicsView(QGraphicsView):
         primitive.draw(self.scene)
         self.geometric_objects.append(primitive)
 
-    def redraw(self, pen=None, brush=None, fit=True):
+    def redraw(self, pen: QPenType = None, brush: QBrushType = None, fit: bool = True):
         """Draw the geometries in the scene and fit the view."""
         for geometric_object in self.geometric_objects:
             geometric_object.draw(self.scene, pen, brush)
