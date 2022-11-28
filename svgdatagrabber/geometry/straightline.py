@@ -4,16 +4,14 @@ from typing import Iterator
 
 import numpy as np
 from qtpy.QtCore import QLineF
-from qtpy.QtGui import QPen, QBrush
-from qtpy.QtWidgets import QGraphicsScene, QGraphicsLineItem, QGraphicsItem
 
 from .exceptions import NotDrawableGeometryError
-from .geometrybase import QPenType, QBrushType
+from .geometrybase import DrawAsLine
 from .linebase import StraightLineBase
 from .point import Point, PointType, Vector
 
 
-class Line(StraightLineBase):
+class Line(StraightLineBase, DrawAsLine):
     """A class representing a line."""
 
     #: Coefficient of the x term.
@@ -593,10 +591,7 @@ class Line(StraightLineBase):
         return Line(A=self.B, B=-self.A, C=-self.B * p.x + self.A * p.y)
 
     @property
-    def qobject(self):
-        raise NotDrawableGeometryError
-
-    def draw(self, scene: QGraphicsScene, pen: QPenType = None, brush: QBrushType = None) -> QGraphicsItem:
+    def drawingargs(self):
         raise NotDrawableGeometryError
 
 
@@ -739,19 +734,9 @@ class LineSegment(Line):
         return self
 
     @property
-    def qobject(self) -> QLineF:
+    def drawingargs(self) -> QLineF:
         """Get the Qt representation of this line segment."""
-        return QLineF(self.start.qobject, self.end.qobject)
-
-    def draw(self, scene: QGraphicsScene, pen: QPenType = None, brush: QBrushType = None) -> QGraphicsLineItem:
-        """Draw this segment on a scene.
-
-        Args:
-            scene: The scene to draw on.
-            pen: The pen to draw with.
-            brush: The brush to draw with.
-        """
-        return scene.addLine(self.qobject, pen or QPen(), brush or QBrush())
+        return QLineF(self.start.x, self.start.y, self.end.x, self.end.y)
 
 
 class ExtendedLineSegment(LineSegment):

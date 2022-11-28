@@ -3,19 +3,18 @@ from __future__ import annotations
 from typing import List, Iterable, Tuple
 
 from qtpy.QtCore import QPointF
-from qtpy.QtGui import QPolygonF, QPen, QBrush
-from qtpy.QtWidgets import QGraphicsScene, QGraphicsPolygonItem
+from qtpy.QtGui import QPolygonF
 from shapely.geometry import Polygon as ShapelyPolygon
 
 from .closedshape import ClosedShape
-from .geometrybase import QPenType, QBrushType
+from .geometrybase import DrawAsPolygon
 from .linebase import LineBase
 from .point import Point, PointType
 from .sequence import PointSequence
 from .straightline import LineRay, LineSegment
 
 
-class Polygon(ClosedShape, PointSequence):
+class Polygon(ClosedShape, DrawAsPolygon, PointSequence):
     """A class representing a polygon."""
 
     def __init__(self, *points: PointType):
@@ -234,16 +233,6 @@ class Polygon(ClosedShape, PointSequence):
         return ShapelyPolygon(((vertex.x, vertex.y) for vertex in self.vertices))
 
     @property
-    def qobject(self) -> QPolygonF:
+    def drawingargs(self) -> Tuple[QPolygonF]:
         """Return the polygon as a Qt polygon."""
-        return QPolygonF([QPointF(vertex.x, vertex.y) for vertex in self.vertices])
-
-    def draw(self, scene: QGraphicsScene, pen: QPenType = None, brush: QBrushType = None) -> QGraphicsPolygonItem:
-        """Draw the polygon on a scene.
-
-        Args:
-            scene: The scene to draw on.
-            pen: The pen to use.
-            brush: The brush to use.
-        """
-        return scene.addPolygon(self.qobject, pen or QPen(), brush or QBrush())
+        return (QPolygonF([QPointF(vertex.x, vertex.y) for vertex in self.vertices]),)

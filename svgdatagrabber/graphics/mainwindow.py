@@ -1,4 +1,5 @@
 from qtpy.QtWidgets import QMainWindow
+
 from .graphicsview import GraphicsView
 
 

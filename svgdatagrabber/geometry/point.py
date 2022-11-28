@@ -1,18 +1,16 @@
 from __future__ import annotations
 
-from typing import Iterable, Union
+from typing import Iterable, Union, Tuple
 
 import numpy as np
-from qtpy.QtCore import QPointF, QLineF
-from qtpy.QtGui import QPen, QBrush
-from qtpy.QtWidgets import QGraphicsScene, QGraphicsLineItem, QGraphicsEllipseItem
+from qtpy.QtCore import QLineF
 
-from .geometrybase import GeometryBase, QPenType, QBrushType
+from .geometrybase import DrawAsEllipse
 
 PointType = Union["Point", Iterable[float], complex]
 
 
-class Point(GeometryBase):
+class Point(DrawAsEllipse):
     """A class representing a point in 2D space."""
 
     #: The x coordinate of the point.
@@ -250,19 +248,9 @@ class Point(GeometryBase):
         return np.array([self.x, self.y])
 
     @property
-    def qobject(self) -> QPointF:
+    def drawingargs(self) -> Tuple[float, float, float, float]:
         """Convert the point to a Qt point."""
-        return QPointF(self.x, self.y)
-
-    def draw(self, scene: QGraphicsScene, pen: QPenType = None, brush: QBrushType = None) -> QGraphicsEllipseItem:
-        """Draw the point on the scene.
-
-        Args:
-            scene: The scene to draw on.
-            pen: The pen to draw with.
-            brush: The brush to draw with.
-        """
-        return scene.addEllipse(self.x, self.y, 0, 0, pen or QPen(), brush or QBrush())
+        return self.x, self.y, 0.0, 0.0
 
 
 class Vector(Point):
@@ -315,16 +303,6 @@ class Vector(Point):
         return cls.aspoint(v)
 
     @property
-    def qobject(self) -> QLineF:
+    def drawingargs(self) -> QLineF:
         """Convert the vector to a Qt line."""
         return QLineF(0.0, 0.0, self.x, self.y)
-
-    def draw(self, scene: QGraphicsScene, pen: QPenType = None, brush: QBrushType = None) -> QGraphicsLineItem:
-        """Draw the vector on the scene.
-
-        Args:
-            scene: The scene to draw on.
-            pen: The pen to draw with.
-            brush: The brush to draw with.
-        """
-        return scene.addLine(self.qobject, pen or QPen(), brush or QBrush())
