@@ -1,5 +1,6 @@
 """
-The Graphics User Interface (GUI) for the SVG Data Grabber.
+The Graphics User Interface (GUI) for the SVG Data Grabber, run with ``python -m svgdatagrabber.graphics`` or
+``svgdatagrabber-graphics``.
 """
 
 
