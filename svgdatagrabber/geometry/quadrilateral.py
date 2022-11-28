@@ -20,7 +20,7 @@ class Quadrilateral(Polygon):
         ...
         AssertionError: The quadrilateral must be simple.
         """
-        assert self.isSimple, "The quadrilateral must be simple."
+        super().check()
         assert self.isValid, "The quadrilateral must be convex."
 
 
