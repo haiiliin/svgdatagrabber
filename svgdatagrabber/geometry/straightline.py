@@ -9,6 +9,8 @@ from .point import Point, PointType, Vector
 
 
 class Line(StraightLineBase):
+    """A class representing a line."""
+
     #: Coefficient of the x term.
     A: float
     #: Coefficient of the y term.
@@ -587,6 +589,8 @@ class Line(StraightLineBase):
 
 
 class LineSegment(Line):
+    """A class representing a line segment."""
+
     #: The first point to create the line.
     start: Point
     #: The second point to create the line.
@@ -724,6 +728,8 @@ class LineSegment(Line):
 
 
 class ExtendedLineSegment(LineSegment):
+    """A class representing an extended line segment."""
+
     def __init__(self, start: PointType, end: PointType):
         """Create a new extended line segment.
 
@@ -738,6 +744,8 @@ class ExtendedLineSegment(LineSegment):
 
 
 class LineRay(Line):
+    """A class representing a line ray."""
+
     #: The first point to create the line.
     start: Point
     #: The second point to create the line.
@@ -821,6 +829,8 @@ class LineRay(Line):
 
 
 class ExtendedLineRay(LineRay):
+    """A class representing an extended line ray."""
+
     def __init__(self, start: PointType, end: PointType):
         """Create an extended ray.
 

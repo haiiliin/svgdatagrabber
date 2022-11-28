@@ -6,6 +6,8 @@ from .straightline import LineSegment
 
 
 class Quadrilateral(Polygon):
+    """A class representing a quadrilateral."""
+
     def __init__(self, *points: PointType):
         if len(points) != 4:
             raise ValueError("A quadrilateral must have exactly four points.")
@@ -25,6 +27,8 @@ class Quadrilateral(Polygon):
 
 
 class Kite(Quadrilateral):
+    """A class representing a kite."""
+
     @property
     def isKite(self):
         """Check if the quadrilateral is a kite."""
@@ -45,6 +49,8 @@ class Kite(Quadrilateral):
 
 
 class RightKite(Kite):
+    """A class representing a right kite."""
+
     @property
     def isRightKite(self):
         """Check if the quadrilateral is a right kite."""
@@ -68,6 +74,8 @@ class RightKite(Kite):
 
 
 class Rhombus(Kite):
+    """A class representing a rhombus."""
+
     @property
     def isRhombus(self):
         """Check if the quadrilateral is a rhombus."""
@@ -88,6 +96,8 @@ class Rhombus(Kite):
 
 
 class Trapezoid(Quadrilateral):
+    """A class representing a trapezoid."""
+
     @property
     def isTrapezoid(self):
         """Check if the quadrilateral is a trapezoid."""
@@ -108,6 +118,8 @@ class Trapezoid(Quadrilateral):
 
 
 class IsoscelesTrapezoid(Trapezoid):
+    """A class representing an isosceles trapezoid."""
+
     @property
     def isIsoscelesTrapezoid(self):
         """Check if the quadrilateral is an isosceles trapezoid."""
@@ -130,6 +142,8 @@ class IsoscelesTrapezoid(Trapezoid):
 
 
 class Parallelogram(Quadrilateral):
+    """A class representing a parallelogram."""
+
     @property
     def isParallelogram(self):
         """Check if the quadrilateral is a parallelogram."""
@@ -150,6 +164,8 @@ class Parallelogram(Quadrilateral):
 
 
 class Rectangle(Parallelogram, IsoscelesTrapezoid):
+    """A class representing a rectangle."""
+
     @property
     def isRectangle(self):
         """Check if the quadrilateral is a rectangle."""
@@ -170,6 +186,8 @@ class Rectangle(Parallelogram, IsoscelesTrapezoid):
 
 
 class Square(Rectangle, Rhombus, Parallelogram, RightKite):
+    """A class representing a square."""
+
     @property
     def isSquare(self):
         """Check if the quadrilateral is a square."""

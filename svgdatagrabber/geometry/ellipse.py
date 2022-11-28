@@ -10,6 +10,8 @@ from .point import Point, PointType
 
 
 class Ellipse(ClosedShape):
+    """A class representing an ellipse."""
+
     #: The center of the ellipse.
     center: Point
     #: The radius in the x direction.

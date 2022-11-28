@@ -12,6 +12,8 @@ from .straightline import LineRay, LineSegment
 
 
 class Polygon(ClosedShape, PointSequence):
+    """A class representing a polygon."""
+
     def __init__(self, *points: PointType):
         """Create a polygon.
 

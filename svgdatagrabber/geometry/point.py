@@ -10,6 +10,8 @@ PointType = Union["Point", Iterable[float], complex]
 
 
 class Point(GeometryBase):
+    """A class representing a point in 2D space."""
+
     #: The x coordinate of the point.
     x: float
     #: The y coordinate of the point.

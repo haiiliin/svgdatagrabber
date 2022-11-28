@@ -5,6 +5,7 @@ from .point import PointType, Point
 
 
 class Circle(Ellipse):
+    """A class representing a circle."""
 
     #: The radius of the circle.
     _r: float

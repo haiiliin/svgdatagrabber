@@ -5,6 +5,8 @@ from .polygon import Polygon
 
 
 class Triangle(Polygon):
+    """A class representing a triangle."""
+
     def __init__(self, *points: PointType):
         """Initialize a triangle.
 

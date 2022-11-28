@@ -12,6 +12,9 @@ SequenceItemType = Union[GeometryBase, PointType, Line]
 
 
 class GeometrySequence(Sequence[GeometryBase]):
+    """A class representing a sequence of geometries."""
+
+    #: Items in the sequence.
     items: List[SequenceItem]
 
     def __init__(self, *items: SequenceItemType):
@@ -166,6 +169,8 @@ class GeometrySequence(Sequence[GeometryBase]):
 
 
 class PointSequence(GeometrySequence):
+    """A sequence of points."""
+
     @property
     def points(self) -> List[Point]:
         """Return the points in the sequence.
@@ -182,6 +187,8 @@ class PointSequence(GeometrySequence):
 
 
 class LineSequence(GeometrySequence):
+    """A sequence of lines."""
+
     @property
     def lines(self) -> List[Line]:
         """Return the lines in the sequence.

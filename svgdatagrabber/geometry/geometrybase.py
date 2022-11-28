@@ -2,6 +2,8 @@ from abc import ABC
 
 
 class GeometryBase(ABC):
+    """A base class for all geometries."""
+
     #: Tolerance for equality.
     tolerance = 1e-6
 
