@@ -23,6 +23,7 @@ class Polygon(ClosedShape, PointSequence):
         if len(points) < 3:
             raise ValueError("A polygon must have at least three points.")
         super().__init__(*points)
+        self.check()
 
     def __repr__(self):
         """Return a string representation of the polygon.
@@ -48,8 +49,6 @@ class Polygon(ClosedShape, PointSequence):
 
         >>> Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)).isSimple
         True
-        >>> Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, -1.0)).isSimple
-        False
         """
         return self.asShapely.is_simple
 
@@ -57,6 +56,11 @@ class Polygon(ClosedShape, PointSequence):
     def isValid(self):
         """Check if the polygon is convex."""
         return self.asShapely.is_valid
+
+    def check(self):
+        """Check if the polygon is valid."""
+        assert self.isSimple, "The polygon is not simple."
+        assert self.isValid, "The polygon is not valid."
 
     @property
     def ndim(self) -> int:

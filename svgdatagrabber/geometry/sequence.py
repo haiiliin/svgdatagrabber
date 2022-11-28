@@ -107,6 +107,10 @@ class GeometrySequence(Sequence[GeometryBase]):
             return all(p in self.items for p in item)
         return self.asitem(item) in self.items
 
+    def check(self):
+        """Check if the sequence is valid."""
+        pass
+
     @classmethod
     def asitem(cls, item: SequenceItemType) -> SequenceItem:
         """Prepare an item for adding to the sequence, if necessary.
