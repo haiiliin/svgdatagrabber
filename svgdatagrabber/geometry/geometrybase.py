@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+import sys
 from abc import ABC
 from enum import IntEnum
 from typing import Union, Tuple
 
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QPen, QBrush, QColor, QGradient
-from qtpy.QtWidgets import QGraphicsLineItem, QGraphicsPolygonItem, QGraphicsEllipseItem
+from qtpy.QtWidgets import QGraphicsLineItem, QGraphicsPolygonItem, QGraphicsEllipseItem, QApplication
 from qtpy.QtWidgets import QGraphicsScene
 
 QPenType = Union[QPen, QColor, Qt.GlobalColor, QGradient]
@@ -76,3 +77,16 @@ class GeometryBase(ABC):
         pen and item.setPen(pen)
         brush and item.setBrush(brush)
         return item
+
+    def plot(self):
+        """Plot the geometry."""
+        from ..graphics.graphicsview import GraphicsView
+
+        app = QApplication(sys.argv)
+        scene = QGraphicsScene()
+        view = GraphicsView(scene)
+        view.setWindowTitle(repr(self))
+        view.resize(800, 600)
+        view.show()
+        self.draw(scene, Qt.blue, Qt.red)
+        sys.exit(app.exec_())

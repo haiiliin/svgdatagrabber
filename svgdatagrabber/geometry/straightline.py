@@ -6,7 +6,6 @@ import numpy as np
 from qtpy.QtCore import QLineF
 
 from .exceptions import NotDrawableGeometryError
-from .geometrybase import DrawAsLine
 from .linebase import StraightLineBase
 from .point import Point, PointType, Vector
 
