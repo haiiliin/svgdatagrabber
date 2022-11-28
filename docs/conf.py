@@ -28,12 +28,17 @@ sys.path.insert(0, os.path.abspath('..'))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
+    'autoapi.extension',
     'myst_parser',
     'nbsphinx',
     'sphinx.ext.autodoc',
     'sphinx_copybutton',
 ]
 
+# AutoAPI configuration
+autoapi_dirs = ['../svgdatagrabber']
+
+# Templates
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
