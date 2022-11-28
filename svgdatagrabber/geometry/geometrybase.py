@@ -47,7 +47,7 @@ class GeometryBase(ABC):
         return not self.__eq__(other)
 
     @property
-    def drawingargs(self) -> Tuple[str, tuple]:
+    def drawArgs(self) -> Tuple[str, tuple]:
         """Return the arguments for drawing the geometry."""
         raise NotImplementedError
 
@@ -62,7 +62,7 @@ class GeometryBase(ABC):
             brush: The brush to draw with.
             item: The old item to draw on, if any.
         """
-        args = self.drawingargs
+        args = self.drawArgs
         if self.drawAs == DrawAsLine:
             item and item.setLine(*args) or (item := scene.addLine(*args))
         elif self.drawAs == DrawAsPolygon:

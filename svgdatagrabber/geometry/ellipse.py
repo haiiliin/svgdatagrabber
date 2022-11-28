@@ -210,5 +210,5 @@ class Ellipse(ClosedShape):
         raise NotImplementedError
 
     @property
-    def drawingargs(self) -> Tuple[float, float, float, float]:
+    def drawArgs(self) -> Tuple[float, float, float, float]:
         return self.x0, self.y0, self.ra, self.rb

@@ -593,7 +593,7 @@ class Line(StraightLineBase):
         return Line(A=self.B, B=-self.A, C=-self.B * p.x + self.A * p.y)
 
     @property
-    def drawingargs(self):
+    def drawArgs(self):
         raise NotDrawableGeometryError
 
 
@@ -736,7 +736,7 @@ class LineSegment(Line):
         return self
 
     @property
-    def drawingargs(self) -> QLineF:
+    def drawArgs(self) -> QLineF:
         """Get the Qt representation of this line segment."""
         return QLineF(self.start.x, self.start.y, self.end.x, self.end.y)
 

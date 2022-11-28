@@ -235,6 +235,6 @@ class Polygon(ClosedShape, PointSequence):
         return ShapelyPolygon(((vertex.x, vertex.y) for vertex in self.vertices))
 
     @property
-    def drawingargs(self) -> Tuple[QPolygonF]:
+    def drawArgs(self) -> Tuple[QPolygonF]:
         """Return the polygon as a Qt polygon."""
         return (QPolygonF([QPointF(vertex.x, vertex.y) for vertex in self.vertices]),)

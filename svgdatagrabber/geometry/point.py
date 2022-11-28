@@ -250,7 +250,7 @@ class Point(GeometryBase):
         return np.array([self.x, self.y])
 
     @property
-    def drawingargs(self) -> Tuple[float, float, float, float]:
+    def drawArgs(self) -> Tuple[float, float, float, float]:
         """Convert the point to a Qt point."""
         return self.x, self.y, 0.0, 0.0
 
@@ -305,6 +305,6 @@ class Vector(Point):
         return cls.aspoint(v)
 
     @property
-    def drawingargs(self) -> QLineF:
+    def drawArgs(self) -> QLineF:
         """Convert the vector to a Qt line."""
         return QLineF(0.0, 0.0, self.x, self.y)
