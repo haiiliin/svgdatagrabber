@@ -359,6 +359,10 @@ class Line(StraightLineBase):
         A, B, C = cls.coefficientsFromAngleAndIntercept(angle, intercept)
         return cls.fromCoefficients(A=A, B=B, C=C)
 
+    @property
+    def maxsize(self) -> float:
+        raise ValueError("Line does not have a maxsize.")
+
     def distance(self, p: Point) -> float:
         """Get the distance between a point and this line.
 

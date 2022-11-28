@@ -1,16 +1,16 @@
-from qtpy.QtWidgets import QGraphicsItem, QGraphicsScene
+from qtpy.QtWidgets import QGraphicsScene
 
 from ..geometry import GeometryBase
-from ..geometry.geometrybase import QPenType, QBrushType
+from ..geometry.geometrybase import QPenType, QBrushType, QGraphicsItemType
 
 
 class GeometricObject:
     #: The geometry of the object.
     geometry: GeometryBase
     #: The graphics item of the object.
-    item: QGraphicsItem
+    item: QGraphicsItemType
 
-    def __init__(self, geometry: GeometryBase, item: QGraphicsItem = None):
+    def __init__(self, geometry: GeometryBase, item: QGraphicsItemType = None):
         """Create a geometric object.
 
         Args:

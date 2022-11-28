@@ -21,7 +21,7 @@ def _get_version():
                 version_scheme="post-release",
                 fallback_version=_default_version,
             )
-        except Exception:
+        except (ImportError, LookupError, Exception):
             return _default_version
     else:  # Get the version from the _version.py setuptools_scm file.
         return _default_version
