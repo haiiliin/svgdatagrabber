@@ -2,7 +2,7 @@ from .circle import Circle
 from .closedshape import ClosedShape
 from .ellipse import Ellipse
 from .geometrybase import GeometryBase
-from .line import Line, LineSegment, LineRay, ExtendedLineSegment, ExtendedLineRay, LineBase, StraightLineBase, CurveLineBase
+from .linebase import LineBase, StraightLineBase, CurveLineBase
 from .point import Point, Vector, PointType
 from .polygon import Polygon
 from .quadrilateral import (
@@ -14,5 +14,12 @@ from .quadrilateral import (
     Kite,
     RightKite,
     IsoscelesTrapezoid,
+)
+from .straightline import (
+    Line,
+    LineSegment,
+    LineRay,
+    ExtendedLineSegment,
+    ExtendedLineRay,
 )
 from .triangle import Triangle

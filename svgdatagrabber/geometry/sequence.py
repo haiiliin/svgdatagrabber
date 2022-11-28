@@ -4,8 +4,8 @@ from abc import abstractmethod
 from typing import Iterable, Sequence, overload, List, Union
 
 from .geometrybase import GeometryBase
-from .line import Line
 from .point import Point, PointType
+from .straightline import Line
 
 SequenceItem = Union[GeometryBase, Point, Line]
 SequenceItemType = Union[GeometryBase, PointType, Line]

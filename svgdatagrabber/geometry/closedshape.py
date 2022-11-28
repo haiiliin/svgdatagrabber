@@ -4,7 +4,7 @@ from abc import ABC
 from typing import Tuple, Iterable, List
 
 from .geometrybase import GeometryBase
-from .line import LineBase
+from .linebase import LineBase
 from .point import Point
 
 

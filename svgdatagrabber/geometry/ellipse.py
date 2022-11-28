@@ -5,7 +5,7 @@ from typing import Tuple, Iterable, List
 import numpy as np
 
 from .closedshape import ClosedShape
-from .line import LineBase
+from .linebase import LineBase
 from .point import Point, PointType
 
 

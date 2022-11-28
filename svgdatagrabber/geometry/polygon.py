@@ -5,9 +5,10 @@ from typing import List, Iterable, Tuple
 from shapely.geometry import Polygon as ShapelyPolygon
 
 from .closedshape import ClosedShape
-from .line import LineRay, LineSegment, LineBase
+from .linebase import LineBase
 from .point import Point, PointType
 from .sequence import PointSequence
+from .straightline import LineRay, LineSegment
 
 
 class Polygon(ClosedShape, PointSequence):

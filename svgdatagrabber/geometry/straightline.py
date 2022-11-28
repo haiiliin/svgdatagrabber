@@ -1,27 +1,11 @@
 from __future__ import annotations
 
-from abc import ABC
 from typing import Iterator
 
 import numpy as np
 
-from .geometrybase import GeometryBase
+from .linebase import StraightLineBase
 from .point import Point, PointType, Vector
-
-
-class LineBase(GeometryBase, ABC):
-    """Base class for line-like geometries."""
-    pass
-
-
-class StraightLineBase(LineBase, ABC):
-    """Base class for straight line-like geometries."""
-    pass
-
-
-class CurveLineBase(LineBase, ABC):
-    """Base class for curve line-like geometries."""
-    pass
 
 
 class Line(StraightLineBase):
