@@ -3,8 +3,12 @@ from __future__ import annotations
 from typing import Tuple, Iterable, List
 
 import numpy as np
+from qtpy.QtGui import QPen, QBrush
+from qtpy.QtWidgets import QGraphicsScene, QGraphicsItem
 
 from .closedshape import ClosedShape
+from .exceptions import NoCorrespondingQtObjectError
+from .geometrybase import QPenType, QBrushType
 from .linebase import LineBase
 from .point import Point, PointType
 
@@ -205,3 +209,18 @@ class Ellipse(ClosedShape):
     def bounding(self) -> Tuple[Point, Point]:
         """Return the bounding box of the ellipse."""
         raise NotImplementedError
+
+    @property
+    def qobject(self):
+        """Return the ellipse as a Qt object."""
+        raise NoCorrespondingQtObjectError
+
+    def draw(self, scene: QGraphicsScene, pen: QPenType = None, brush: QBrushType = None) -> QGraphicsItem:
+        """Draw the ellipse on a scene.
+
+        Args:
+            scene: The scene.
+            pen: The pen.
+            brush: The brush.
+        """
+        return scene.addEllipse(self.x0, self.y0, self.ra, self.rb, pen or QPen(), brush or QBrush())
