@@ -35,6 +35,10 @@ class Path(StraightLineBase, LineSequence):
     def __eq__(self, other: "Path") -> bool:
         return LineSequence.__eq__(self, other)
 
+    @property
+    def segments(self) -> List[LineSegment | Arc | QuadraticBezier | CubicBezier]:
+        return self.items
+
     @classmethod
     def fromSvgPathToolsPath(cls, path: "SvgPathToolsPath"):
         segments = []
@@ -51,7 +55,7 @@ class Path(StraightLineBase, LineSequence):
 
     @property
     def array(self) -> np.ndarray:
-        return np.array([[p.x, p.y] for segment in self.items for p in segment])
+        return np.array([[p.x, p.y] for segment in self.segments for p in segment])
 
     def transformed(self, csys: CoordinateSystem):
         for segment in self.items:
