@@ -8,6 +8,7 @@ from qtpy.QtCore import QLineF
 from .exceptions import NotDrawableGeometryError
 from .linebase import StraightLineBase
 from .point import Point, PointType, Vector
+from svgpathtools import Line as SvgPathToolsLine
 
 
 class Line(StraightLineBase):
@@ -682,6 +683,21 @@ class LineSegment(Line):
         """
         yield self.start
         yield self.end
+
+    @classmethod
+    def fromSvgPathToolsLine(cls, line: SvgPathToolsLine):
+        """Create a new line segment from a SvgPathTools line.
+
+        >>> LineSegment.fromSvgPathToolsLine(SvgPathToolsLine(start=.0j, end=1.0+1.0j))
+        LineSegment(start=Point(x=0.0, y=0.0), end=Point(x=1.0, y=1.0)) -> LineSegment(A=1.0, B=-1.0, C=0.0)
+
+        Args:
+            line: The SvgPathTools line to create the line segment from.
+
+        Returns:
+            A new line segment.
+        """
+        return cls(start=line.start, end=line.end)
 
     @property
     def maxsize(self) -> float:

@@ -62,6 +62,16 @@ class GeometrySequence(Sequence[GeometryBase]):
         """
         return self.items[index]
 
+    def __setitem__(self, key: int, value: SequenceItemType):
+        """Set a point in the sequence.
+
+        >>> ps = GeometrySequence(Point(1.0, 2.0), Point(3.0, 4.0))
+        >>> ps[1] = Point(5.0, 6.0)
+        >>> ps
+        GeometrySequence(Point(x=1.0, y=2.0), Point(x=5.0, y=6.0))
+        """
+        self.items[key] = self.asitem(value)
+
     def __len__(self) -> int:
         """Return the length of the sequence.
 
