@@ -6,8 +6,8 @@ from qtpy.QtCore import Qt
 from qtpy.QtGui import QPainter
 from qtpy.QtWidgets import QGraphicsView, QGraphicsScene, QOpenGLWidget, QWidget
 
-from .geometricobject import GeometricObject
 from .annotations import QPenType, QBrushType
+from .geometricobject import GeometricObject
 from ..geometry import GeometryBase
 
 

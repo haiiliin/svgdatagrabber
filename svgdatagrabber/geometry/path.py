@@ -9,11 +9,11 @@ from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 from svgpathtools import Arc as SvgPathToolsArc
 from svgpathtools import CubicBezier as SvgPathToolsCubicBezier
+from svgpathtools import Line as SvgPathToolsLine
 from svgpathtools import Path as SvgPathToolsPath
 from svgpathtools import QuadraticBezier as SvgPathToolsQuadraticBezier
-from svgpathtools import Line as SvgPathToolsLine
 
-from . import LineSegment, Point
+from . import LineSegment
 from .arc import Arc
 from .bezier import QuadraticBezier, CubicBezier, Bezier
 from .linebase import StraightLineBase, LineBase

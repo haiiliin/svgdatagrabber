@@ -4,11 +4,11 @@ from typing import Iterator
 
 import numpy as np
 from qtpy.QtCore import QLineF
+from svgpathtools import Line as SvgPathToolsLine
 
 from .exceptions import NotDrawableGeometryError
 from .linebase import StraightLineBase
 from .point import Point, PointType, Vector
-from svgpathtools import Line as SvgPathToolsLine
 
 
 class Line(StraightLineBase):

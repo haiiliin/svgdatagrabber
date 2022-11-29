@@ -13,6 +13,7 @@ from .point import Point, PointType
 
 class Arc(CurveLineBase, Ellipse):
     """A class representing an arc."""
+
     #: The start point of the arc.
     start: Point
     #: The end point of the arc.

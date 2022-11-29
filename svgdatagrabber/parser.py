@@ -5,7 +5,6 @@ from typing import Callable
 import numpy as np
 from svgpathtools.path import Path
 from svgpathtools.svg_to_paths import svg2paths
-from .geometry import PathSequence
 
 from .csys import CoordinateSystem
 from .filters import (
@@ -17,6 +16,7 @@ from .filters import (
     ClosedPathFilter,
     CustomFilter,
 )
+from .geometry import PathSequence
 
 
 class SvgPathParser:

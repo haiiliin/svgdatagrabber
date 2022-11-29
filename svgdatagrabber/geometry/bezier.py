@@ -10,6 +10,7 @@ from .point import PointType, Point
 
 class Bezier(CurveLineBase, ABC):
     """A class representing a Bézier curve."""
+
     #: The start point of the quadratic Bézier curve.
     start: PointType
     #: The control point of the quadratic Bézier curve.
@@ -23,7 +24,7 @@ class Bezier(CurveLineBase, ABC):
         self.end = Point.aspoint(end)
 
     def __repr__(self):
-        return f'{self.__class__.__name__}(start={self.start}, controls={self.controls}, end={self.end})'
+        return f"{self.__class__.__name__}(start={self.start}, controls={self.controls}, end={self.end})"
 
     def __iter__(self):
         yield self.start
@@ -33,7 +34,6 @@ class Bezier(CurveLineBase, ABC):
 
 
 class QuadraticBezier(Bezier):
-
     def __init__(self, start: PointType, control: PointType, end: PointType):
         super().__init__(start, [control], end)
 
@@ -43,7 +43,6 @@ class QuadraticBezier(Bezier):
 
 
 class CubicBezier(Bezier):
-
     def __init__(self, start: PointType, control1: PointType, control2: PointType, end: PointType):
         super().__init__(start, [control1, control2], end)
 
