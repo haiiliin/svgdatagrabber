@@ -60,6 +60,6 @@ class ClosedShape(GeometryBase, ABC):
         raise NotImplementedError
 
     @property
-    def bounding(self) -> Tuple[Point, Point]:
+    def bbox(self) -> Tuple[Point, Point]:
         """Return the bounding box of the shape."""
         raise NotImplementedError

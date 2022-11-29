@@ -51,10 +51,10 @@ class Circle(Ellipse):
         """
         self._r, self.ra, self.rb = value, value, value
 
-    def bounding(self) -> Tuple[Point, Point]:
+    def bbox(self) -> Tuple[Point, Point]:
         """Get the bounding box of the circle.
 
-        >>> Circle(center=Point(0.0, 0.0), r=1.0).bounding()
+        >>> Circle(center=Point(0.0, 0.0), r=1.0).bbox()
         (Point(x=-1.0, y=-1.0), Point(x=1.0, y=1.0))
 
         Returns:

@@ -211,7 +211,7 @@ class Ellipse(ClosedShape):
         return self.center
 
     @property
-    def bounding(self) -> Tuple[Point, Point]:
+    def bbox(self) -> Tuple[Point, Point]:
         """Return the bounding box of the ellipse."""
         raise NotImplementedError
 

@@ -191,7 +191,7 @@ class Polygon(ClosedShape, PointSequence):
         >>> Polygon(Point(0.0, 0.0), Point(2.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)).maxsize
         2.0
         """
-        lf, tr = self.bounding
+        lf, tr = self.bbox
         return max(tr.x - lf.x, tr.y - lf.y)
 
     @property
@@ -226,10 +226,10 @@ class Polygon(ClosedShape, PointSequence):
         return Point(x, y)
 
     @property
-    def bounding(self) -> Tuple[Point, Point]:
+    def bbox(self) -> Tuple[Point, Point]:
         """Return the bounding box of the polygon.
 
-        >>> Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)).bounding
+        >>> Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)).bbox
         (Point(x=0.0, y=0.0), Point(x=1.0, y=1.0))
         """
         x, y = zip(*self.vertices)
