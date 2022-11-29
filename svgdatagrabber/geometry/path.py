@@ -55,10 +55,10 @@ class Path(StraightLineBase, LineSequence):
 
     def transformed(self, csys: CoordinateSystem):
         for segment in self.items:
-            segment.start = Point(csys.transform(segment.start))
-            segment.end = Point(csys.transform(segment.end))
+            segment.start = csys.transform(segment.start)
+            segment.end = csys.transform(segment.end)
             if isinstance(segment, Bezier):
-                segment.controls = [Point(csys.transform(control)) for control in segment.controls]
+                segment.controls = [csys.transform(control) for control in segment.controls]
 
 
 class PathSequence(GeometrySequence):

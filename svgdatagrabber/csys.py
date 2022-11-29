@@ -105,7 +105,7 @@ class CoordinateSystem:
         self.xaxis = XAxis()
         self.yaxis = YAxis()
 
-    def transform(self, p: Point | Iterable[float] | complex) -> complex:
+    def transform(self, p: Point | Iterable[float] | complex) -> Point:
         """Transform the coordinate to the coordinate system.
 
         >>> csys = CoordinateSystem()
@@ -155,7 +155,7 @@ class CoordinateSystem:
         x = self.xaxis.xstart + rx * (self.xaxis.xend - self.xaxis.xstart)
         y = self.yaxis.ystart + ry * (self.yaxis.yend - self.yaxis.ystart)
         x, y = round(x + 0.0, 10), round(y + 0.0, 10)
-        return complex(x, y)
+        return Point(x, y)
 
     def setup_xaxis(
         self,
