@@ -40,9 +40,9 @@ class Ellipse(ClosedShape):
         """Create an ellipse, either by center, radius and rotation angle or by parameters.
 
         >>> Ellipse(center=Point(0.0, 0.0), ra=1.0, rb=1.0, theta=0.0)
-        Ellipse(center=Point(x=0.0, y=0.0), a=1.0, b=1.0, theta=0.0)
+        Ellipse(center=Point(x=0.0, y=0.0), ra=1.0, rb=1.0, theta=0.0)
         >>> Ellipse(A=1.0, B=0.0, C=1.0, D=0.0, E=0.0, F=-1.0)
-        Ellipse(center=Point(x=0.0, y=0.0), a=1.0, b=1.0, theta=0.0)
+        Ellipse(center=Point(x=0.0, y=0.0), ra=1.0, rb=1.0, theta=0.0)
 
         Args:
             center: The center of the ellipse.
@@ -83,9 +83,9 @@ class Ellipse(ClosedShape):
         """Return a string representation of the ellipse.
 
         >>> repr(Ellipse(center=Point(0.0, 0.0), ra=1.0, rb=1.0, theta=0.0))
-        'Ellipse(center=Point(x=0.0, y=0.0), a=1.0, b=1.0, theta=0.0)'
+        'Ellipse(center=Point(x=0.0, y=0.0), ra=1.0, rb=1.0, theta=0.0)'
         """
-        return f"{self.__class__.__name__}(center={self.center}, a={self.ra}, b={self.rb}, theta={self.theta})"
+        return f"{self.__class__.__name__}(center={self.center}, ra={self.ra}, rb={self.rb}, theta={self.theta})"
 
     def __eq__(self, other: "Ellipse") -> bool:
         """Check if two ellipses are equal.
