@@ -13,12 +13,12 @@ from svgpathtools import Line as SvgPathToolsLine
 from svgpathtools import Path as SvgPathToolsPath
 from svgpathtools import QuadraticBezier as SvgPathToolsQuadraticBezier
 
-from . import LineSegment
 from .arc import Arc
 from .bezier import QuadraticBezier, CubicBezier, Bezier
+from .csys import CoordinateSystem
 from .linebase import StraightLineBase, LineBase
 from .sequence import LineSequence, GeometrySequence
-from ..csys import CoordinateSystem
+from .straightline import LineSegment
 
 SvgPathToolsSegmentType = Union[SvgPathToolsLine, SvgPathToolsArc, SvgPathToolsQuadraticBezier, SvgPathToolsCubicBezier]
 
@@ -26,8 +26,12 @@ SvgPathToolsSegmentType = Union[SvgPathToolsLine, SvgPathToolsArc, SvgPathToolsQ
 class Path(StraightLineBase, LineSequence):
     items: List[LineSegment | Arc | QuadraticBezier | CubicBezier]
 
-    def __init__(self, *segments: LineBase):
+    #: Whether to only export the start and end points of the path.
+    start_end_only: bool
+
+    def __init__(self, *segments: LineBase, start_end_only: bool = True):
         LineSequence.__init__(self, *segments)
+        self.start_end_only = start_end_only
 
     def __repr__(self):
         return LineSequence.__repr__(self)
@@ -40,7 +44,7 @@ class Path(StraightLineBase, LineSequence):
         return self.items
 
     @classmethod
-    def fromSvgPathToolsPath(cls, path: "SvgPathToolsPath"):
+    def fromSvgPathToolsPath(cls, path: "SvgPathToolsPath", start_end_only: bool = True):
         segments = []
         for segment in path:
             if isinstance(segment, SvgPathToolsLine):
@@ -51,11 +55,14 @@ class Path(StraightLineBase, LineSequence):
                 segments.append(QuadraticBezier.fromSvgPathToolsQuadraticBezier(segment))
             elif isinstance(segment, SvgPathToolsCubicBezier):
                 segments.append(CubicBezier.fromSvgPathToolsCubicBezier(segment))
-        return cls(*segments)
+        return cls(*segments, start_end_only=start_end_only)
 
     @property
     def array(self) -> np.ndarray:
-        return np.array([[p.x, p.y] for segment in self.segments for p in segment])
+        if self.start_end_only:
+            return np.array([[p.x, p.y] for segment in self.segments for p in [segment.start, segment.end]])
+        else:
+            return np.array([[p.x, p.y] for segment in self.segments for p in segment])
 
     def transformed(self, csys: CoordinateSystem):
         for segment in self.items:

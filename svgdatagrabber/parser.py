@@ -6,7 +6,6 @@ import numpy as np
 from svgpathtools.path import Path
 from svgpathtools.svg_to_paths import svg2paths
 
-from .csys import CoordinateSystem
 from .filters import (
     RectangleRangeFilter,
     SegmentNumberFilter,
@@ -17,6 +16,7 @@ from .filters import (
     CustomFilter,
 )
 from .geometry import PathSequence
+from .geometry.csys import CoordinateSystem
 
 
 class SvgPathParser:

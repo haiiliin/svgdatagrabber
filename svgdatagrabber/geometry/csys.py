@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from typing import Iterable
 
-from svgdatagrabber.geometry import ExtendedLineSegment, Point
+from .point import Point
+from .straightline import ExtendedLineSegment
 
 
 class Axis(ExtendedLineSegment):
@@ -110,25 +111,25 @@ class CoordinateSystem:
 
         >>> csys = CoordinateSystem()
         >>> csys.transform(Point(0.0, 0.0))
-        0j
+        Point(x=0.0, y=0.0)
         >>> csys.transform(Point(1.0, 1.0))
-        (1+1j)
+        Point(x=1.0, y=1.0)
 
         >>> csys = CoordinateSystem()
         >>> csys.setup_xaxis(start=(0.0, 0.0), end=(2.0, 0.0), xstart=0.0, xend=1.0, y=0.0, check=False)
         >>> csys.setup_yaxis(start=(0.0, 0.0), end=(0.0, 2.0), ystart=0.0, yend=1.0, x=0.0, check=True)
         >>> csys.transform(Point(2.0, 0.0))
-        (1+0j)
+        Point(x=1.0, y=0.0)
         >>> csys.transform(Point(0.0, 2.0))
-        1j
+        Point(x=0.0, y=1.0)
 
         >>> csys = CoordinateSystem()
         >>> csys.setup_xaxis(start=(1.0, 0.0), end=(2.0, 0.0), xstart=0.0, xend=1.0, y=0.0, check=False)
         >>> csys.setup_yaxis(start=(0.0, 1.0), end=(0.0, 2.0), ystart=0.0, yend=1.0, x=0.0, perpendicular=True)
         >>> csys.transform(Point(2.0, 1.0))
-        (1+0j)
+        Point(x=1.0, y=0.0)
         >>> csys.transform(Point(1.0, 2.0))
-        1j
+        Point(x=0.0, y=1.0)
 
         >>> csys = CoordinateSystem()
         >>> csys.setup_xaxis(start=(0.0, 0.0), end=(1.0, 0.0), xstart=0.0, xend=1.0, y=0.0)

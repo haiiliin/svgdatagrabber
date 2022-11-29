@@ -2,7 +2,7 @@ from svgdatagrabber.parser import SvgPathParser
 
 
 def test_getpaths():
-    lines = (
+    arrays = (
         SvgPathParser(
             "praai2013.svg",
             xrange=(0, 3000),
@@ -11,6 +11,6 @@ def test_getpaths():
             tolerance=1,
         )
         .parse()
-        .lines()
+        .arrays
     )
-    assert len(lines) == 12
+    assert len(arrays) == 12
