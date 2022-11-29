@@ -87,7 +87,7 @@ class Ellipse(ClosedShape):
         """
         return f"{self.__class__.__name__}(center={self.center}, a={self.ra}, b={self.rb}, theta={self.theta})"
 
-    def __eq__(self, other: "ClosedShape") -> bool:
+    def __eq__(self, other: "Ellipse") -> bool:
         """Check if two ellipses are equal.
 
         >>> Ellipse(center=Point(0.0, 0.0), ra=1.0, rb=1.0) == Ellipse(center=Point(0.0, 0.0), ra=1.0, rb=1.0)
@@ -98,8 +98,6 @@ class Ellipse(ClosedShape):
         Args:
             other: The other ellipse.
         """
-        if not isinstance(other, Ellipse):
-            return False
         return self.center == other.center and self.ra == other.ra and self.rb == other.rb and self.theta == other.theta
 
     @property
