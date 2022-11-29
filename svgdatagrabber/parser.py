@@ -5,6 +5,7 @@ from typing import Callable
 import numpy as np
 from svgpathtools.path import Path
 from svgpathtools.svg_to_paths import svg2paths
+from .geometry import PathSequence
 
 from .csys import CoordinateSystem
 from .filters import (
@@ -16,7 +17,6 @@ from .filters import (
     ClosedPathFilter,
     CustomFilter,
 )
-from .paths import SvgPaths
 
 
 class SvgPathParser:
@@ -75,7 +75,7 @@ class SvgPathParser:
             return
         self.filters.append(f if isinstance(f, FilterBase) else CustomFilter(f))
 
-    def parse(self) -> SvgPaths:
+    def parse(self) -> PathSequence:
         """Parse the paths from the svg file.
 
         Returns:
@@ -86,5 +86,5 @@ class SvgPathParser:
             return [pt for pt in pts if all(f.accept(pt) for f in self.filters)]
 
         paths, atts = svg2paths(self.svgfile)
-        paths = SvgPaths(filtered(paths)).transformed(self.csys)
+        paths = PathSequence.fromSvgPathToolsPathSequence(filtered(paths)).transformed(self.csys)
         return paths
