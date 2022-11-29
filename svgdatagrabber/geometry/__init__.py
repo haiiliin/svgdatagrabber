@@ -23,3 +23,6 @@ from .straightline import (
     ExtendedLineRay,
 )
 from .triangle import Triangle
+from .arc import Arc
+from .bezier import Bezier, CubicBezier, QuadraticBezier
+from .path import Path, PathSequence
