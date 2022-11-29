@@ -48,7 +48,7 @@ class Ellipse(ClosedShape):
             center: The center of the ellipse.
             ra: The radius in the x direction.
             rb: The radius in the y direction.
-            theta: The rotation of the ellipse in degrees.
+            theta: The rotation of the ellipse in radians.
         """
         if center is not None and ra is not None and rb is not None and theta is not None:
             self.center = Point.aspoint(center)
