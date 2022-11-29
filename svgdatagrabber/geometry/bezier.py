@@ -12,11 +12,11 @@ class Bezier(CurveLineBase, ABC):
     """A class representing a Bézier curve."""
 
     #: The start point of the quadratic Bézier curve.
-    start: PointType
+    start: Point
     #: The control point of the quadratic Bézier curve.
-    controls: List[PointType]
+    controls: List[Point]
     #: The end point of the quadratic Bézier curve.
-    end: PointType
+    end: Point
 
     def __init__(self, start: PointType, controls: List[PointType], end: PointType):
         self.start = Point.aspoint(start)
