@@ -20,7 +20,7 @@ class GeometricObject:
         self.geometry = geometry
         self.item = item
 
-    def draw(
+    def redraw(
         self,
         scene: QGraphicsScene,
         pen: QPenType = None,

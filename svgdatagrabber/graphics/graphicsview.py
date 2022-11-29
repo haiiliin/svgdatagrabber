@@ -46,19 +46,19 @@ class GraphicsView(QGraphicsView):
         # use OpenGL
         useOpenGL and self.useOpenGL()
 
-    def addPrimitive(self, primitive: GeometricObject | GeometryBase, fitInView: bool = True, scale: float = 0.8):
+    def addPrimitive(self, primitive: GeometricObject | GeometryBase, fitInView: bool = True, scale: float = 1.0):
         """Add a primitive to the scene."""
         if isinstance(primitive, GeometryBase):
             primitive = GeometricObject(primitive)
-        primitive.draw(self.scene)
+        primitive.redraw(self.scene)
         self.geometric_objects.append(primitive)
         fitInView and self.fitInView(self.scene.itemsBoundingRect(), Qt.KeepAspectRatio)
         self.scale(scale, scale)
 
-    def redraw(self, pen: QPenType = None, brush: QBrushType = None, fitInView: bool = True, scale: float = 0.8):
+    def redraw(self, pen: QPenType = None, brush: QBrushType = None, fitInView: bool = True, scale: float = 1.0):
         """Draw the geometries in the scene and fit the view."""
         for geometric_object in self.geometric_objects:
-            geometric_object.draw(self.scene, pen, brush)
+            geometric_object.redraw(self.scene, pen, brush)
         fitInView and self.fitInView(self.scene.itemsBoundingRect(), Qt.KeepAspectRatio)
         self.scale(scale, scale)
 
