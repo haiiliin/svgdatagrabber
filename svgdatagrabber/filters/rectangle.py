@@ -26,7 +26,6 @@ class RectangleRangeFilter(FilterBase):
         yrange: tuple[float, float] = (-np.inf, np.inf),
         include: bool = True,
         sensitive: bool = False,
-        *,
         enabled: bool = True,
         tolerance: float = 1e-6,
     ):

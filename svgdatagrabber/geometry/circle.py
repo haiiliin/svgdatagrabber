@@ -10,7 +10,7 @@ class Circle(Ellipse):
     #: The radius of the circle.
     _r: float
 
-    def __init__(self, *, center: PointType, r: float):
+    def __init__(self, center: PointType, r: float):
         """Create a circle, either by center and radius or by parameters.
 
         >>> Circle(center=Point(0.0, 0.0), r=1.0)

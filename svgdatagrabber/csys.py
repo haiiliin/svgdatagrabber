@@ -19,7 +19,6 @@ class XAxis(Axis):
 
     def __init__(
         self,
-        *,
         start: Point | Iterable[float] | complex = Point(0.0, 0.0),
         end: Point | Iterable[float] | complex = Point(1.0, 0.0),
         xstart: float = 0.0,
@@ -31,7 +30,6 @@ class XAxis(Axis):
 
     def setup(
         self,
-        *,
         start: Point | Iterable[float] | complex = Point(0.0, 0.0),
         end: Point | Iterable[float] | complex = Point(1.0, 0.0),
         xstart: float = 0.0,
@@ -64,7 +62,6 @@ class YAxis(Axis):
 
     def __init__(
         self,
-        *,
         start: Point | Iterable[float] | complex = Point(0.0, 0.0),
         end: Point | Iterable[float] | complex = Point(0.0, 1.0),
         ystart: float = 0.0,
@@ -76,7 +73,6 @@ class YAxis(Axis):
 
     def setup(
         self,
-        *,
         start: Point | Iterable[float] | complex = Point(0.0, 0.0),
         end: Point | Iterable[float] | complex = Point(0.0, 1.0),
         ystart: float = 0.0,
@@ -163,7 +159,6 @@ class CoordinateSystem:
 
     def setup_xaxis(
         self,
-        *,
         start: Point | Iterable[float] | complex = Point(0.0, 0.0),
         end: Point | Iterable[float] | complex = Point(1.0, 0.0),
         xstart: float = 0.0,
@@ -193,7 +188,6 @@ class CoordinateSystem:
 
     def setup_yaxis(
         self,
-        *,
         start: Point | Iterable[float] | complex = Point(0.0, 0.0),
         end: Point | Iterable[float] | complex = Point(0.0, 1.0),
         ystart: float = 0.0,

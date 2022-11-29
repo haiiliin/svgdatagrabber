@@ -26,7 +26,6 @@ class Ellipse(ClosedShape):
 
     def __init__(
         self,
-        *,
         center: PointType = None,
         ra: float = None,
         rb: float = None,

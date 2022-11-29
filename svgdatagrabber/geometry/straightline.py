@@ -22,7 +22,6 @@ class Line(StraightLineBase):
 
     def __init__(
         self,
-        *,
         start: PointType = None,
         end: PointType = None,
         A: float = None,
@@ -610,7 +609,6 @@ class LineSegment(Line):
 
     def __init__(
         self,
-        *,
         start: PointType,
         end: PointType,
         extended: bool = False,
@@ -779,7 +777,6 @@ class LineRay(Line):
 
     def __init__(
         self,
-        *,
         start: PointType,
         end: PointType,
         extended: bool = False,
