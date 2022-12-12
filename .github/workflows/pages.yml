@@ -36,6 +36,6 @@ jobs:
         pip install -r docs/requirements.txt
         pip install .
     - name: Build and Commit
-      uses: sphinx-notes/pages@v2
+      uses: sphinx-notes/pages@v3
       with:
         documentation_path: docs
