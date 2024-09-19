@@ -48,7 +48,7 @@ jobs:
           cond: ${{ github.event_name == 'pull_request' }}
           if_true: ${{ github.base_ref }}
           if_false: ${{ github.ref_name }}
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         if: ${{ matrix.python-version == '3.11' }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
