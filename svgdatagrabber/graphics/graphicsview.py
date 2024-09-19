@@ -4,11 +4,11 @@ from typing import List, overload
 
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QPainter
-from qtpy.QtWidgets import QGraphicsView, QGraphicsScene, QOpenGLWidget, QWidget
+from qtpy.QtWidgets import QGraphicsScene, QGraphicsView, QOpenGLWidget, QWidget
 
-from .annotations import QPenType, QBrushType
-from .geometricobject import GeometricObject
 from ..geometry import GeometryBase
+from .annotations import QBrushType, QPenType
+from .geometricobject import GeometricObject
 
 
 class GraphicsView(QGraphicsView):
@@ -18,12 +18,10 @@ class GraphicsView(QGraphicsView):
     geometric_objects: List[GeometricObject]
 
     @overload
-    def __init__(self, parent: QWidget | None = None, *, useOpenGL: bool = False):
-        ...
+    def __init__(self, parent: QWidget | None = None, *, useOpenGL: bool = False): ...
 
     @overload
-    def __init__(self, scene: QGraphicsScene = None, parent: QWidget | None = None, *, useOpenGL: bool = False):
-        ...
+    def __init__(self, scene: QGraphicsScene = None, parent: QWidget | None = None, *, useOpenGL: bool = False): ...
 
     def __init__(
         self,

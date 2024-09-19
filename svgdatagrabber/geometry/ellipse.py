@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Tuple, Iterable, List
+from typing import Iterable, List, Tuple
 
 import numpy as np
 

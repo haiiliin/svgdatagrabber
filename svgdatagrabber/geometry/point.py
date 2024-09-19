@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Iterable, Union, Tuple
+from typing import Iterable, Tuple, Union
 
 import numpy as np
 from qtpy.QtCore import QLineF

@@ -1,8 +1,8 @@
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QMainWindow
 
+from ..geometry import Circle, Point, Polygon
 from .graphicsview import GraphicsView
-from ..geometry import Polygon, Point, Circle
 
 
 class SvgDataGrabberMainWindow(QMainWindow):

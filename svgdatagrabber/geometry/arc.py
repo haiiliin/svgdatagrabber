@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-from typing import List, Iterable, Tuple
+from typing import Iterable, List, Tuple
 
 import numpy as np
 from svgpathtools import Arc as SvgPathToolsArc
 
 from .ellipse import Ellipse
-from .linebase import CurveLineBase
-from .linebase import LineBase
+from .linebase import CurveLineBase, LineBase
 from .point import Point, PointType
 
 

@@ -1,47 +1,47 @@
 # .github/release-drafter.yml
 
-name-template: 'v$RESOLVED_VERSION 🌈'
-tag-template: 'v$RESOLVED_VERSION'
+name-template: "v$RESOLVED_VERSION 🌈"
+tag-template: "v$RESOLVED_VERSION"
 filter-by-commitish: true
 commitish: main
 categories:
-  - title: '🚀 New Features'
+  - title: "🚀 New Features"
     labels:
-      - 'feature'
-      - 'new feature'
-      - 'enhancement'
-      - 'customization'
-  - title: '🐛 Bug Fixes'
+      - "feature"
+      - "new feature"
+      - "enhancement"
+      - "customization"
+  - title: "🐛 Bug Fixes"
     labels:
-      - 'fix'
-      - 'bugfix'
-      - 'bug'
-      - 'test'
-      - 'typo'
-      - 'refactor'
-  - title: '📝 Documentation'
+      - "fix"
+      - "bugfix"
+      - "bug"
+      - "test"
+      - "typo"
+      - "refactor"
+  - title: "📝 Documentation"
     labels:
-      - 'documentation'
-      - 'docs'
-      - 'doc'
-  - title: '🤖 Automation'
+      - "documentation"
+      - "docs"
+      - "doc"
+  - title: "🤖 Automation"
     labels:
-      - 'automation'
-      - 'release'
-      - 'workflow'
-version-template: '$MAJOR.$MINOR.$PATCH'
-change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+      - "automation"
+      - "release"
+      - "workflow"
+version-template: "$MAJOR.$MINOR.$PATCH"
+change-template: "- $TITLE @$AUTHOR (#$NUMBER)"
 change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
 version-resolver:
   major:
     labels:
-      - 'major'
+      - "major"
   minor:
     labels:
-      - 'minor'
+      - "minor"
   patch:
     labels:
-      - 'patch'
+      - "patch"
   default: patch
 template: |
   ## Changes

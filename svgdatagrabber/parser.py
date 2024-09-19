@@ -7,13 +7,13 @@ from svgpathtools.path import Path
 from svgpathtools.svg_to_paths import svg2paths
 
 from .filters import (
-    RectangleRangeFilter,
-    SegmentNumberFilter,
-    HorizontalLineFilter,
-    VerticalLineFilter,
-    FilterBase,
     ClosedPathFilter,
     CustomFilter,
+    FilterBase,
+    HorizontalLineFilter,
+    RectangleRangeFilter,
+    SegmentNumberFilter,
+    VerticalLineFilter,
 )
 from .geometry import PathSequence
 from .geometry.csys import CoordinateSystem

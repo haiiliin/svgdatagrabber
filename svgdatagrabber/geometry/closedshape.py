@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC
-from typing import Tuple, Iterable, List
+from typing import Iterable, List, Tuple
 
 from .geometrybase import GeometryBase
 from .linebase import LineBase

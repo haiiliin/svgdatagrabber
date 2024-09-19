@@ -1,6 +1,6 @@
 from abc import ABC
 
-from .geometrybase import GeometryBase, DrawAsLine
+from .geometrybase import DrawAsLine, GeometryBase
 
 
 class LineBase(GeometryBase, ABC):

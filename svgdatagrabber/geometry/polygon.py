@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Iterable, Tuple
+from typing import Iterable, List, Tuple
 
 from qtpy.QtCore import QPointF
 from qtpy.QtGui import QPolygonF

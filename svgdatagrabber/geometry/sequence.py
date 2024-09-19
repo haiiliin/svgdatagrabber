@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Iterable, Sequence, overload, List, Union
+from typing import Iterable, List, Sequence, Union, overload
 
 from .geometrybase import GeometryBase
 from .point import Point, PointType
@@ -39,13 +39,11 @@ class GeometrySequence(Sequence[GeometryBase]):
 
     @overload
     @abstractmethod
-    def __getitem__(self, index: int) -> SequenceItem:
-        ...
+    def __getitem__(self, index: int) -> SequenceItem: ...
 
     @overload
     @abstractmethod
-    def __getitem__(self, index: slice) -> Sequence[SequenceItem]:
-        ...
+    def __getitem__(self, index: slice) -> Sequence[SequenceItem]: ...
 
     def __getitem__(self, index: int) -> SequenceItem | Sequence[SequenceItem]:
         """Get a point from the sequence.
