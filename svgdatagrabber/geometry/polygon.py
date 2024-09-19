@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Iterable, Tuple
+from typing import Iterable, List, Tuple
 
 from qtpy.QtCore import QPointF
 from qtpy.QtGui import QPolygonF
@@ -208,8 +208,7 @@ class Polygon(ClosedShape, PointSequence):
     def perimeter(self) -> float:
         """Return the perimeter of the polygon.
 
-        >>> Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)).perimeter
-        4.0
+        >>> assert Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)).perimeter == 4.0
         """
         return sum(edge.length for edge in self.edges)
 
@@ -240,7 +239,7 @@ class Polygon(ClosedShape, PointSequence):
         """Return the polygon as a Shapely polygon.
 
         >>> Polygon(Point(0.0, 0.0), Point(1.0, 0.0), Point(1.0, 1.0), Point(0.0, 1.0)).asShapely
-        <shapely.geometry.polygon.Polygon object at ...>
+        <POLYGON ...>
         """
         return ShapelyPolygon(((vertex.x, vertex.y) for vertex in self.vertices))
 

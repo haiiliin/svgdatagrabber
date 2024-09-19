@@ -8,6 +8,7 @@ def main():
     import sys
 
     from qtpy.QtWidgets import QApplication
+
     from svgdatagrabber.graphics.mainwindow import SvgDataGrabberMainWindow
 
     app = QApplication(sys.argv)

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Union
 
-from svgpathtools.path import Path, Line, QuadraticBezier, CubicBezier, Arc
+from svgpathtools.path import Arc, CubicBezier, Line, Path, QuadraticBezier
 
 from .filterbase import FilterBase
 

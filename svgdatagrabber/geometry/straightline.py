@@ -250,8 +250,7 @@ class Line(StraightLineBase):
     def coefficientsFromPointAndAngle(cls, p: PointType, angle: float) -> tuple[float, float, float]:
         """Get the coefficients of a line from a point and an angle.
 
-        >>> Line.coefficientsFromPointAndAngle(Point(0.0, 0.0), np.pi / 4.0)
-        (1.0, -1.0, 0.0)
+        >>> assert Line.coefficientsFromPointAndAngle(Point(0.0, 0.0), np.pi / 4.0) == (1.0, -1.0, 0.0)
 
         Args:
             p: The point.
@@ -326,8 +325,7 @@ class Line(StraightLineBase):
     def coefficientsFromAngleAndIntercept(cls, angle: float, intercept: float) -> tuple[float, float, float]:
         """Get the coefficients of a line from an angle and an intercept.
 
-        >>> Line.coefficientsFromAngleAndIntercept(np.pi / 4.0, 0.0)
-        (1.0, -1.0, 0.0)
+        >>> assert Line.coefficientsFromAngleAndIntercept(np.pi / 4.0, 0.0) == (1.0, -1.0, 0.0)
 
         Args:
             angle: The angle.
@@ -346,8 +344,7 @@ class Line(StraightLineBase):
     def fromAngleAndIntercept(cls, angle: float, intercept: float) -> Line:
         """Create a line from an angle and intercept.
 
-        >>> Line.fromAngleAndIntercept(np.pi / 4.0, 0.0)
-        Line(A=1.0, B=-1.0, C=0.0)
+        >>> assert Line.fromAngleAndIntercept(np.pi / 4.0, 0.0) == Line(A=1.0, B=-1.0, C=0.0)
 
         Args:
             angle: The angle.
@@ -383,12 +380,9 @@ class Line(StraightLineBase):
     def slope(self) -> float:
         """Get the slope of this line.
 
-        >>> Line(A=1.0, B=-1.0, C=0.0).slope
-        1.0
-        >>> Line(A=1.0, B=1.0, C=0.0).slope
-        -1.0
-        >>> Line(A=1.0, B=0.0, C=0.0).slope
-        inf
+        >>> assert Line(A=1.0, B=-1.0, C=0.0).slope == 1.0
+        >>> assert Line(A=1.0, B=1.0, C=0.0).slope == -1.0
+        >>> assert Line(A=1.0, B=0.0, C=0.0).slope == np.inf
 
         Returns:
             The slope of this line.
@@ -414,8 +408,7 @@ class Line(StraightLineBase):
 
         >>> line1 = Line(A=1.0, B=1.0, C=0.0)
         >>> line2 = Line(A=1.0, B=-1.0, C=0.0)
-        >>> line1.angleBetween(line2)
-        1.5707963267948966
+        >>> assert line1.angleBetween(line2) == np.pi / 2.0
 
         Args:
             other: The other line.
@@ -429,8 +422,7 @@ class Line(StraightLineBase):
     def intercept(self) -> float:
         """Get the intercept of this line.
 
-        >>> Line(A=1.0, B=1.0, C=1.0).intercept
-        -1.0
+        >>> assert Line(A=1.0, B=1.0, C=1.0).intercept == -1.0
         >>> Line(A=1.0, B=0.0, C=0.0).intercept
         Traceback (most recent call last):
         ...
@@ -446,8 +438,7 @@ class Line(StraightLineBase):
     def getx(self, y: float) -> float:
         """Get the x coordinate of a point on this line.
 
-        >>> Line(A=1.0, B=1.0, C=0.0).getx(1.0)
-        -1.0
+        >>> assert Line(A=1.0, B=1.0, C=0.0).getx(1.0) == -1.0
         >>> Line(A=0.0, B=1.0, C=0.0).getx(0.0)
         Traceback (most recent call last):
         ...
@@ -466,8 +457,7 @@ class Line(StraightLineBase):
     def gety(self, x: float) -> float:
         """Get the y coordinate of a point on this line.
 
-        >>> Line(A=1.0, B=1.0, C=0.0).gety(1.0)
-        -1.0
+        >>> assert Line(A=1.0, B=1.0, C=0.0).gety(1.0) == -1.0
         >>> Line(A=1.0, B=0.0, C=0.0).gety(0.0)
         Traceback (most recent call last):
         ...
@@ -562,8 +552,7 @@ class Line(StraightLineBase):
     def parallel(self, p: PointType) -> "Line":
         """Get a parallel line to this line.
 
-        >>> Line(A=1.0, B=-1.0, C=0.0).parallel(Point(0.0, 1.0))
-        Line(A=1.0, B=-1.0, C=1.0)
+        >>> assert Line(A=1.0, B=-1.0, C=0.0).parallel(Point(0.0, 1.0)) == Line(A=1.0, B=-1.0, C=1.0)
 
         Args:
             p: A point on the parallel line.
@@ -577,12 +566,9 @@ class Line(StraightLineBase):
     def perpendicular(self, p: PointType) -> "Line":
         """Get a perpendicular line to this line.
 
-        >>> Line(A=1.0, B=-1.0, C=0.0).perpendicular(Point(0.0, 1.0))
-        Line(A=1.0, B=1.0, C=-1.0)
-        >>> Line(A=0.0, B=1.0, C=0.0).perpendicular(Point(0.0, 0.0))
-        Line(A=1.0, B=0.0, C=0.0)
-        >>> Line(A=1.0, B=0.0, C=0.0).perpendicular(Point(0.0, 0.0))
-        Line(A=0.0, B=1.0, C=0.0)
+        >>> assert Line(A=1.0, B=-1.0, C=0.0).perpendicular(Point(0.0, 1.0)) == Line(A=1.0, B=1.0, C=-1.0)
+        >>> assert Line(A=0.0, B=1.0, C=0.0).perpendicular(Point(0.0, 0.0)) == Line(A=1.0, B=0.0, C=0.0)
+        >>> assert Line(A=1.0, B=0.0, C=0.0).perpendicular(Point(0.0, 0.0)) == Line(A=0.0, B=1.0, C=0.0)
 
         Args:
             p: A point on the perpendicular line.
@@ -703,8 +689,7 @@ class LineSegment(Line):
     def maxsize(self) -> float:
         """Get the maximal size of this segment.
 
-        >>> LineSegment(start=Point(0.0, 0.0), end=Point(3.0, 4.0)).maxsize
-        5.0
+        >>> assert LineSegment(start=Point(0.0, 0.0), end=Point(3.0, 4.0)).maxsize == 5.0
         """
         return self.length
 
@@ -712,8 +697,7 @@ class LineSegment(Line):
     def length(self) -> float:
         """Get the length of this segment.
 
-        >>> LineSegment(start=Point(0.0, 0.0), end=Point(3.0, 4.0)).length
-        5.0
+        >>> assert LineSegment(start=Point(0.0, 0.0), end=Point(3.0, 4.0)).length == 5.0
 
         Returns:
             The length of this segment.
@@ -724,14 +708,10 @@ class LineSegment(Line):
     def direction(self) -> float:
         """Get the direction of this segment.
 
-        >>> LineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).direction - np.pi / 4
-        0.0
-        >>> LineSegment(start=Point(0.0, 0.0), end=Point(-1.0, 1.0)).direction - 3.0 * np.pi / 4
-        0.0
-        >>> LineSegment(start=Point(0.0, 0.0), end=Point(-1.0, -1.0)).direction + 3.0 * np.pi / 4.0
-        0.0
-        >>> LineSegment(start=Point(0.0, 0.0), end=Point(1.0, -1.0)).direction + np.pi / 4.0
-        0.0
+        >>> assert LineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).direction - np.pi / 4 == 0.0
+        >>> assert LineSegment(start=Point(0.0, 0.0), end=Point(-1.0, 1.0)).direction - 3.0 * np.pi / 4 == 0.0
+        >>> assert LineSegment(start=Point(0.0, 0.0), end=Point(-1.0, -1.0)).direction + 3.0 * np.pi / 4.0 == 0.0
+        >>> assert LineSegment(start=Point(0.0, 0.0), end=Point(1.0, -1.0)).direction + np.pi / 4.0 == 0.0
 
         Returns:
             The direction of this segment.
@@ -742,8 +722,7 @@ class LineSegment(Line):
     def midpoint(self) -> Point:
         """Get the midpoint of this segment.
 
-        >>> LineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).midpoint
-        Point(x=0.5, y=0.5)
+        >>> assert LineSegment(start=Point(0.0, 0.0), end=Point(1.0, 1.0)).midpoint == Point(x=0.5, y=0.5)
 
         Returns:
             The midpoint of this segment.

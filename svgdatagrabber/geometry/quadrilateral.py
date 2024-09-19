@@ -1,8 +1,8 @@
 import numpy as np
 
-from .point import Point, PointType
+from .point import Point, PointType  # noqa
 from .polygon import Polygon
-from .straightline import LineSegment
+from .straightline import LineSegment  # noqa
 
 
 class Quadrilateral(Polygon):

@@ -8,6 +8,7 @@ sphinx:
 formats: []
 python:
   install:
-    - requirements: docs/requirements.txt
     - method: pip
       path: .
+      extra:
+        - docs

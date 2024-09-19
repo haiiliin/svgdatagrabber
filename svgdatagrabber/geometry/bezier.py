@@ -5,7 +5,7 @@ from svgpathtools import CubicBezier as SvgPathToolsCubicBezier
 from svgpathtools import QuadraticBezier as SvgPathToolsQuadraticBezier
 
 from .linebase import CurveLineBase
-from .point import PointType, Point
+from .point import Point, PointType
 
 
 class Bezier(CurveLineBase, ABC):

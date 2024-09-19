@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Tuple, Iterable, List
+from typing import Iterable, List, Tuple
 
 import numpy as np
 
@@ -187,8 +187,7 @@ class Ellipse(ClosedShape):
     def area(self) -> float:
         """Return the area of the ellipse.
 
-        >>> Ellipse(center=Point(0.0, 0.0), ra=1.0, rb=1.0).area
-        3.141592653589793
+        >>> assert Ellipse(center=Point(0.0, 0.0), ra=1.0, rb=1.0).area == np.pi
         """
         return np.pi * self.ra * self.rb
 
@@ -196,8 +195,7 @@ class Ellipse(ClosedShape):
     def perimeter(self) -> float:
         """Return the perimeter of the ellipse.
 
-        >>> Ellipse(center=Point(0.0, 0.0), ra=1.0, rb=1.0).perimeter
-        6.283185307179586
+        >>> assert Ellipse(center=Point(0.0, 0.0), ra=1.0, rb=1.0).perimeter == 2 * np.pi
         """
         return 2 * np.pi * np.sqrt((self.ra**2 + self.rb**2) / 2)
 

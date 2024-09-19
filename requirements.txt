@@ -1,8 +1,0 @@
-matplotlib
-numpy
-pytest
-pandas
-qtpy
-pyqt5
-shapely
-svgpathtools

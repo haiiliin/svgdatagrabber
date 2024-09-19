@@ -1,4 +1,4 @@
-# pyproject.toml, for more information about configuration options, see 
+# pyproject.toml, for more information about configuration options, see
 # https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
 
 [build-system]
@@ -20,12 +20,20 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: Implementation :: PyPy",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    'sphinx-toolbox',
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "qtpy",
+    "PyQt5",
+    "shapely",
+    "svgpathtools",
+    "typing_extensions",
 ]
 
 [project.urls]
@@ -34,6 +42,17 @@ dependencies = [
 
 [project.scripts]
 svgdatagrabber-graphics = "svgdatagrabber.graphics.__main__:main"
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov"]
+docs = [
+    "furo",
+    "myst-parser",
+    "nbsphinx",
+    "sphinx",
+    "sphinx-autoapi",
+    "sphinx-copybutton",
+]
 
 [tool.setuptools_scm]
 root = "."
@@ -44,7 +63,7 @@ fallback_version = "0.0.1"
 
 [tool.black]
 line-length = 120
-target-version = ['py38', 'py39', 'py310', 'py311']
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
 include = '(svgdatagrabber/.*\.py)|(tests/.*\.py)|(setup\.py)'
 
 [tool.pytest.ini_options]

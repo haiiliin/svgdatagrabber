@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import math
-from typing import List, Union, Iterable
+from typing import Iterable, List, Union
 
 import numpy as np
 import pandas as pd
@@ -12,12 +12,13 @@ from svgpathtools import CubicBezier as SvgPathToolsCubicBezier
 from svgpathtools import Line as SvgPathToolsLine
 from svgpathtools import Path as SvgPathToolsPath
 from svgpathtools import QuadraticBezier as SvgPathToolsQuadraticBezier
+from typing_extensions import Self
 
 from .arc import Arc
-from .bezier import QuadraticBezier, CubicBezier, Bezier
+from .bezier import Bezier, CubicBezier, QuadraticBezier
 from .csys import CoordinateSystem
-from .linebase import StraightLineBase, LineBase
-from .sequence import LineSequence, GeometrySequence
+from .linebase import LineBase, StraightLineBase
+from .sequence import GeometrySequence, LineSequence
 from .straightline import LineSegment
 
 SvgPathToolsSegmentType = Union[SvgPathToolsLine, SvgPathToolsArc, SvgPathToolsQuadraticBezier, SvgPathToolsCubicBezier]
@@ -77,6 +78,10 @@ class PathSequence(GeometrySequence):
 
     def __init__(self, *paths: Path):
         GeometrySequence.__init__(self, *paths)
+
+    def __getitem__(self, item) -> Self | Path:
+        items = self.items[item]
+        return self.__class__(*items) if isinstance(items, list) else items
 
     @property
     def paths(self) -> List[Path]:

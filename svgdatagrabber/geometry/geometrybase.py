@@ -9,7 +9,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtGui import QPen
 from qtpy.QtWidgets import QApplication, QGraphicsScene
 
-from ..graphics.annotations import QPenType, QBrushType, QGraphicsItemType
+from ..graphics.annotations import QBrushType, QGraphicsItemType, QPenType
 
 
 class GeometryDrawAs(IntEnum):

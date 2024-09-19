@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .point import PointType, Point
+from .point import Point, PointType
 from .polygon import Polygon
 
 

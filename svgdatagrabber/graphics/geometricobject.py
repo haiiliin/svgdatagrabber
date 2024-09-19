@@ -1,7 +1,7 @@
 from qtpy.QtWidgets import QGraphicsScene
 
-from .annotations import QPenType, QBrushType, QGraphicsItemType
 from ..geometry import GeometryBase
+from .annotations import QBrushType, QGraphicsItemType, QPenType
 
 
 class GeometricObject:

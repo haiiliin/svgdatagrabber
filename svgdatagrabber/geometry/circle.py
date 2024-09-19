@@ -1,7 +1,7 @@
 from typing import Tuple
 
 from .ellipse import Ellipse
-from .point import PointType, Point
+from .point import Point, PointType
 
 
 class Circle(Ellipse):

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Iterable, Union, Tuple
+from typing import Iterable, Tuple, Union
 
 import numpy as np
 from qtpy.QtCore import QLineF
@@ -148,8 +148,7 @@ class Point(GeometryBase):
     def __abs__(self) -> float:
         """Calculate the magnitude of the vector.
 
-        >>> abs(Point(3.0, 4.0))
-        5.0
+        >>> assert abs(Point(3.0, 4.0)) == 5.0
 
         Returns:
             The magnitude of the vector.
@@ -198,8 +197,7 @@ class Point(GeometryBase):
     def distance(self, other: PointType) -> float:
         """Calculate the distance between two points.
 
-        >>> Point(1.0, 2.0).distance(Point(4.0, 6.0))
-        5.0
+        >>> assert Point(1.0, 2.0).distance(Point(4.0, 6.0)) == 5.0
 
         Args:
             other: The other point.
