@@ -21,7 +21,6 @@ from .straightline import LineSegment
 SvgPathToolsSegmentType = Union[SvgPathToolsLine, SvgPathToolsArc, SvgPathToolsQuadraticBezier, SvgPathToolsCubicBezier]
 
 if TYPE_CHECKING:
-    import pandas as pd
     from matplotlib.axes import Axes
     from pandas import DataFrame
 
