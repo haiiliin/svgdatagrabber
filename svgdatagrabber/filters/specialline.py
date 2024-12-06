@@ -12,7 +12,7 @@ class HorizontalLineFilter(FilterBase):
 
     def accept(self, path: Path) -> bool:
         def segmentIsHorizontal(segment: Union[Line, QuadraticBezier, CubicBezier, Arc]):
-            if type(segment) != Line:
+            if not isinstance(segment, Line):
                 return False
             return abs(segment.start.imag - segment.end.imag) < self.tolerance
 
@@ -24,7 +24,7 @@ class VerticalLineFilter(FilterBase):
 
     def accept(self, path: Path) -> bool:
         def segmentIsVertical(segment: Union[Line, QuadraticBezier, CubicBezier, Arc]):
-            if type(segment) != Line:
+            if not isinstance(segment, Line):
                 return False
             return abs(segment.start.real - segment.end.real) < self.tolerance
 
