@@ -27,11 +27,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "matplotlib",
     "numpy",
-    "pandas",
-    "qtpy",
-    "PyQt5",
     "shapely",
     "svgpathtools",
     "typing_extensions",
@@ -45,6 +41,8 @@ dependencies = [
 svgdatagrabber-graphics = "svgdatagrabber.graphics.__main__:main"
 
 [project.optional-dependencies]
+graphics = ["qtpy", "PyQt5"]
+io = ["matplotlib", "pandas"]
 dev = ["pytest", "pytest-cov"]
 
 [tool.setuptools_scm]

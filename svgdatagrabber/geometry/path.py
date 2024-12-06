@@ -1,12 +1,9 @@
 from __future__ import annotations
 
 import math
-from typing import Iterable, List, Union
+from typing import TYPE_CHECKING, Iterable, List, Union
 
 import numpy as np
-import pandas as pd
-from matplotlib import pyplot as plt
-from matplotlib.axes import Axes
 from svgpathtools import Arc as SvgPathToolsArc
 from svgpathtools import CubicBezier as SvgPathToolsCubicBezier
 from svgpathtools import Line as SvgPathToolsLine
@@ -22,6 +19,11 @@ from .sequence import GeometrySequence, LineSequence
 from .straightline import LineSegment
 
 SvgPathToolsSegmentType = Union[SvgPathToolsLine, SvgPathToolsArc, SvgPathToolsQuadraticBezier, SvgPathToolsCubicBezier]
+
+if TYPE_CHECKING:
+    import pandas as pd
+    from matplotlib.axes import Axes
+    from pandas import DataFrame
 
 
 class Path(StraightLineBase, LineSequence):
@@ -108,7 +110,7 @@ class PathSequence(GeometrySequence):
             path.transformed(csys)
         return self
 
-    def plot(self, ax: Axes = None, fig_kwargs: dict = None, **kwargs) -> Axes:
+    def plot(self, ax: "Axes" = None, fig_kwargs: dict = None, **kwargs) -> "Axes":
         """Plot the paths.
 
         Args:
@@ -116,6 +118,8 @@ class PathSequence(GeometrySequence):
             fig_kwargs: Keyword arguments to pass to plt.figure().
             kwargs: Keyword arguments to pass to plt.plot().
         """
+        import matplotlib.pyplot as plt
+
         if ax is None:
             _, ax = plt.subplots(**(fig_kwargs or {}))
         arrays = self.arrays
@@ -126,8 +130,10 @@ class PathSequence(GeometrySequence):
         ax.grid()
         return ax
 
-    def df(self, x: str = "x", y: str = "y") -> pd.DataFrame:
+    def df(self, x: str = "x", y: str = "y") -> "DataFrame":
         """Get the paths as a pandas DataFrame."""
+        import pandas as pd
+
         df = pd.DataFrame(columns=[x, y, "path"])
         for idx, line in enumerate(self.arrays):
             df = pd.concat([df, pd.DataFrame({x: line[:, 0], y: line[:, 1], "path": idx})], ignore_index=True)
