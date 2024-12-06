@@ -35,7 +35,6 @@ dependencies = [
 
 [project.urls]
 "Homepage" = "https://github.com/haiiliin/svgdatagrabber/"
-"Documentation" = "https://svgdatagrabber.readthedocs.io/"
 
 [project.scripts]
 svgdatagrabber-graphics = "svgdatagrabber.graphics.__main__:main"
