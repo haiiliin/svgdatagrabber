@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-from typing import Iterable, List, Tuple
+from typing import TYPE_CHECKING, Iterable, List, Tuple
 
-from qtpy.QtCore import QPointF
-from qtpy.QtGui import QPolygonF
 from shapely.geometry import Polygon as ShapelyPolygon
 
 from .closedshape import ClosedShape
@@ -12,6 +10,9 @@ from .linebase import LineBase
 from .point import Point, PointType
 from .sequence import PointSequence
 from .straightline import LineRay, LineSegment
+
+if TYPE_CHECKING:
+    from qtpy.QtGui import QPolygonF
 
 
 class Polygon(ClosedShape, PointSequence):
@@ -244,6 +245,9 @@ class Polygon(ClosedShape, PointSequence):
         return ShapelyPolygon(((vertex.x, vertex.y) for vertex in self.vertices))
 
     @property
-    def drawArgs(self) -> Tuple[QPolygonF]:
+    def drawArgs(self) -> Tuple["QPolygonF"]:
         """Return the polygon as a Qt polygon."""
+        from qtpy.QtCore import QPointF
+        from qtpy.QtGui import QPolygonF
+
         return (QPolygonF([QPointF(vertex.x, vertex.y) for vertex in self.vertices]),)

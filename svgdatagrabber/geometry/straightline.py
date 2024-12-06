@@ -1,14 +1,16 @@
 from __future__ import annotations
 
-from typing import Iterator
+from typing import TYPE_CHECKING, Iterator
 
 import numpy as np
-from qtpy.QtCore import QLineF
 from svgpathtools import Line as SvgPathToolsLine
 
 from .exceptions import NotDrawableGeometryError
 from .linebase import StraightLineBase
 from .point import Point, PointType, Vector
+
+if TYPE_CHECKING:
+    from qtpy.QtCore import QLineF
 
 
 class Line(StraightLineBase):
@@ -739,8 +741,10 @@ class LineSegment(Line):
         return self
 
     @property
-    def drawArgs(self) -> QLineF:
+    def drawArgs(self) -> "QLineF":
         """Get the Qt representation of this line segment."""
+        from qtpy.QtCore import QLineF
+
         return QLineF(self.start.x, self.start.y, self.end.x, self.end.y)
 
 

@@ -3,13 +3,12 @@ from __future__ import annotations
 import sys
 from abc import ABC
 from enum import IntEnum
-from typing import Tuple
-
-from qtpy.QtCore import Qt
-from qtpy.QtGui import QPen
-from qtpy.QtWidgets import QApplication, QGraphicsScene
+from typing import TYPE_CHECKING, Tuple
 
 from ..graphics.annotations import QBrushType, QGraphicsItemType, QPenType
+
+if TYPE_CHECKING:
+    from qtpy.QtWidgets import QGraphicsScene
 
 
 class GeometryDrawAs(IntEnum):
@@ -58,7 +57,7 @@ class GeometryBase(ABC):
 
     def draw(
         self,
-        scene: QGraphicsScene,
+        scene: "QGraphicsScene",
         pen: QPenType = None,
         brush: QBrushType = None,
         item: QGraphicsItemType = None,
@@ -71,6 +70,8 @@ class GeometryBase(ABC):
             brush: The brush to draw with.
             item: The old item to draw on, if any.
         """
+        from qtpy.QtGui import QPen
+
         args = self.drawArgs
         if self.drawAs == DrawAsLine:
             item and item.setLine(*args) or item or (item := scene.addLine(*args))
@@ -94,6 +95,9 @@ class GeometryBase(ABC):
             brush: The brush to draw with.
             fit: Fit the view to the geometry.
         """
+        from qtpy.QtCore import Qt
+        from qtpy.QtWidgets import QApplication
+
         from ..graphics.graphicsview import GraphicsView
 
         app = QApplication(sys.argv)

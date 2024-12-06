@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from typing import Iterable, Tuple, Union
+from typing import TYPE_CHECKING, Iterable, Tuple, Union
 
 import numpy as np
-from qtpy.QtCore import QLineF
 
 from .geometrybase import DrawAsEllipse, GeometryBase
+
+if TYPE_CHECKING:
+    from qtpy.QtCore import QLineF
 
 PointType = Union["Point", Iterable[float], complex]
 
@@ -312,6 +314,8 @@ class Vector(Point):
         return cls.aspoint(v)
 
     @property
-    def drawArgs(self) -> QLineF:
+    def drawArgs(self) -> "QLineF":
         """Convert the vector to a Qt line."""
+        from qtpy.QtCore import QLineF
+
         return QLineF(0.0, 0.0, self.x, self.y)
