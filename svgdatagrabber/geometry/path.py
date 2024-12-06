@@ -72,6 +72,7 @@ class Path(StraightLineBase, LineSequence):
             segment.end = csys.transform(segment.end)
             if isinstance(segment, Bezier):
                 segment.controls = [csys.transform(control) for control in segment.controls]
+        return self
 
 
 class PathSequence(GeometrySequence):
