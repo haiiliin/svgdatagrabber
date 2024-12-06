@@ -46,14 +46,6 @@ svgdatagrabber-graphics = "svgdatagrabber.graphics.__main__:main"
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-cov"]
-docs = [
-    "furo",
-    "myst-parser",
-    "nbsphinx",
-    "sphinx",
-    "sphinx-autoapi",
-    "sphinx-copybutton",
-]
 
 [tool.setuptools_scm]
 root = "."
