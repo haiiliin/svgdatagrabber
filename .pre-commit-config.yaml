@@ -47,3 +47,10 @@ repos:
       - id: prettier
         additional_dependencies:
           - prettier@3.1.0
+
+  - repo: https://github.com/hakancelikdev/unimport
+    rev: "1.2.1"
+    hooks:
+      - id: unimport
+        args:
+          - --include=svgdatagrabber
