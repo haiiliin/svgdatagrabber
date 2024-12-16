@@ -40,7 +40,7 @@ dependencies = [
 svgdatagrabber-graphics = "svgdatagrabber.graphics.__main__:main"
 
 [project.optional-dependencies]
-graphics = ["qtpy", "PyQt5", "PyQt5-sip<=12.15.0; python_version == '3.8'"]
+graphics = ["qtpy", "PyQt5"]
 io = ["matplotlib", "pandas"]
 dev = ["pytest", "pytest-cov"]
 
